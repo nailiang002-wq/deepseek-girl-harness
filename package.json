@@ -1,0 +1,54 @@
+{
+  "name": "@local/dsh-deepseek-girl",
+  "version": "1.3.0",
+  "private": true,
+  "type": "module",
+  "description": "DeepSeek 娘：任务状态动画、白饭喂食、铁盆帽和按时间问候。",
+  "icon": "./icon.png",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "projection.js",
+    "logic.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.png",
+    "locale",
+    "README.md",
+    "client.template.js",
+    "README.en.md",
+    "docs/images"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-chat"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs",
+    "test:browser": "node scripts/build.cjs && node tests/browser.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "sharp": "0.35.5",
+    "playwright": "1.62.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  }
+}
