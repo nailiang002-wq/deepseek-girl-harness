@@ -1,20 +1,34 @@
 # DeepSeek 娘 · Harness Desktop
 
-**一个会陪你思考、写答案，也会捧着铁盆等你喂饭的小挂件。**
+**让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.3.0** · [下载安装包](https://github.com/nailiang002-wq/deepseek-girl-harness/releases/tag/v1.3.0)
+[English](README.en.md) · 中文 · **v1.3.0**
 
-![DeepSeek 娘的十种表情](docs/images/overview.png)
+<p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
+
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.3.0/DeepSeekGirl-Harness-v1.3.0.zip"><strong>⬇ 下载插件 v1.3.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+
+**适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
 DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。她会跟随当前任务改变表情，你也可以把她拎到窗口另一边、喂她一盆白饭，或给她戴上铁盆帽。早晨、午间和夜晚，她会用小气泡跟你打招呼。
 
-角色显示在 Harness 窗口内。安装后即可使用，动画和互动都在本地播放，不需要额外的模型调用。
+## 三步安装
+
+![下载、添加插件、启用：三步安装图解](docs/images/install.png)
+
+1. **下载并解压**上面的 ZIP，找到 `DshDeepSeekGirl` 文件夹。
+2. 在 Harness 打开 **插件 → 添加插件**，填写这个文件夹的完整路径。
+3. **安装并启用**，按提示重新载入界面；没有重新载入入口时，退出并重新打开 Harness。
+
+第一次使用：点击角色旁边的白饭盆喂饭；点击或右键角色打开菜单，试试铁盆帽和时间问候。按住角色拖动，Ctrl + 滚轮调整大小。
+
+遇到安装问题，请到 [Issues](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) 告诉我你的 Harness 版本、系统和报错内容。也欢迎反馈最喜欢的动作、哪里卡顿或下一步想加入的互动。
 
 ## 图片与动画演示
 
-![吃白饭、铁盆帽与时间问候](docs/images/interactions.png)
+![DeepSeek 娘的十种表情](docs/images/overview.png)
 
-<p align="center"><img src="docs/images/feeding.gif" width="420" alt="开心吃白饭动画演示"></p>
+![吃白饭、铁盆帽与时间问候](docs/images/interactions.png)
 
 演示使用与插件相同的图集和运动规则生成，不包含个人聊天记录。角色保留六个关键姿势，叠加连续呼吸、轻晃和落地缓冲。
 
@@ -33,14 +47,9 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 
 共有 **10 种状态**：待机、思考、回答、完成、错误、拖动、落地、休息、捧盆求饭、开心吃饭。手动停止任务或等待授权不会被当作成功完成。
 
-## 安装
+## 其他安装方式与兼容性
 
-1. 从 [Releases](https://github.com/nailiang002-wq/deepseek-girl-harness/releases/tag/v1.3.0) 下载 `DeepSeekGirl-Harness-v1.3.0.zip` 并解压。
-2. 打开 Harness 左侧的 **插件 → 添加插件**。
-3. 输入解压后 `DshDeepSeekGirl` 文件夹的完整路径，安装并启用。
-4. 按应用提示重新载入界面；如果没有重新载入入口，退出并重新打开 Harness。
-
-也可以直接下载或克隆本仓库，将包含 `package.json` 的仓库根目录作为插件目录添加。**使用已经编译好的插件无需安装 Node.js，也无需执行构建命令。**
+除了安装包，也可以直接下载或克隆本仓库，将包含 `package.json` 的仓库根目录作为插件目录添加。**使用已经编译好的插件无需安装 Node.js，也无需执行构建命令。**
 
 已在 Windows 版 DeepSeek Harness Desktop 验证；其他系统尚未实测。插件使用 Harness 的 Cordis 接口，依赖应用内提供的会话和聊天服务。
 

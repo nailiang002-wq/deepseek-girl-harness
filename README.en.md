@@ -1,20 +1,34 @@
 # DeepSeek Girl · Harness Desktop
 
-**A little companion who thinks with you, writes with you, and waits for rice with an iron basin.**
+**Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.3.0** · [Download](https://github.com/nailiang002-wq/deepseek-girl-harness/releases/tag/v1.3.0)
+English · [中文](README.md) · **v1.3.0**
 
-![Ten expressions of DeepSeek Girl](docs/images/overview.png)
+<p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
+
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.3.0/DeepSeekGirl-Harness-v1.3.0.zip"><strong>⬇ Download v1.3.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+
+**For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
 DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day.
 
-She lives inside the Harness window. Animations and interactions run locally, with no extra model calls.
+## Install in three steps
+
+![Download, add the plugin, and enable it: three installation steps](docs/images/install.png)
+
+1. **Download and extract** the ZIP above; find the `DshDeepSeekGirl` folder.
+2. In Harness, open **Plugins → Add plugin** and enter that folder’s full path.
+3. **Install and enable** the plugin, then reload when prompted. If your version has no reload option, quit and reopen Harness.
+
+Try feeding her by clicking the rice basin beside her. Click or right-click the character to find the basin hat and time greetings. Drag her to move, or use Ctrl + mouse wheel to resize.
+
+If installation fails, open an [issue](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) with your Harness version, operating system, and error message. Feedback about favorite motions, stuttering, and future interactions is welcome.
 
 ## Image and animation demos
 
-![Rice feeding, basin hat, and time greetings](docs/images/interactions.png)
+![Ten expressions of DeepSeek Girl](docs/images/overview.png)
 
-<p align="center"><img src="docs/images/feeding.gif" width="420" alt="Happy rice-feeding animation"></p>
+![Rice feeding, basin hat, and time greetings](docs/images/interactions.png)
 
 These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Six key poses per state are combined with continuous breathing, swaying, and a soft landing.
 
@@ -33,12 +47,7 @@ These previews use the same sprite atlases and motion rules as the plugin. They 
 
 There are **10 states**: idle, thinking, answering, success, error, dragging, landing, sleeping, asking for rice, and eating rice. Stopping a task or waiting for approval is not treated as successful completion.
 
-## Install
-
-1. Download `DeepSeekGirl-Harness-v1.3.0.zip` from [Releases](https://github.com/nailiang002-wq/deepseek-girl-harness/releases/tag/v1.3.0) and extract it.
-2. In Harness, open **Plugins → Add plugin**.
-3. Enter the full path to the extracted `DshDeepSeekGirl` folder, install it, and enable it.
-4. Reload the interface when prompted. If your version has no reload option, quit and reopen Harness.
+## Other installation options and compatibility
 
 Alternatively, download or clone this repository and add its root folder—the one containing `package.json`—as a plugin. **The prebuilt plugin does not require Node.js or a build step.**
 
