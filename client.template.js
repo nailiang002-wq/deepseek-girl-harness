@@ -15,6 +15,7 @@ window.__ModuleLoader__.load({
     function readPrefs(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{};}catch{return {};}}
     function writePrefs(value){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(value));window.dispatchEvent(new Event('deepseek-girl-preferences'));}catch{}}
     const CSS = `
+@font-face{font-family:'DSG Greeting Hand';src:url('__GREETING_FONT__') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .dsg-root{position:fixed;z-index:60;display:flex;flex-direction:column;align-items:center;user-select:none;font-family:inherit}
 .dsg-character{position:relative;width:100%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:grab;touch-action:none;border-radius:18px}
 .dsg-character:active{cursor:grabbing}.dsg-character:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary));outline-offset:2px}
@@ -35,8 +36,18 @@ __SPRITE_CSS__
 .dsg-food{display:flex;align-items:center;justify-content:center;width:40px;height:32px;flex-shrink:0;border:0;background:transparent;cursor:pointer;border-radius:8px;padding:1px}
 .dsg-food img{width:100%;height:100%;object-fit:contain;pointer-events:none}.dsg-food:hover{background:var(--dsw-alias-interactive-bg-hover);transform:scale(1.08)}.dsg-food:disabled{cursor:default;opacity:.55;transform:none}.dsg-food:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary))}
 .dsg-label{pointer-events:none;font-size:11px;line-height:22px;padding:0 9px;max-width:100%;white-space:nowrap;border-radius:12px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2)}
-.dsg-greeting{position:fixed;box-sizing:border-box;width:224px;max-width:calc(100vw - 16px);padding:11px 29px 11px 13px;border-radius:15px;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);box-shadow:0 4px 20px rgba(0,0,0,.12);font-size:13px;line-height:1.6;user-select:text}
-.dsg-greeting button{position:absolute;top:4px;right:4px;border:0;background:transparent;color:var(--dsw-alias-label-tertiary);font-size:17px;cursor:pointer;width:23px;height:23px;border-radius:6px}.dsg-greeting button:hover{background:var(--dsw-alias-interactive-bg-hover)}.dsg-greeting button:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary))}
+.dsg-greeting{position:fixed;box-sizing:border-box;padding:23px 36px 23px 25px;color:#355575;font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:18px;font-weight:400;line-height:1.65;letter-spacing:.3px;user-select:text;isolation:isolate;filter:drop-shadow(0 5px 7px rgba(44,67,95,.13));animation:dsg-note-arrive .18s ease-out both}
+.dsg-greeting-text{position:relative;z-index:1;display:block;overflow-y:auto;max-height:var(--dsg-text-max-height);overflow-wrap:anywhere;text-wrap:pretty;scrollbar-width:thin}
+.dsg-greeting-paper{position:absolute;inset:0;width:100%;height:100%;z-index:-1;overflow:visible;pointer-events:none}
+.dsg-greeting:before{content:'';position:absolute;inset:8px;z-index:0;border-radius:22px;background-image:radial-gradient(#b8a88b24 .65px,transparent .8px);background-size:5px 5px;opacity:.42;pointer-events:none}
+.dsg-greeting-tail{position:absolute;left:var(--dsg-tail-x);width:17px;height:17px;background:#fff9ee;z-index:0;transform:translateX(-50%) rotate(39deg);border:2px solid #83a6c7;border-radius:1px 4px 4px 5px;pointer-events:none}
+.dsg-greeting[data-side='above'] .dsg-greeting-tail{bottom:-6px;border-top:0;border-left:0}.dsg-greeting[data-side='below'] .dsg-greeting-tail{top:-6px;border-right:0;border-bottom:0}
+.dsg-greeting-doodle{position:absolute;bottom:10px;right:18px;width:36px;height:9px;color:#edb09d;pointer-events:none;opacity:.9}
+.dsg-greeting-mark{position:absolute;left:-3px;top:-6px;width:24px;height:24px;transform:rotate(-13deg);pointer-events:none}
+.dsg-greeting button{position:absolute;top:8px;right:8px;display:grid;place-items:center;border:0;background:transparent;color:#7195b7;cursor:pointer;width:26px;height:26px;border-radius:45% 55% 48% 52%;padding:5px;transition:background .12s,color .12s}.dsg-greeting button svg{width:16px;height:16px;pointer-events:none}.dsg-greeting button:hover{background:#e2edf3;color:#365e86}.dsg-greeting button:focus-visible{outline:2px dashed #416c98;outline-offset:2px}
+@keyframes dsg-note-arrive{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.dsg-root[data-motion-enabled='false'] .dsg-greeting{animation:none}.dsg-root[data-hidden='true'] .dsg-greeting{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.dsg-greeting{animation:none}}
 .dsg-menu{position:absolute;z-index:2;box-sizing:border-box;width:252px;max-width:calc(100vw - 16px);max-height:calc(100vh - 64px);overflow-y:auto;padding:12px;border-radius:14px;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);box-shadow:0 6px 28px rgba(0,0,0,.18);font-size:12px}
 .dsg-menu strong{display:block;margin-bottom:9px}.dsg-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.dsg-menu button{cursor:pointer;font:inherit;color:inherit;background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l2);border-radius:7px;padding:7px}.dsg-menu button:hover{color:var(--dsw-alias-state-business-primary)}.dsg-menu .dsg-wide{width:100%;margin-top:7px}.dsg-help{line-height:1.6;color:var(--dsw-alias-label-tertiary);margin:9px 0 0}
 `;
@@ -63,14 +74,22 @@ __SPRITE_CSS__
       const [sleeping,setSleeping]=React.useState(false),[celebrating,setCelebrating]=React.useState(false);
       const [eating,setEating]=React.useState(false),[begging,setBegging]=React.useState(false);
       const [greeting,setGreeting]=React.useState(null),[clockPlan,setClockPlan]=React.useState(()=>greetingFor(new Date()));
+      const [greetingHeight,setGreetingHeight]=React.useState(128);
       const [reduced,setReduced]=React.useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
       const [hidden,setHidden]=React.useState(()=>document.hidden===true);
       const root=React.useRef(null), drag=React.useRef(null), prefsRef=React.useRef(prefs);
+      const greetingRef=React.useRef(null);
       prefsRef.current=prefs;
       const feedingRef=React.useRef(false);
       const task=taskState(running,phase,status,sleeping,celebrating);
       const eligible=task==='idle'&&!eating&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
       const greetingReady=task==='idle'&&!eating&&!dragging&&!dropping&&!preview&&!menu;
+      (React.useLayoutEffect||React.useEffect)(()=>{
+        const element=greetingRef.current;if(!greeting||!greetingReady||!element?.getBoundingClientRect)return;
+        let live=true;const measure=()=>{if(!live)return;const height=Math.ceil(element.getBoundingClientRect().height);setGreetingHeight(previous=>previous===height?previous:height);};
+        measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);
+        document.fonts?.ready.then(measure);return()=>{live=false;observer?.disconnect();};
+      },[greeting?.period,greetingReady]);
       const seen=React.useRef(status?.endSeq),lastSession=React.useRef(sessionId);
       React.useEffect(()=>{if(lastSession.current!==sessionId){lastSession.current=sessionId;seen.current=status?.endSeq;setCelebrating(false);return;}
         if(status?.endSeq===undefined)return;if(seen.current===undefined){seen.current=status.endSeq;return;}
@@ -126,15 +145,23 @@ __SPRITE_CSS__
         window.addEventListener('pointerdown',close);window.addEventListener('keydown',close);return()=>{window.removeEventListener('pointerdown',close);window.removeEventListener('keydown',close);};},[menu]);
       const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible);
       const animate=prefs.animate!==false&&!reduced;
+      const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight);
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function feed(){if(feedingRef.current)return;feedingRef.current=true;setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
       function down(e){if(e.button!==0)return;setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
       function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;setDragging(true);}d.position=viewport({...d.start,x:d.start.x+dx,y:d.start.y+dy});
         if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.position.x-d.start.x}px,${d.position.y-d.start.y}px,0)`;});}
       function finish(e,cancel=false){const d=drag.current;if(!d||d.id!==e.pointerId)return;drag.current=null;if(d.raf)cancelAnimationFrame(d.raf);setDragging(false);if(d.moved){const next={...prefsRef.current,...d.position};if(root.current){root.current.style.left=next.x+'px';root.current.style.top=next.y+'px';root.current.style.transform='';}setPrefs(next);writePrefs(next);if(!cancel)setDropping(true);}else if(!cancel)setMenu(v=>!v);}
-      return h('div',{ref:root,className:'dsg-root',style:{left:prefs.x,top:prefs.y,width:prefs.size},'data-deepseek-girl-state':state,'data-hidden':String(hidden)},
-        greeting&&greetingReady&&h('div',{className:'dsg-greeting',role:'status','aria-live':'polite',style:{left:clamp(prefs.x+prefs.size/2-112,8,Math.max(8,window.innerWidth-232)),top:clamp(prefs.y>=108?prefs.y-100:prefs.y+prefs.size+34,42,Math.max(42,window.innerHeight-100))}},
-          h('span',null,t('greet_'+greeting.period)),h('button',{type:'button',title:t('closeGreeting'),'aria-label':t('closeGreeting'),onClick:()=>setGreeting(null)},'×')),
+      return h('div',{ref:root,className:'dsg-root',style:{left:prefs.x,top:prefs.y,width:prefs.size},'data-deepseek-girl-state':state,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
+        greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
+          h('span',{className:'dsg-greeting-text'},t('greet_'+greeting.period)),
+          h('svg',{className:'dsg-greeting-paper',viewBox:'0 0 360 160',preserveAspectRatio:'none','aria-hidden':true},
+            h('path',{d:'M30 5 C85 1 113 10 171 5 S274 7 328 4 Q354 5 353 28 C359 58 350 99 356 130 Q353 157 326 153 C272 159 234 148 179 153 S80 151 29 155 Q4 155 6 130 C1 96 10 65 4 29 Q5 6 30 5 Z',fill:'#fff9ee',stroke:'#83a6c7',strokeWidth:2.2,vectorEffect:'non-scaling-stroke',strokeLinecap:'round'}),
+            h('path',{d:'M29 8 C95 6 227 10 328 8 Q351 8 351 31 L352 130 Q351 151 327 150 C236 153 115 147 31 151 Q9 152 9 130 L8 30 Q7 9 29 8',fill:'none',stroke:'#bad0df',strokeWidth:1.1,strokeDasharray:'17 4 9 3',vectorEffect:'non-scaling-stroke',strokeLinecap:'round'})),
+          h('span',{className:'dsg-greeting-tail','aria-hidden':true}),
+          h('svg',{className:'dsg-greeting-mark',viewBox:'0 0 24 24','aria-hidden':true},h('path',{d:'M12 3 L15 8 L21 10 L16 14 L16 21 L11 17 L5 19 L6 12 L2 8 L9 8 Z',fill:'#f5d595',stroke:'#d7aa67',strokeWidth:1.6,strokeLinejoin:'round',strokeLinecap:'round'})),
+          h('svg',{className:'dsg-greeting-doodle',viewBox:'0 0 38 10','aria-hidden':true},h('path',{d:'M2 4 Q12 1 32 4 M5 8 Q16 5 36 6',fill:'none',stroke:'currentColor',strokeWidth:2.1,strokeLinecap:'round'})),
+          h('button',{type:'button',title:t('closeGreeting'),'aria-label':t('closeGreeting'),onClick:()=>setGreeting(null)},h('svg',{viewBox:'0 0 20 20','aria-hidden':true},h('path',{d:'M5 4 Q9 9 15 16 M15 5 Q10 10 4 15',fill:'none',stroke:'currentColor',strokeWidth:2.1,strokeLinecap:'round'})))),
         h('button',{className:'dsg-character',type:'button','aria-label':'DeepSeek 娘：'+t(state)+'；'+t('accessible'),title:t('hint'),
           onPointerDown:down,onPointerMove:move,onPointerUp:e=>finish(e),onPointerCancel:e=>finish(e,true),onLostPointerCapture:e=>finish(e,true),
           onContextMenu:e=>{e.preventDefault();setMenu(v=>!v);},onKeyDown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setMenu(v=>!v);}}},

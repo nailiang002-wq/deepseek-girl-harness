@@ -2,11 +2,11 @@
 
 **让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.3.0**
+[English](README.en.md) · 中文 · **v1.4.0**
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.3.0/DeepSeekGirl-Harness-v1.3.0.zip"><strong>⬇ 下载插件 v1.3.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.4.0/DeepSeekGirl-Harness-v1.4.0.zip"><strong>⬇ 下载插件 v1.4.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
@@ -70,6 +70,12 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 
 ## 时间问候
 
+**v1.4 的问候换上了手写字体和蜡笔小纸条气泡**：奶油色纸张、蓝色手绘双线、小星星和浅粉涂鸦。字体随插件离线提供，气泡根据实际文字高度调整位置；支持长句换行、窗口边缘避让、深色背景和减少动态效果。
+
+![手写问候气泡：早晨、深夜和英文长句](docs/images/greetings.png)
+
+以上为实际客户端在独立测试页面中的预览。
+
 | 本地时间 | 问候 |
 | --- | --- |
 | 05:00–10:59 | 早上好～今天也一起加油吧！ |
@@ -110,3 +116,5 @@ npm run test:browser
 ## 关于素材
 
 这是一个非官方角色插件，与 DeepSeek 官方无隶属关系。插画通过 ImageGen 根据项目创建者提供的角色参考生成，生成提示词见 [assets/generation-prompts.txt](assets/generation-prompts.txt)。原始参考图片未包含在仓库中。
+
+问候手写字体由 [Xiaolai v3.126](https://github.com/lxgw/kose-font) 子集化并更名为 DSG Greeting Hand，字体采用 SIL Open Font License 1.1；许可证与来源见 [assets/fonts](assets/fonts)。这是字体的许可，不代表整个插件或人物插画采用同一许可。

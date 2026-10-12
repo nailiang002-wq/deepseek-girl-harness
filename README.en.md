@@ -2,11 +2,11 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.3.0**
+English · [中文](README.md) · **v1.4.0**
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.3.0/DeepSeekGirl-Harness-v1.3.0.zip"><strong>⬇ Download v1.3.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.4.0/DeepSeekGirl-Harness-v1.4.0.zip"><strong>⬇ Download v1.4.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
@@ -70,6 +70,12 @@ Position, size, hat, and interaction preferences are stored locally. Disable or 
 
 ## Time greetings
 
+**Version 1.4 adds handwriting and a crayon-note greeting bubble**: cream paper, blue hand-drawn double lines, a small star, and pale peach doodles. The font is bundled for offline use. Placement follows the measured text height, with wrapping and viewport-edge handling, including dark backgrounds and reduced motion.
+
+![Handwritten greetings: morning, late night, and a longer English message](docs/images/greetings.png)
+
+These previews show the actual client in a standalone test page.
+
 | Local time | Greeting |
 | --- | --- |
 | 05:00–10:59 | Good morning! Let’s make it a lovely day. |
@@ -110,3 +116,5 @@ Browser checks cover all ten atlases, loop and one-shot endings, meal restarts, 
 ## Artwork
 
 This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt). The original reference image is not included.
+
+The greeting font is a renamed subset of [Xiaolai v3.126](https://github.com/lxgw/kose-font), distributed as DSG Greeting Hand under SIL Open Font License 1.1. See [assets/fonts](assets/fonts) for the license and provenance. This is the font’s license, not a license for the entire plugin or character artwork.
