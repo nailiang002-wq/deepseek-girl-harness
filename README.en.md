@@ -2,15 +2,17 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.5.0**
+English · [中文](README.md) · **v1.6.0**
+
+![Three outfits and the live wardrobe preview](docs/images/wardrobe.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.5.0/DeepSeekGirl-Harness-v1.5.0.zip"><strong>⬇ Download v1.5.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.6.0/DeepSeekGirl-Harness-v1.6.0.zip"><strong>⬇ Download v1.6.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
-DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day.
+DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. Version 1.6 adds a wardrobe with three complete outfits and a three-bite meal.
 
 ## Install in three steps
 
@@ -26,20 +28,21 @@ If installation fails, open an [issue](https://github.com/nailiang002-wq/deepsee
 
 ## Image and animation demos
 
-![Ten expressions of DeepSeek Girl](docs/images/overview.png)
+![Twelve expressions of DeepSeek Girl](docs/images/overview.png)
 
 ![Twelve-pose rice feeding, head pats, and playful pouts](docs/images/interactions.png)
 
 <p align="center"><img src="docs/images/petting.gif" width="420" alt="Head-pat and repeated-tap pout animation preview"></p>
 
-These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Rice feeding now has twelve key poses; other states have six. They are combined with continuous breathing, swaying, and a soft landing.
+These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Each outfit covers all twelve states, with 78 key poses per outfit (234 in total). A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. They are combined with continuous breathing, swaying, and a soft landing.
 
 ## What she does
 
 | Feature | Behavior |
 | --- | --- |
 | Task expressions | Thinks during reasoning, types while the answer streams, celebrates completion, and looks upset after an error |
-| White-rice feeding | Twelve poses show scooping, lifting the spoon, chewing, and a satisfied smile; returns to the task after about 4.4 seconds |
+| Wardrobe | Classic maid, blue & white hoodie, and star pajamas; preview first, then confirm to save |
+| White-rice feeding | Three full bites with scooping, lifting the spoon, chewing, and a satisfied smile; returns to the current task after about 13 seconds |
 | Head pats | Tap her head to see her close her eyes and nuzzle, with little floating hearts; also available in the menu |
 | Repeated taps | Three quick head taps trigger a brief playful pout, returning after about 1.8 seconds; head pats do not interrupt a meal |
 | Asking for rice | Holds out an empty basin while idle; feeding pauses requests for two minutes |
@@ -66,12 +69,19 @@ Tested on DeepSeek Harness Desktop for Windows. Other operating systems have not
 | Tap her head | Pet her; three quick taps make her pout |
 | Click her body / Right-click / Enter or Space | Open expressions and interactions |
 | Click the rice basin | Feed her |
+| Menu: Open wardrobe | Preview, apply, or cancel an outfit change |
 | Menu: Wear / Remove basin hat | Toggle the hat |
 | Menu: Say hello | Show the current time greeting manually |
 | Menu: Disable time greetings / idle rice requests | Turn off an automatic interaction |
 | Menu: Pause animation | Stop pose playback and continuous motion |
 
-Position, size, hat, and interaction preferences are stored locally. Disable or uninstall the plugin from the Harness plugin list.
+Outfit, position, size, hat, and interaction preferences are stored locally. Disable or uninstall the plugin from the Harness plugin list.
+
+## A small wardrobe
+
+Open the character menu and choose **Open wardrobe**. Select an outfit to preview it, then choose **Wear this outfit** to remember it. Cancel, Escape, or clicking outside restores the saved outfit. The selected card also shows a live preview when the panel covers the character.
+
+All three outfits cover thinking, answering, feeding, head pats, pouting, dragging, sleeping, and the other states. Changing clothes preserves the current task and meal progress, along with the basin hat and character position. The twelve meal poses now play three complete bites instead of stopping after one.
 
 ## Time greetings
 
@@ -93,7 +103,7 @@ Automatic greetings appear once per time period, including after a conversation 
 
 ## Animation and local behavior
 
-Version 1.3 replaces timer-driven image changes with predecoded transparent sprite atlases played by the browser. Continuous breathing and swaying do not rerender the whole character every frame. Drag updates are coalesced with the display refresh cycle. Version 1.5 uses twelve key poses for meals and six each for the new head-pat and pout states. These are not newly drawn illustrations for every display refresh.
+Version 1.3 replaces timer-driven image changes with predecoded transparent sprite atlases played by the browser. Continuous breathing and swaying do not rerender the whole character every frame. Drag updates are coalesced with the display refresh cycle. Version 1.6 reuses twelve meal poses across three bites and supplies every state in all three outfits. Decoded atlas caching is bounded, and switching outfits preserves the elapsed time of one-shot reactions. These are not newly drawn illustrations for every display refresh.
 
 The plugin observes task state without rewriting conversation content, sending external telemetry, or making extra model calls for feeding and greetings.
 
@@ -114,12 +124,12 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-`client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames` and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
+`client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames`, `assets/outfits`, and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
 
-Browser checks cover all twelve atlases, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
+Browser checks cover all 36 outfit/state atlases, wardrobe preview/apply/cancel and saved reloads, three-bite meal timing, switching outfits during a meal, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
 
 ## Artwork
 
-This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Original prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt), and the new v1.5 art prompts are in [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt). The original reference image is not included.
+This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Original prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt), and the new v1.5 art prompts are in [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt). Wardrobe prompts and selected source sheets are in [assets/outfits](assets/outfits). The original reference image is not included.
 
 The greeting font is a renamed subset of [Xiaolai v3.126](https://github.com/lxgw/kose-font), distributed as DSG Greeting Hand under SIL Open Font License 1.1. See [assets/fonts](assets/fonts) for the license and provenance. This is the font’s license, not a license for the entire plugin or character artwork.

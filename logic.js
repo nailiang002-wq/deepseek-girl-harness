@@ -2,6 +2,7 @@ export const STORAGE_KEY = 'deepseek-girl.preferences.v1';
 export const DEFAULT_SIZE = 144;
 export const MIN_SIZE = 64;
 export const MAX_SIZE = 320;
+export function normalizeOutfit(value) { return value === 'hoodie' || value === 'pajamas' ? value : 'maid'; }
 export function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 export function geometry(value, width, height) {
   const w = Number.isFinite(width) && width > 0 ? width : 1280;

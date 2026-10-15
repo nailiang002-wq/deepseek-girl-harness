@@ -1,9 +1,9 @@
 {
   "name": "@local/dsh-deepseek-girl",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
-  "description": "DeepSeek 娘：任务状态动画、白饭喂食、铁盆帽和按时间问候。",
+  "description": "DeepSeek 娘：三套服装、任务状态动画、多口白饭喂食、摸头、铁盆帽和手写时间问候。",
   "icon": "./icon.png",
   "exports": {
     ".": "./index.js",
@@ -41,8 +41,8 @@
   },
   "scripts": {
     "build": "node scripts/build.cjs",
-    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs",
-    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs"
+    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/artwork.cjs",
+    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs"
   },
   "engines": {
     "node": ">=20"
