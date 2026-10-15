@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {definition} from '../projection.js';
-import {geometry,greetingGeometry,latestAssistantKey,assistantPhase,taskState,visualState,canBeg,lastFedAt,FEED_QUIET_MS,greetingFor,greetingDue,rememberGreeting} from '../logic.js';
+import {geometry,greetingGeometry,latestAssistantKey,assistantPhase,taskState,visualState,patReaction,canBeg,lastFedAt,FEED_QUIET_MS,greetingFor,greetingDue,rememberGreeting} from '../logic.js';
 let checks=0;function test(name,fn){fn();checks++;console.log('PASS '+name);}
 test('durable turn start and outcomes',()=>{let state=definition.init();state=definition.apply(state,{type:'turn/start',seq:1,data:{turn:1}});assert.equal(state.outcome,'working');for(const [kind,outcome]of [['completed','completed'],['error','error'],['aborted','stopped'],['blocked','stopped'],['max-tokens','stopped']]){const end=definition.apply(state,{type:'turn/end',seq:2,data:{turn:1,reason:{kind}}});assert.equal(end.outcome,outcome);definition.stateSchema.parse(end);}assert.equal(definition.apply(state,{type:'request/usage'}),state);});
 test('reasoning stays thinking; body streams answering',()=>{assert.equal(assistantPhase({data:{status:'running',blocks:[{kind:'reasoning',text:'reason'}]}}),'thinking');assert.equal(assistantPhase({data:{status:'running',blocks:[{kind:'text',text:'answer'}]}}),'generating');assert.equal(assistantPhase({data:{status:'settled',blocks:[{kind:'text',text:'old answer'}]}}),'thinking');});
@@ -17,6 +17,13 @@ test('greeting stays on screen at corners, on narrow windows, and with taller te
   assert.equal(greetingGeometry({x:300,y:0,size:144},1280,800,120).side,'below');
 });
 test('feeding returns to current task and drag remains available',()=>{assert.equal(visualState('generating',false,false,null,true,false),'eating');assert.equal(visualState('generating',false,false,null,false,false),'generating');assert.equal(visualState('idle',true,false,null,true,true),'dragging');assert.equal(visualState('idle',false,false,null,false,true),'begging');assert.equal(visualState('error',false,false,null,false,true),'error');});
+test('three quick head taps pout, while slow taps and invalid history start fresh',()=>{
+  let result=patReaction([],10000);assert.equal(result.state,'petting');result=patReaction(result.taps,10300);assert.equal(result.state,'petting');result=patReaction(result.taps,10600);assert.equal(result.state,'pouting');assert.deepEqual(result.taps,[]);
+  assert.deepEqual(patReaction([1000,NaN,'bad',999999],10000),{state:'petting',taps:[10000]});
+  assert.equal(patReaction([10000],12500).taps.length,1);
+  assert.equal(visualState('generating',false,false,null,false,false,'petting'),'petting');assert.equal(visualState('generating',false,false,null,false,false,null),'generating');
+  assert.equal(visualState('idle',true,false,null,false,false,'pouting'),'dragging');assert.equal(visualState('thinking',false,false,null,true,false,'petting'),'eating');
+});
 test('begging pauses after food, never replaces active work, and can be disabled',()=>{const now=1000000;assert.equal(canBeg('idle',{},now),true);assert.equal(canBeg('thinking',{},now),false);assert.equal(canBeg('sleeping',{},now),false);assert.equal(canBeg('idle',{beggingEnabled:false},now),false);assert.equal(canBeg('idle',{lastFed:now-1000},now),false);assert.equal(canBeg('idle',{lastFed:now-FEED_QUIET_MS},now),true);assert.equal(lastFedAt(now+9999,now),0);assert.equal(lastFedAt('oops',now),0);});
 test('local greeting boundaries and future scheduling',()=>{
   for(const [hour,minute,period,nextHour] of [[0,0,'late',5],[4,59,'late',5],[5,0,'morning',11],[10,59,'morning',11],[11,0,'noon',14],[13,59,'noon',14],[14,0,'afternoon',18],[17,59,'afternoon',18],[18,0,'evening',23],[22,59,'evening',23],[23,0,'late',5]]){

@@ -2,11 +2,11 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.4.0**
+English · [中文](README.md) · **v1.5.0**
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.4.0/DeepSeekGirl-Harness-v1.4.0.zip"><strong>⬇ Download v1.4.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.5.0/DeepSeekGirl-Harness-v1.5.0.zip"><strong>⬇ Download v1.5.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
@@ -20,7 +20,7 @@ DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop*
 2. In Harness, open **Plugins → Add plugin** and enter that folder’s full path.
 3. **Install and enable** the plugin, then reload when prompted. If your version has no reload option, quit and reopen Harness.
 
-Try feeding her by clicking the rice basin beside her. Click or right-click the character to find the basin hat and time greetings. Drag her to move, or use Ctrl + mouse wheel to resize.
+Tap her head for a gentle pat; three quick taps make her pout. Click her body or right-click for the menu. Feed her using the rice basin, drag to move, or use Ctrl + mouse wheel to resize.
 
 If installation fails, open an [issue](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) with your Harness version, operating system, and error message. Feedback about favorite motions, stuttering, and future interactions is welcome.
 
@@ -28,16 +28,20 @@ If installation fails, open an [issue](https://github.com/nailiang002-wq/deepsee
 
 ![Ten expressions of DeepSeek Girl](docs/images/overview.png)
 
-![Rice feeding, basin hat, and time greetings](docs/images/interactions.png)
+![Twelve-pose rice feeding, head pats, and playful pouts](docs/images/interactions.png)
 
-These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Six key poses per state are combined with continuous breathing, swaying, and a soft landing.
+<p align="center"><img src="docs/images/petting.gif" width="420" alt="Head-pat and repeated-tap pout animation preview"></p>
+
+These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Rice feeding now has twelve key poses; other states have six. They are combined with continuous breathing, swaying, and a soft landing.
 
 ## What she does
 
 | Feature | Behavior |
 | --- | --- |
 | Task expressions | Thinks during reasoning, types while the answer streams, celebrates completion, and looks upset after an error |
-| White-rice feeding | Click the rice-filled iron basin; she happily scoops and chews, then returns to the current task after about four seconds |
+| White-rice feeding | Twelve poses show scooping, lifting the spoon, chewing, and a satisfied smile; returns to the task after about 4.4 seconds |
+| Head pats | Tap her head to see her close her eyes and nuzzle, with little floating hearts; also available in the menu |
+| Repeated taps | Three quick head taps trigger a brief playful pout, returning after about 1.8 seconds; head pats do not interrupt a meal |
 | Asking for rice | Holds out an empty basin while idle; feeding pauses requests for two minutes |
 | Basin hat | Toggle an upside-down silver basin that moves with her |
 | Pick up and drop | Gently swings while dragged and settles when released; remembers her position |
@@ -45,7 +49,7 @@ These previews use the same sprite atlases and motion rules as the plugin. They 
 | Sleep | Rests after 90 seconds without input and wakes on mouse or keyboard activity |
 | Animation controls | Preview expressions, pause motion, respect reduced-motion settings, and pause visual playback while the window is hidden |
 
-There are **10 states**: idle, thinking, answering, success, error, dragging, landing, sleeping, asking for rice, and eating rice. Stopping a task or waiting for approval is not treated as successful completion.
+There are **12 states**: idle, thinking, answering, success, error, dragging, landing, sleeping, asking for rice, eating rice, enjoying head pats, and pouting. Stopping a task or waiting for approval is not treated as successful completion.
 
 ## Other installation options and compatibility
 
@@ -59,7 +63,8 @@ Tested on DeepSeek Harness Desktop for Windows. Other operating systems have not
 | --- | --- |
 | Drag the character | Move her |
 | Ctrl + mouse wheel | Resize her |
-| Click or right-click the character | Open expressions and interactions |
+| Tap her head | Pet her; three quick taps make her pout |
+| Click her body / Right-click / Enter or Space | Open expressions and interactions |
 | Click the rice basin | Feed her |
 | Menu: Wear / Remove basin hat | Toggle the hat |
 | Menu: Say hello | Show the current time greeting manually |
@@ -84,11 +89,11 @@ These previews show the actual client in a standalone test page.
 | 18:00–22:59 | Good evening! You’ve worked hard. Remember to relax. |
 | 23:00–04:59 the next day | It’s getting late. Take care of yourself and get some rest. |
 
-Automatic greetings appear once per time period, including after a conversation switch or app restart. The hours before and after midnight share one late-night period. Greetings wait until she is idle if you are working, feeding her, dragging, previewing a state, or using the menu. Bubbles disappear after about ten seconds and have a close button.
+Automatic greetings appear once per time period, including after a conversation switch or app restart. The hours before and after midnight share one late-night period. Greetings wait until she is idle if you are working, feeding her, petting her, triggering a pout, dragging, previewing a state, or using the menu. Bubbles disappear after about ten seconds and have a close button.
 
 ## Animation and local behavior
 
-Version 1.3 replaces timer-driven image changes with predecoded transparent sprite atlases played by the browser. Continuous breathing and swaying do not rerender the whole character every frame. Drag updates are coalesced with the display refresh cycle. Expressions and hand gestures still use six original key poses; this is not a newly drawn animation frame for every display frame.
+Version 1.3 replaces timer-driven image changes with predecoded transparent sprite atlases played by the browser. Continuous breathing and swaying do not rerender the whole character every frame. Drag updates are coalesced with the display refresh cycle. Version 1.5 uses twelve key poses for meals and six each for the new head-pat and pout states. These are not newly drawn illustrations for every display refresh.
 
 The plugin observes task state without rewriting conversation content, sending external telemetry, or making extra model calls for feeding and greetings.
 
@@ -111,10 +116,10 @@ npm run test:browser
 
 `client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames` and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
 
-Browser checks cover all ten atlases, loop and one-shot endings, meal restarts, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
+Browser checks cover all twelve atlases, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
 
 ## Artwork
 
-This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt). The original reference image is not included.
+This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Original prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt), and the new v1.5 art prompts are in [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt). The original reference image is not included.
 
 The greeting font is a renamed subset of [Xiaolai v3.126](https://github.com/lxgw/kose-font), distributed as DSG Greeting Hand under SIL Open Font License 1.1. See [assets/fonts](assets/fonts) for the license and provenance. This is the font’s license, not a license for the entire plugin or character artwork.

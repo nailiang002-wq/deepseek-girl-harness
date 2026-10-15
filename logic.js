@@ -52,8 +52,12 @@ export function canBeg(task, preferences, now) {
   return task === 'idle' && preferences?.beggingEnabled !== false &&
     now - lastFedAt(preferences?.lastFed, now) >= FEED_QUIET_MS;
 }
-export function visualState(task, dragging, dropping, preview, eating = false, begging = false) {
-  return dragging ? 'dragging' : dropping ? 'drop' : preview || (eating ? 'eating' : begging && task === 'idle' ? 'begging' : task);
+export function visualState(task, dragging, dropping, preview, eating = false, begging = false, reaction = null) {
+  return dragging ? 'dragging' : dropping ? 'drop' : preview || (eating ? 'eating' : reaction || (begging && task === 'idle' ? 'begging' : task));
+}
+export function patReaction(previous, now) {
+  const taps=(Array.isArray(previous)?previous:[]).filter(time=>Number.isFinite(time)&&time>=0&&time<=now&&now-time<=2400).slice(-2).concat(now);
+  return taps.length===3?{state:'pouting',taps:[]}:{state:'petting',taps};
 }
 export function greetingFor(date) {
   const hour = date.getHours();

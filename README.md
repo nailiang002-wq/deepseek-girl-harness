@@ -2,11 +2,11 @@
 
 **让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.4.0**
+[English](README.en.md) · 中文 · **v1.5.0**
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.4.0/DeepSeekGirl-Harness-v1.4.0.zip"><strong>⬇ 下载插件 v1.4.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.5.0/DeepSeekGirl-Harness-v1.5.0.zip"><strong>⬇ 下载插件 v1.5.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
@@ -20,7 +20,7 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 2. 在 Harness 打开 **插件 → 添加插件**，填写这个文件夹的完整路径。
 3. **安装并启用**，按提示重新载入界面；没有重新载入入口时，退出并重新打开 Harness。
 
-第一次使用：点击角色旁边的白饭盆喂饭；点击或右键角色打开菜单，试试铁盆帽和时间问候。按住角色拖动，Ctrl + 滚轮调整大小。
+第一次使用：轻点头部摸摸头，快速点三次会鼓脸；点击身体或右键打开菜单。点击旁边的白饭盆喂饭，按住角色拖动，Ctrl + 滚轮调整大小。
 
 遇到安装问题，请到 [Issues](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) 告诉我你的 Harness 版本、系统和报错内容。也欢迎反馈最喜欢的动作、哪里卡顿或下一步想加入的互动。
 
@@ -28,16 +28,20 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 
 ![DeepSeek 娘的十种表情](docs/images/overview.png)
 
-![吃白饭、铁盆帽与时间问候](docs/images/interactions.png)
+![十二帧吃饭、摸头和鼓脸](docs/images/interactions.png)
 
-演示使用与插件相同的图集和运动规则生成，不包含个人聊天记录。角色保留六个关键姿势，叠加连续呼吸、轻晃和落地缓冲。
+<p align="center"><img src="docs/images/petting.gif" width="420" alt="轻点头部摸头，连续轻点后鼓脸的动画预览"></p>
+
+演示使用与插件相同的图集和运动规则生成，不包含个人聊天记录。吃饭细化为十二个姿势，其余状态各六个，叠加连续呼吸、轻晃和落地缓冲。
 
 ## 她会做什么
 
 | 功能 | 表现 |
 | --- | --- |
 | 跟随任务 | 推理时思考，正文输出时认真回答，完成后庆祝，出错时露出委屈表情 |
-| 喂一盆白饭 | 点击装着白饭的铁盆，她会开心地舀饭、咀嚼，约 4 秒后回到当前任务状态 |
+| 喂一盆白饭 | 十二个姿势依次舀饭、送到嘴边、咀嚼和满足微笑，约 4.4 秒后恢复当前任务状态 |
+| 摸摸头 | 轻点头部会眯眼轻蹭，飘出小爱心；也可以从菜单触发 |
+| 连续轻戳 | 快速点头部三次会短暂鼓脸，约 1.8 秒后恢复；吃饭时不被摸头打断 |
 | 捧盆求饭 | 待机时举着空铁盆等你投喂；吃饱后两分钟内不再求饭 |
 | 铁盆帽 | 可以戴上、摘下倒扣的银色铁盆；帽子会和角色一起动 |
 | 拎起与落地 | 拖动时轻轻摇晃，松手后播放落地动作，并记住新位置 |
@@ -45,7 +49,7 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 | 休息 | 空闲 90 秒后闭眼休息；有鼠标或键盘活动时醒来 |
 | 动画控制 | 可预览表情、暂停动画；支持系统减少动态效果设置，窗口隐藏时暂停视觉播放 |
 
-共有 **10 种状态**：待机、思考、回答、完成、错误、拖动、落地、休息、捧盆求饭、开心吃饭。手动停止任务或等待授权不会被当作成功完成。
+共有 **12 种状态**：待机、思考、回答、完成、错误、拖动、落地、休息、捧盆求饭、开心吃饭、被摸头、鼓脸。手动停止任务或等待授权不会被当作成功完成。
 
 ## 其他安装方式与兼容性
 
@@ -59,7 +63,8 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 | --- | --- |
 | 按住角色拖动 | 移动角色 |
 | Ctrl + 滚轮 | 调整大小 |
-| 点击或右键角色 | 打开表情与互动菜单 |
+| 轻点头部 | 摸头；快速点三次会鼓脸 |
+| 点击身体 / 右键角色 / Enter 或空格 | 打开表情与互动菜单 |
 | 点击旁边的白饭盆 | 喂饭 |
 | 菜单：戴上 / 摘下铁盆帽 | 切换帽子 |
 | 菜单：和我打个招呼 | 手动触发当前时段的问候 |
@@ -84,11 +89,11 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 | 18:00–22:59 | 晚上好～辛苦啦，记得放松一下。 |
 | 23:00–次日 04:59 | 已经很晚啦～熬夜也要注意身体，记得休息哦。 |
 
-每个时段只自动问候一次，切换会话或重新打开应用不会反复提醒。午夜前后属于同一个深夜时段。工作、吃饭、拖动、预览表情或打开菜单时，问候会等到空闲再显示；气泡约 10 秒后消失，也可以点击 × 关闭。
+每个时段只自动问候一次，切换会话或重新打开应用不会反复提醒。午夜前后属于同一个深夜时段。工作、吃饭、摸头、鼓脸、拖动、预览表情或打开菜单时，问候会等到空闲再显示；气泡约 10 秒后消失，也可以点击 × 关闭。
 
 ## 动画与本地运行
 
-v1.3 将逐张切图的计时器改为预先解码的透明图集，由浏览器播放。连续呼吸和摆动不需要每帧刷新整个挂件；拖动按屏幕刷新节奏合并位置更新。角色的手势和表情仍由原来的六个关键姿势组成，并非逐帧重新绘制的人物动画。
+v1.3 将逐张切图的计时器改为预先解码的透明图集，由浏览器播放。连续呼吸和摆动不需要每帧刷新整个挂件；拖动按屏幕刷新节奏合并位置更新。v1.5 的吃饭图集为十二个关键姿势，新增的摸头和鼓脸各六个姿势；它们不等于每次屏幕刷新都新增一张插画。
 
 插件读取当前会话的任务状态，不改写聊天内容，不发送外部上报，也不会为了喂饭或问候额外调用模型。
 
@@ -111,10 +116,10 @@ npm run test:browser
 
 `client.template.js` 是客户端模板，`scripts/build.cjs` 将 `assets/frames` 与 `assets/props` 编译成 `client.js`。`logic.js` 负责状态和时间规则，`projection.js` 负责正常完成、错误和停止的区分。测试临时文件写入 `.cache/`。
 
-浏览器检查覆盖十种图集的位置、循环与单次播放、吃饭重播、帽子、暂停、减少动态效果、隐藏窗口和拖动保存。独立测试页面中，循环播放约 3 秒时角色组件的刷新由旧版 10 次降至新版 0 次；这不代表所有机器或应用负载下都能保持固定帧率。
+浏览器检查覆盖十二种图集的位置、循环与单次播放、吃饭重播、头部 / 身体点击、连续轻点、触屏、菜单键盘操作、帽子、暂停、减少动态效果、隐藏窗口和拖动保存。独立测试页面中，循环播放约 3 秒时角色组件的刷新由旧版 10 次降至新版 0 次；这不代表所有机器或应用负载下都能保持固定帧率。
 
 ## 关于素材
 
-这是一个非官方角色插件，与 DeepSeek 官方无隶属关系。插画通过 ImageGen 根据项目创建者提供的角色参考生成，生成提示词见 [assets/generation-prompts.txt](assets/generation-prompts.txt)。原始参考图片未包含在仓库中。
+这是一个非官方角色插件，与 DeepSeek 官方无隶属关系。插画通过 ImageGen 根据项目创建者提供的角色参考生成，原始提示词见 [assets/generation-prompts.txt](assets/generation-prompts.txt)，v1.5 的新插画提示词见 [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt)。原始参考图片未包含在仓库中。
 
 问候手写字体由 [Xiaolai v3.126](https://github.com/lxgw/kose-font) 子集化并更名为 DSG Greeting Hand，字体采用 SIL Open Font License 1.1；许可证与来源见 [assets/fonts](assets/fonts)。这是字体的许可，不代表整个插件或人物插画采用同一许可。

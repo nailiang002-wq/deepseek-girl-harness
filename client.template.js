@@ -5,8 +5,8 @@ window.__ModuleLoader__.load({
     const ASSETS = __ASSETS__;
     const PROPS = __PROPS__;
     __LOGIC__
-    const STATES = ["idle","thinking","generating","success","error","dragging","drop","sleeping","begging","eating"];
-    const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"点击 / 右键：表情菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"点白饭盆喂饭 · 角色可拖动 · Ctrl + 滚轮缩放。铁盆帽可开关；喂饱后两分钟不再求饭。","accessible":"点击查看表情，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Click / right click: expressions · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Click the rice basin to feed · Drag to move · Ctrl + wheel to resize. Toggle her basin hat; feeding pauses rice requests for two minutes.","accessible":"Click for expressions, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting"}};
+    const STATES = ["idle","thinking","generating","success","error","dragging","drop","sleeping","begging","eating","petting","pouting"];
+    const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"轻点头部：摸头 · 身体 / 右键：菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"轻点头部摸摸头，快速点三次会鼓脸。身体点击 / 右键打开菜单。点白饭盆喂饭；拖动移动，Ctrl + 滚轮缩放。帽子可开关，喂饱后两分钟不再求饭。","accessible":"轻点头部摸头，身体点击或右键打开菜单，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡","petting":"被摸头","pouting":"鼓脸啦","pet":"摸摸头"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Tap head: pet · Body / right click: menu · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Tap her head for a pat; three quick taps make her pout. Click her body or right-click for the menu. Feed with the rice basin, drag to move, Ctrl + wheel to resize. Toggle her hat; feeding pauses rice requests for two minutes.","accessible":"Tap her head to pet, click her body or right-click for the menu, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting","petting":"Enjoying head pats","pouting":"Pouting","pet":"Pat her head"}};
     let docks = 0;
     const listeners = new Set();
     const presence = { subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);}, snapshot(){return docks>0;} };
@@ -24,12 +24,18 @@ window.__ModuleLoader__.load({
 .dsg-art{height:100%;display:block;max-width:none;pointer-events:none;will-change:transform;animation-timing-function:steps(1,end);animation-fill-mode:forwards}
 .dsg-motion[data-motion="thinking"]{animation:dsg-sway 2.6s ease-in-out infinite}.dsg-motion[data-motion="generating"]{animation:dsg-breathe 1.8s ease-in-out infinite}.dsg-motion[data-motion="sleeping"]{animation:dsg-breathe 4.4s ease-in-out infinite}
 .dsg-motion[data-motion="begging"]{animation:dsg-sway 2s ease-in-out infinite}.dsg-motion[data-motion="eating"]{animation:dsg-breathe .9s ease-in-out infinite}.dsg-motion[data-motion="dragging"]{transform-origin:50% 20%;animation:dsg-swing 1.5s ease-in-out infinite}.dsg-motion[data-motion="success"]{animation:dsg-happy 1s ease-in-out infinite}.dsg-motion[data-motion="drop"]{animation:dsg-land .6s ease-out both}
+.dsg-motion[data-motion="petting"]{animation:dsg-nuzzle 1.8s ease-in-out both}.dsg-motion[data-motion="pouting"]{animation:dsg-pout 1.8s ease-in-out both}
 .dsg-motion[data-animate="false"]{animation:none;will-change:auto}.dsg-root[data-hidden="true"] .dsg-motion,.dsg-root[data-hidden="true"] .dsg-art{animation-play-state:paused}
 @keyframes dsg-breathe{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-1%,0) scale(1.008)}}
 @keyframes dsg-sway{0%,100%{transform:translate3d(0,0,0) rotate(-.7deg)}50%{transform:translate3d(0,-1.2%,0) rotate(.7deg)}}
 @keyframes dsg-swing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 @keyframes dsg-happy{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-3%,0) rotate(.6deg)}}
 @keyframes dsg-land{0%{transform:translate3d(0,-3%,0) scale(1.01)}40%{transform:translate3d(0,1%,0) scale(1.02,.98)}100%{transform:translate3d(0,0,0) scale(1)}}
+@keyframes dsg-nuzzle{0%,100%{transform:rotate(0)}35%{transform:translate3d(-1%,-1%,0) rotate(-2deg)}70%{transform:translate3d(1%,-.5%,0) rotate(1.5deg)}}
+@keyframes dsg-pout{0%,100%{transform:translate3d(0,0,0)}35%{transform:translate3d(0,-1%,0) rotate(-1deg)}65%{transform:rotate(1deg)}}
+.dsg-affection{position:absolute;inset:0;overflow:visible;pointer-events:none}.dsg-heart{position:absolute;width:13%;height:13%;left:12%;top:17%;color:#e7a2b7;opacity:0;animation:dsg-heart-rise 1.3s ease-out both}.dsg-heart:nth-child(2){left:auto;right:9%;top:26%;width:10%;animation-delay:.15s}.dsg-heart:nth-child(3){left:22%;top:9%;width:8%;animation-delay:.3s}
+@keyframes dsg-heart-rise{0%{opacity:0;transform:translate3d(0,5px,0) scale(.75)}20%{opacity:.9}100%{opacity:0;transform:translate3d(1px,-18px,0) scale(1.08)}}
+.dsg-root[data-motion-enabled='false'] .dsg-heart{animation:none;opacity:.65}.dsg-root[data-hidden='true'] .dsg-heart{animation-play-state:paused}
 __SPRITE_CSS__
 .dsg-hat{position:absolute;left:20%;top:11%;width:60%;height:auto;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));transform:rotate(-5deg);transform-origin:50% 80%}
 .dsg-footer{display:flex;align-items:center;justify-content:center;gap:3px;height:32px;max-width:100%}
@@ -65,7 +71,7 @@ __SPRITE_CSS__
       React.useEffect(()=>{let live=true;warmAsset(state).then(ok=>{if(live)setReady({state,ok});});return()=>{live=false;};},[state]);
       const play=animate&&ready?.state===state&&ready.ok,asset=ASSETS[state];
       return h('span',{className:'dsg-clip'},h('img',{key:state+':'+play,className:'dsg-art',src:play?asset.strip:asset.still,alt:label,draggable:false,
-        style:{width:play?'600%':'100%',animationName:play?'dsg-frames-'+state:'none',animationDuration:asset.duration+'ms',animationIterationCount:asset.loop?'infinite':1}}));
+        style:{width:play?asset.count*100+'%':'100%',animationName:play?'dsg-frames-'+state:'none',animationDuration:asset.duration+'ms',animationIterationCount:asset.loop?'infinite':1}}));
     }
     function Mascot({running=false,phase='thinking',status,sessionId='',t=key=>DICTIONARIES.zh[key]||key}){
       const [prefs,setPrefs]=React.useState(()=>({...readPrefs(),...viewport(readPrefs())}));
@@ -73,6 +79,7 @@ __SPRITE_CSS__
       const [preview,setPreview]=React.useState(null),[menu,setMenu]=React.useState(false);
       const [sleeping,setSleeping]=React.useState(false),[celebrating,setCelebrating]=React.useState(false);
       const [eating,setEating]=React.useState(false),[begging,setBegging]=React.useState(false);
+      const [touch,setTouch]=React.useState(null);
       const [greeting,setGreeting]=React.useState(null),[clockPlan,setClockPlan]=React.useState(()=>greetingFor(new Date()));
       const [greetingHeight,setGreetingHeight]=React.useState(128);
       const [reduced,setReduced]=React.useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -81,9 +88,10 @@ __SPRITE_CSS__
       const greetingRef=React.useRef(null);
       prefsRef.current=prefs;
       const feedingRef=React.useRef(false);
+      const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
       const task=taskState(running,phase,status,sleeping,celebrating);
-      const eligible=task==='idle'&&!eating&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
-      const greetingReady=task==='idle'&&!eating&&!dragging&&!dropping&&!preview&&!menu;
+      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
+      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu;
       (React.useLayoutEffect||React.useEffect)(()=>{
         const element=greetingRef.current;if(!greeting||!greetingReady||!element?.getBoundingClientRect)return;
         let live=true;const measure=()=>{if(!live)return;const height=Math.ceil(element.getBoundingClientRect().height);setGreetingHeight(previous=>previous===height?previous:height);};
@@ -100,6 +108,7 @@ __SPRITE_CSS__
       React.useEffect(()=>{if(!dropping)return;const timer=setTimeout(()=>setDropping(false),ASSETS.drop.delays.reduce((a,b)=>a+b,0));return()=>clearTimeout(timer);},[dropping]);
       React.useEffect(()=>{if(!preview)return;const timer=setTimeout(()=>setPreview(null),3500);return()=>clearTimeout(timer);},[preview]);
       React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{feedingRef.current=false;setEating(false);},ASSETS.eating.delays.reduce((a,b)=>a+b,0));return()=>clearTimeout(timer);},[eating]);
+      React.useEffect(()=>{if(!touch)return;const timer=setTimeout(()=>{touchRef.current=null;touchTaps.current=[];setTouch(null);},ASSETS[touch.kind].duration);return()=>clearTimeout(timer);},[touch]);
       React.useEffect(()=>{
         const visibility=()=>setHidden(document.hidden===true);document.addEventListener('visibilitychange',visibility);
         return()=>document.removeEventListener('visibilitychange',visibility);
@@ -143,15 +152,17 @@ __SPRITE_CSS__
       },[]);
       React.useEffect(()=>{if(!menu)return;const close=e=>{if(e.type==='keydown'&&e.key!=='Escape')return;if(e.type==='pointerdown'&&root.current?.contains(e.target))return;setMenu(false);};
         window.addEventListener('pointerdown',close);window.addEventListener('keydown',close);return()=>{window.removeEventListener('pointerdown',close);window.removeEventListener('keydown',close);};},[menu]);
-      const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible);
+      const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible,touch?.kind);
       const animate=prefs.animate!==false&&!reduced;
       const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight);
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
-      function feed(){if(feedingRef.current)return;feedingRef.current=true;setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
+      function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
+      function pet(){if(feedingRef.current||touchRef.current?.kind==='pouting')return;const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
+      function feed(){if(feedingRef.current)return;feedingRef.current=true;stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
       function down(e){if(e.button!==0)return;setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
-      function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;setDragging(true);}d.position=viewport({...d.start,x:d.start.x+dx,y:d.start.y+dy});
+      function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}d.position=viewport({...d.start,x:d.start.x+dx,y:d.start.y+dy});
         if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.position.x-d.start.x}px,${d.position.y-d.start.y}px,0)`;});}
-      function finish(e,cancel=false){const d=drag.current;if(!d||d.id!==e.pointerId)return;drag.current=null;if(d.raf)cancelAnimationFrame(d.raf);setDragging(false);if(d.moved){const next={...prefsRef.current,...d.position};if(root.current){root.current.style.left=next.x+'px';root.current.style.top=next.y+'px';root.current.style.transform='';}setPrefs(next);writePrefs(next);if(!cancel)setDropping(true);}else if(!cancel)setMenu(v=>!v);}
+      function finish(e,cancel=false){const d=drag.current;if(!d||d.id!==e.pointerId)return;drag.current=null;if(d.raf)cancelAnimationFrame(d.raf);setDragging(false);if(d.moved){const next={...prefsRef.current,...d.position};if(root.current){root.current.style.left=next.x+'px';root.current.style.top=next.y+'px';root.current.style.transform='';}setPrefs(next);writePrefs(next);if(!cancel)setDropping(true);}else if(!cancel){const bounds=e.currentTarget.getBoundingClientRect();if(d.y-bounds.top<=bounds.height*.68)pet();else{stopTouch();setMenu(v=>!v);}}}
       return h('div',{ref:root,className:'dsg-root',style:{left:prefs.x,top:prefs.y,width:prefs.size},'data-deepseek-girl-state':state,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
         greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
           h('span',{className:'dsg-greeting-text'},t('greet_'+greeting.period)),
@@ -164,13 +175,15 @@ __SPRITE_CSS__
           h('button',{type:'button',title:t('closeGreeting'),'aria-label':t('closeGreeting'),onClick:()=>setGreeting(null)},h('svg',{viewBox:'0 0 20 20','aria-hidden':true},h('path',{d:'M5 4 Q9 9 15 16 M15 5 Q10 10 4 15',fill:'none',stroke:'currentColor',strokeWidth:2.1,strokeLinecap:'round'})))),
         h('button',{className:'dsg-character',type:'button','aria-label':'DeepSeek 娘：'+t(state)+'；'+t('accessible'),title:t('hint'),
           onPointerDown:down,onPointerMove:move,onPointerUp:e=>finish(e),onPointerCancel:e=>finish(e,true),onLostPointerCapture:e=>finish(e,true),
-          onContextMenu:e=>{e.preventDefault();setMenu(v=>!v);},onKeyDown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setMenu(v=>!v);}}},
-          h('span',{className:'dsg-motion','data-motion':state,'data-animate':String(animate)},h(SpriteArt,{key:state+':'+(preview?'preview':eating?'meal':'task'),state,animate,label:t(state)}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false}))),
+          onContextMenu:e=>{e.preventDefault();stopTouch();setMenu(v=>!v);},onKeyDown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();stopTouch();setMenu(v=>!v);}}},
+          h('span',{className:'dsg-motion','data-motion':state,'data-animate':String(animate)},h(SpriteArt,{key:state+':'+(preview?'preview':eating?'meal':touch?'touch-'+touch.sequence:'task'),state,animate,label:t(state)}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false})),
+          state==='petting'&&h('span',{className:'dsg-affection',key:touch?.sequence||'preview','aria-hidden':true},[0,1,2].map(index=>h('svg',{className:'dsg-heart',key:index,viewBox:'0 0 24 24'},h('path',{d:'M12 20 C4 14 1 10 3 6 C5 2 10 3 12 7 C14 3 19 2 21 6 C23 10 20 14 12 20Z',fill:'currentColor'}))))),
         h('div',{className:'dsg-footer'},h('span',{className:'dsg-label'},(preview?t('preview'):'')+t(state)),
           h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating,title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
         menu&&h('div',{className:'dsg-menu',role:'dialog','aria-label':t('menu'),style:{left:clamp(-42,8-prefs.x,window.innerWidth-prefs.x-260),top:clamp(prefs.y-560,42,Math.max(42,window.innerHeight-616))-prefs.y}},
           h('strong',null,t('menu')),h('div',{className:'dsg-grid'},STATES.map(key=>h('button',{key,type:'button',onClick:()=>{setPreview(key);setMenu(false);}},t(key)))),
           h('button',{className:'dsg-wide',type:'button',disabled:eating,onClick:feed},t('feed')),
+          h('button',{className:'dsg-wide',type:'button',disabled:eating||touch?.kind==='pouting',onClick:pet},t('pet')),
           h('button',{className:'dsg-wide',type:'button','aria-pressed':prefs.hat===true,onClick:()=>writePrefs({...prefsRef.current,hat:!prefs.hat})},prefs.hat?t('hatOff'):t('hatOn')),
           h('button',{className:'dsg-wide',type:'button','aria-pressed':prefs.beggingEnabled!==false,onClick:()=>writePrefs({...prefsRef.current,beggingEnabled:prefs.beggingEnabled===false})},prefs.beggingEnabled===false?t('begOn'):t('begOff')),
           h('button',{className:'dsg-wide',type:'button',onClick:greet},t('greetNow')),
