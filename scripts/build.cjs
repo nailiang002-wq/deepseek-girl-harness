@@ -34,7 +34,7 @@ async function buildOutfit(outfit){
  const font=fs.readFileSync(path.join(source,'fonts/greeting-hand.woff2'));
  const template=fs.readFileSync(path.join(root,'client.template.js'),'utf8');
  if(!template.includes('__OUTFIT_ASSETS__'))throw Error('Wardrobe client template is required');
- const code=template.replace('__ASSETS__',JSON.stringify(all.maid)).replace('__OUTFIT_ASSETS__',JSON.stringify({hoodie:all.hoodie,pajamas:all.pajamas})).replace('__PROPS__',JSON.stringify(props)).replace('__GREETING_FONT__','data:font/woff2;base64,'+font.toString('base64')).replace('__SPRITE_CSS__',spriteCSS).replace('__LOGIC__',fs.readFileSync(path.join(root,'logic.js'),'utf8').replace(/export /g,''));
+ const code=template.replace('__ASSETS__',()=>JSON.stringify(all.maid)).replace('__OUTFIT_ASSETS__',()=>JSON.stringify({hoodie:all.hoodie,pajamas:all.pajamas})).replace('__PROPS__',()=>JSON.stringify(props)).replace('__GREETING_FONT__',()=>'data:font/woff2;base64,'+font.toString('base64')).replace('__SPRITE_CSS__',()=>spriteCSS).replace('__LOGIC__',()=>fs.readFileSync(path.join(root,'logic.js'),'utf8').replace(/export /g,'')).replace('__FINANCE__',()=>fs.readFileSync(path.join(root,'finance-protocol.js'),'utf8').replace(/export /g,'')+'\n'+fs.readFileSync(path.join(root,'finance-client.js'),'utf8'));
  if(/__[A-Z_]+__/.test(code))throw Error('Unresolved build placeholder');
  fs.writeFileSync(path.join(root,'client.js'),code);
  fs.mkdirSync(path.join(root,'.cache'),{recursive:true});

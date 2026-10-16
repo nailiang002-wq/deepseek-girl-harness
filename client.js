@@ -92,10 +92,126 @@ function rememberGreeting(previous, key, now) {
   return Object.fromEntries([[key,now],...entries]);
 }
 
+    // A deliberately small, read-only Remote surface. No credentials or session content cross it.
+function parseFinanceRequest(value) {
+  const offset = value?.timezoneOffsetSeconds;
+  if (!Number.isInteger(offset) || Math.abs(offset) > 14 * 3600 || offset % 60 !== 0) throw new TypeError('Invalid local timezone offset');
+  return {timezoneOffsetSeconds: offset};
+}
+const FINANCE_REMOTE = {
+  package: '@local/dsh-deepseek-girl-finance',
+  descriptors: [{
+    id: '@local/dsh-deepseek-girl-finance#deepseekGirlFinance/summary',
+    service: 'deepseekGirlFinance', namespace: 'deepseekGirlFinance', method: 'summary',
+    invocation: {kind: 'direct'},
+    parameters: [{name: 'request', wire: 'request', source: 'json', codec: {
+      mode: 'strict', typeSymbol: '@local/dsh-deepseek-girl-finance#FinanceRequest',
+      create: () => ({parse: parseFinanceRequest}),
+    }}],
+    result: {mode: 'src-json'},
+  }],
+};
+
+// Embedded verbatim in the browser bundle. Financial values stay in memory only.
+const FINANCE_EMPTY = Object.freeze({account:Object.freeze({status:'unavailable',wallets:[],updatedAt:null}),summary:Object.freeze({status:'unavailable'}),refreshing:false});
+const FINANCE_IDLE_STORE = {subscribe:()=>()=>{},getSnapshot:()=>FINANCE_EMPTY,acquire:()=>()=>{},refresh:()=>Promise.resolve()};
+const FINANCE_POLL_MS = 60000;
+// Matches the installed Harness account UI compatibility metadata.
+const FINANCE_ACCOUNT_VERSION = '0.2.0-rc.2';
+function financeDecimal(value){
+  if(typeof value!=='string'||value.length>128)return null;
+  const match=/^([+-]?)(?:(\d+)(?:\.(\d*))?|\.(\d+))(?:[eE]([+-]?\d{1,3}))?$/.exec(value);
+  if(!match)return null;
+  const whole=match[2]||'',fraction=match[3]??match[4]??'',exponent=Number(match[5]||0);
+  if(Math.abs(exponent)>96||whole.length+fraction.length>96)return null;
+  let digits=(whole+fraction).replace(/^0+/,'')||'0',scale=fraction.length-exponent;
+  if(digits==='0')return {amount:0n,scale:0};
+  if(scale<0){if(digits.length-scale>96)return null;digits+='0'.repeat(-scale);scale=0;}
+  if(scale>96)return null;
+  return {amount:BigInt((match[1]==='-'?'-':'')+digits),scale};
+}
+function financeDecimalText({amount,scale}){const negative=amount<0n,digits=String(negative?-amount:amount).padStart(scale+1,'0');return(negative?'-':'')+(scale?digits.slice(0,-scale)+'.'+digits.slice(-scale):digits);}
+function financeWallets(value){
+  if(!Array.isArray(value)||value.length>64)return null;
+  const result=[];for(const item of value){if(!item||(item.currency!=='CNY'&&item.currency!=='USD'))return null;const amount=financeDecimal(item.balance);if(amount===null)return null;result.push({currency:item.currency,balance:financeDecimalText(amount)});}return result;
+}
+function financeBalanceText(wallets){
+  const totals=new Map();
+  for(const wallet of financeWallets(wallets)||[]){const {amount,scale}=financeDecimal(wallet.balance),previous=totals.get(wallet.currency)||{amount:0n,scale:0},nextScale=Math.max(scale,previous.scale);totals.set(wallet.currency,{amount:previous.amount*10n**BigInt(nextScale-previous.scale)+amount*10n**BigInt(nextScale-scale),scale:nextScale});}
+  return [...totals].map(([currency,{amount,scale}])=>{const symbol=currency==='CNY'?'¥':'$',negative=amount<0n,absolute=negative?-amount:amount,base=10n**BigInt(scale);if(amount===0n)return symbol+'0.00';if(!negative&&absolute*100n<base)return '<'+symbol+'0.01';let cents=absolute*100n/base;if(negative){if(absolute*100n%base*2n>=base)cents++;if(cents===0n)cents=1n;}const whole=String(cents/100n).replace(/\B(?=(\d{3})+(?!\d))/g,',');return(negative?'-':'')+symbol+whole+'.'+String(cents%100n).padStart(2,'0');}).join(' + ');
+}
+function financeEstimateText(estimate){
+  if(!estimate||!Number.isFinite(estimate.min)||!Number.isFinite(estimate.max))return '—';
+  const money=value=>value>0&&value<.0001?'<¥0.0001':'¥'+value.toFixed(4);
+  return estimate.min===estimate.max?money(estimate.min):money(estimate.min)+' – '+money(estimate.max);
+}
+function financeSummary(value){
+  if(!value||value.status!=='ready')return {status:value?.status==='failed'?'failed':'unavailable'};
+  const count=number=>Number.isSafeInteger(number)&&number>=0;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value.day)||value.scope!=='harness-local'||!['input','output'].every(key=>count(value.tokens?.[key]))||!['cacheRead','cacheWrite','total'].every(key=>value.tokens?.[key]===null||count(value.tokens?.[key]))||!count(value.requests)||!count(value.missingUsage))return {status:'failed'};
+  const estimate=value.estimate;
+  if(!estimate||estimate.currency!=='CNY'||!((estimate.min===null&&estimate.max===null)||(Number.isFinite(estimate.min)&&Number.isFinite(estimate.max)&&estimate.min>=0&&estimate.max>=estimate.min))||!count(estimate.pricedRequests)||!count(estimate.unpricedRequests))return {status:'failed'};
+  return {status:'ready',day:value.day,scope:'harness-local',tokens:Object.fromEntries(['input','output','cacheRead','cacheWrite','total'].map(key=>[key,value.tokens[key]])),requests:value.requests,missingUsage:value.missingUsage,estimate:{currency:'CNY',min:estimate.min,max:estimate.max,pricedRequests:estimate.pricedRequests,unpricedRequests:estimate.unpricedRequests,sourceUrl:typeof estimate.sourceUrl==='string'&&/^https:\/\/(?:api-docs\.)?deepseek\.com\//.test(estimate.sourceUrl)?estimate.sourceUrl:null,asOf:typeof estimate.asOf==='string'?estimate.asOf:null},updatedAt:Number.isFinite(value.updatedAt)?value.updatedAt:Date.now()};
+}
+function financeIncomplete(value){return value?.status==='ready'&&(value.missingUsage>0||value.tokens.total===null||value.estimate.unpricedRequests>0);}
+function createFinanceClient(ctx){
+  if(typeof ctx.inject!=='function')return FINANCE_IDLE_STORE;
+  let snapshot=FINANCE_EMPTY,disposed=false,timer=null,inflight=null,lastAttempt=0,account=null,summary=null,summaryRevision=0,streamFactory=null,accountStream=null,accountRevision=0,accountView,refreshAgain=false;
+  const listeners=new Set(),consumers=new Set(),cleanups=[];
+  const publish=patch=>{if(disposed)return;snapshot={...snapshot,...patch};for(const listener of listeners)listener();};
+  const active=()=>!disposed&&consumers.size>0&&document.hidden!==true;
+  const metadata=()=>({version:FINANCE_ACCOUNT_VERSION,locale:ctx.locale?.getSnapshot?.().active||'zh',timezoneOffsetSeconds:-new Date().getTimezoneOffset()*60});
+  const stopWatch=()=>{const stream=accountStream;accountStream=null;try{stream?.dispose?.();}catch{}};
+  const clearTimer=()=>{if(timer!==null){clearTimeout(timer);timer=null;}};
+  function schedule(){clearTimer();if(active())timer=setTimeout(()=>{timer=null;refresh(false);},Math.max(1,FINANCE_POLL_MS-(Date.now()-lastAttempt)));}
+  function signedOut(){accountRevision++;accountView='signed-out';publish({account:{status:'signed-out',wallets:[],updatedAt:null}});}
+  function startWatch(){
+    if(!active()||!account?.watch||accountStream)return;
+    let stream;try{stream=streamFactory?streamFactory({name:'deepseek-girl-finance-account',open:signal=>account.watch(signal),ended:()=>new Error('account stream ended')}):account.watch();}catch{return;}
+    accountStream=stream;let firstFrame=true;
+    (async()=>{for await(const frame of stream){if(disposed||accountStream!==stream)break;const view=frame?.value??frame;if(view?.status!=='credential-stored'&&view?.status!=='signed-out'){frame?.accept?.();continue;}const changed=!firstFrame||accountView==='signed-out';firstFrame=false;if(view.status==='signed-out')signedOut();else {if(changed){accountRevision++;publish({account:{status:'loading',wallets:[],updatedAt:null}});}accountView='credential-stored';if(changed){if(inflight)refreshAgain=true;else refresh(true);}}frame?.accept?.();}})().catch(()=>{if(!disposed&&accountStream===stream&&active())publish({account:{status:'failed',wallets:[],updatedAt:null}});});
+  }
+  async function readAccount(){
+    if(!account)return {status:'unavailable',wallets:[],updatedAt:null};
+    const revision=accountRevision;
+    try{
+      if(accountView!=='credential-stored'&&account.getState){const state=await account.getState();if(!active()||revision!==accountRevision)return null;if(!state?.ok)throw Error('unavailable');if(state.value?.status==='signed-out'){signedOut();return null;}if(state.value?.status!=='credential-stored')throw Error('unavailable');accountView='credential-stored';}
+      if(accountView==='signed-out')return {status:'signed-out',wallets:[],updatedAt:null};
+      const response=await account.getBalance(metadata());if(!active()||revision!==accountRevision)return null;if(!response?.ok)throw Error('unavailable');const value=response.value;if(value===null){signedOut();return null;}if(value.status!=='ready')throw Error('unavailable');
+      const recharge=financeWallets(value.value),bonus=financeWallets(value.bonusWallets);if(recharge===null||bonus===null)throw Error('invalid balance');return {status:'ready',wallets:recharge.concat(bonus),recharge,bonus,updatedAt:Date.now()};
+    }catch{return active()&&revision===accountRevision?{status:'failed',wallets:[],updatedAt:null}:null;}
+  }
+  async function readSummary(){if(!summary)return {status:'unavailable'};const source=summary,revision=summaryRevision;try{const result=await source({timezoneOffsetSeconds:-new Date().getTimezoneOffset()*60});return revision!==summaryRevision?null:result?.ok?financeSummary(result.value):{status:'failed'};}catch{return revision===summaryRevision?{status:'failed'}:null;}}
+  function refresh(force=true){
+    if(!active())return Promise.resolve();if(inflight)return inflight;if(!force&&Date.now()-lastAttempt<FINANCE_POLL_MS){schedule();return Promise.resolve();}
+    lastAttempt=Date.now();publish({refreshing:true,account:snapshot.account.status==='unavailable'&&account?{status:'loading',wallets:[],updatedAt:null}:snapshot.account,summary:snapshot.summary.status==='unavailable'&&summary?{status:'loading'}:snapshot.summary});
+    const request=Promise.all([readAccount(),readSummary()]).then(([balance,total])=>{if(active()){const patch={};if(total!==null)patch.summary=total;if(balance!==null)patch.account=balance;publish(patch);}}).finally(()=>{if(inflight!==request)return;inflight=null;if(!disposed)publish({refreshing:false});if(refreshAgain&&active()){refreshAgain=false;refresh(true);}else schedule();});inflight=request;return request;
+  }
+  function reconcile(){clearTimer();if(active()){startWatch();refresh(false);}else stopWatch();}
+  const visibility=()=>reconcile();document.addEventListener('visibilitychange',visibility);window.addEventListener('focus',visibility);
+  cleanups.push(()=>document.removeEventListener('visibilitychange',visibility),()=>window.removeEventListener('focus',visibility));
+  if(typeof ctx.inject==='function'){
+    ctx.inject(['remote'],scope=>{
+      if(typeof FINANCE_REMOTE==='undefined'||typeof scope.remote.$mount!=='function')return;
+      const mount=scope.remote.$mount.bind(scope.remote);let live=true,release;
+      scope.effect(()=>()=>{live=false;try{return Promise.resolve(release?.()).catch(()=>{});}catch{}});
+      Promise.resolve().then(()=>mount(FINANCE_REMOTE)).then(dispose=>{if(!live){try{return Promise.resolve(dispose?.()).catch(()=>{});}catch{}}else release=dispose;}).catch(()=>{if(!summary)publish({summary:{status:'unavailable'}});});
+    });
+    ctx.inject(['remote','remote.account'],scope=>{
+      const remote=scope.remote,source=remote.account;account={getBalance:source.getBalance.bind(source),...(typeof source.getState==='function'?{getState:source.getState.bind(source)}:{}),...(typeof source.watch==='function'?{watch:source.watch.bind(source)}:{})};streamFactory=typeof remote.$stream==='function'?remote.$stream.bind(remote):null;accountView=undefined;accountRevision++;lastAttempt=0;reconcile();
+      scope.effect(()=>()=>{stopWatch();account=null;streamFactory=null;accountRevision++;publish({account:{status:'unavailable',wallets:[],updatedAt:null}});});
+    });
+    ctx.inject(['remote','remote.deepseekGirlFinance'],scope=>{const source=scope.remote.deepseekGirlFinance;summary=source.summary.bind(source);summaryRevision++;lastAttempt=0;reconcile();scope.effect(()=>()=>{summary=null;summaryRevision++;publish({summary:{status:'unavailable'}});});});
+  }
+  return {subscribe(listener){listeners.add(listener);return()=>listeners.delete(listener);},getSnapshot:()=>snapshot,acquire(enabled=true){const token={};if(enabled)consumers.add(token);reconcile();return()=>{consumers.delete(token);reconcile();};},refresh,dispose(){if(disposed)return;disposed=true;clearTimer();stopWatch();consumers.clear();listeners.clear();for(const cleanup of cleanups)cleanup();}};
+}
+
     const STATES = ["idle","thinking","generating","success","error","dragging","drop","sleeping","begging","eating","petting","pouting"];
     const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"轻点头部：摸头 · 身体 / 右键：菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"轻点头部摸摸头，快速点三次会鼓脸。身体点击 / 右键打开菜单。点白饭盆喂饭；拖动移动，Ctrl + 滚轮缩放。帽子可开关，喂饱后两分钟不再求饭。","accessible":"轻点头部摸头，身体点击或右键打开菜单，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡","petting":"被摸头","pouting":"鼓脸啦","pet":"摸摸头"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Tap head: pet · Body / right click: menu · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Tap her head for a pat; three quick taps make her pout. Click her body or right-click for the menu. Feed with the rice basin, drag to move, Ctrl + wheel to resize. Toggle her hat; feeding pauses rice requests for two minutes.","accessible":"Tap her head to pet, click her body or right-click for the menu, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting","petting":"Enjoying head pats","pouting":"Pouting","pet":"Pat her head"}};
     Object.assign(DICTIONARIES.zh,{wardrobe:'打开小衣柜',wardrobeTitle:'今天想穿哪一套？',wardrobeHint:'点选衣服预览，确认后会记住你的选择。',wear:'就穿这套',cancelOutfit:'取消',outfitLoading:'正在整理衣服…',outfitError:'衣服暂时没准备好，请重新点选。',outfitSaved:'正在穿',outfitPreview:'预览中',outfit_maid:'经典女仆装',outfit_hoodie:'蓝白休闲卫衣',outfit_pajamas:'星星睡衣'});
     Object.assign(DICTIONARIES.en,{wardrobe:'Open wardrobe',wardrobeTitle:'What shall I wear today?',wardrobeHint:'Choose a look to preview; confirm to remember it.',wear:'Wear this outfit',cancelOutfit:'Cancel',outfitLoading:'Getting dressed…',outfitError:'This outfit could not load. Please select it again.',outfitSaved:'Wearing',outfitPreview:'Preview',outfit_maid:'Classic maid',outfit_hoodie:'Blue & white hoodie',outfit_pajamas:'Star pajamas'});
+    Object.assign(DICTIONARIES.zh,{financeShow:'显示余额与今日预估',financeHide:'隐藏余额与今日预估',financeTitle:'她的饭钱小账本',financeOpen:'查看余额与今日用量明细',financeBalance:'登录账户余额',financeToday:'今日预估',financeLoading:'查询中…',financeFailed:'暂时查询失败',financeUnavailable:'暂不可用',financeSignedOut:'登录后查看',financeRefresh:'刷新账本',financeRefreshing:'正在刷新…',financeClose:'收起账本',financeScope:'仅本机 Harness 今日已记录的模型用量；不包含其他设备或平台用量，也不是账户账单。',financePricing:'按已知模型公开价格估算；区间对应不同时段价格，实际扣费可能不同。',financeAccountScope:'余额来自 Harness 登录账户，包含充值与赠送余额；可能与 API Key 所属账户不同。',financeTokens:'今日 Token',financeInput:'非缓存输入',financeOutput:'输出',financeCacheRead:'缓存命中',financeCacheWrite:'缓存写入',financeTotal:'总计',financeRequests:'已记录请求',financeMissing:'缺少用量的请求',financeUnpriced:'未匹配价格的请求',financeRecharge:'充值余额',financeBonus:'赠送余额',financeUpdated:'上次更新',financePriceSource:'价格来源',financeOfficialBill:'查看官方账单',financeNoWallet:'暂无余额数据',financePartial:'仅已知部分',financeSnapshot:'本机今日记录',financeNoSummary:'当前环境暂未提供用量汇总。'});
+    Object.assign(DICTIONARIES.en,{financeShow:'Show balance and daily estimate',financeHide:'Hide balance and daily estimate',financeTitle:'Her little rice ledger',financeOpen:'View balance and today’s usage details',financeBalance:'Signed-in account balance',financeToday:'Estimated today',financeLoading:'Loading…',financeFailed:'Could not refresh',financeUnavailable:'Unavailable',financeSignedOut:'Sign in to view',financeRefresh:'Refresh ledger',financeRefreshing:'Refreshing…',financeClose:'Close ledger',financeScope:'Only model usage recorded by this Harness installation today. Excludes other devices and platforms; this is not your account bill.',financePricing:'Estimated from known models’ public prices. Ranges reflect different time bands; actual charges may differ.',financeAccountScope:'Balance belongs to the account signed in to Harness and includes topped-up and granted credits. Your API key may belong to another account.',financeTokens:'Today’s tokens',financeInput:'Uncached input',financeOutput:'Output',financeCacheRead:'Cache read',financeCacheWrite:'Cache write',financeTotal:'Total',financeRequests:'Recorded requests',financeMissing:'Requests missing usage',financeUnpriced:'Requests without prices',financeRecharge:'Topped-up balance',financeBonus:'Granted balance',financeUpdated:'Last updated',financePriceSource:'Price source',financeOfficialBill:'View official bill',financeNoWallet:'No balance data',financePartial:'Known portion only',financeSnapshot:'Today on this installation',financeNoSummary:'Usage totals are unavailable in this environment.'});
     let docks = 0;
     const listeners = new Set();
     const presence = { subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);}, snapshot(){return docks>0;} };
@@ -165,6 +281,11 @@ function rememberGreeting(previous, key, now) {
 .dsg-outfit .dsg-outfit-preview{display:block;position:relative;width:100%;max-width:130px;aspect-ratio:1}.dsg-outfit .dsg-wardrobe-art{max-width:none;aspect-ratio:auto;object-fit:fill}.dsg-outfit .dsg-hat{width:60%;height:auto;max-width:none;aspect-ratio:auto}.dsg-outfit .dsg-loading-art{display:none}
 .dsg-wardrobe-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.dsg-wardrobe-actions button{font:inherit;font-size:13px;border:1px solid #c5d4e5;background:#fff;border-radius:12px;padding:8px 16px;color:#52718e;cursor:pointer}.dsg-wardrobe-actions .dsg-wear{background:#668ebd;color:#fff;border-color:#668ebd}.dsg-wardrobe-actions button:disabled{opacity:.5;cursor:wait}.dsg-wardrobe button:focus-visible{outline:2px dashed #496f9e;outline-offset:3px}.dsg-wardrobe .dsg-wardrobe-status{margin:13px 0 0;min-height:18px}
 @media(max-width:420px){.dsg-wardrobe{padding:16px 12px}.dsg-outfits{gap:5px}.dsg-outfit{padding:8px 3px}.dsg-wardrobe h2{font-size:22px}}
+.dsg-finance-card{position:absolute;box-sizing:border-box;max-height:calc(100dvh - 16px);overflow:auto;z-index:1;border:1.5px solid #a5bdd3;border-radius:15px 19px 14px 18px;padding:10px 12px 8px;background:#fff9ee;color:#486580;box-shadow:0 4px 13px #2b456314;cursor:pointer;text-align:left;font-family:inherit;line-height:1.45}
+.dsg-finance-card:before{content:'✦';position:absolute;right:7px;top:2px;color:#dcad69;font-size:13px}.dsg-finance-card:hover{border-color:#6e94bb;background:#fff7e8}.dsg-finance-card:focus-visible{outline:2px dashed #50769f;outline-offset:3px}.dsg-finance-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:10px}.dsg-finance-line+.dsg-finance-line{margin-top:4px}.dsg-finance-value{font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:15px;overflow-wrap:anywhere;text-align:right}.dsg-finance-card small{display:block;margin-top:5px;color:#8796a2;font-size:10px;border-top:1px dashed #d6dfdf;padding-top:4px}
+.dsg-finance-backdrop{position:fixed;z-index:5;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;background:#23324e24}.dsg-finance-panel{box-sizing:border-box;min-width:0;width:430px;max-width:100%;max-height:calc(100dvh - 24px);overflow-y:auto;padding:23px;border:2px solid #b7cce0;border-radius:23px 28px 22px 26px;background:#fff9ee;color:#45627e;font-family:inherit;font-size:13px;line-height:1.6;user-select:text;box-shadow:0 16px 60px #203f6e30}
+.dsg-finance-panel h2{font:24px/1.5 'DSG Greeting Hand','KaiTi',cursive;margin:0 0 5px;color:#42678d}.dsg-finance-date{color:#8393a1;font-size:11px;margin:0 0 14px}.dsg-finance-section{padding:12px 0;border-top:1px dashed #c4d1dc}.dsg-finance-section h3{font-size:12px;font-weight:500;margin:0 0 5px;color:#71869b}.dsg-finance-amount{font:23px/1.5 'DSG Greeting Hand','KaiTi',cursive;margin:0 0 4px;overflow-wrap:anywhere}.dsg-finance-panel p{margin:6px 0}.dsg-finance-note{font-size:11px;color:#7c8b99}.dsg-finance-panel dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px 12px;margin:9px 0}.dsg-finance-panel dt{color:#7a8b9b}.dsg-finance-panel dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.dsg-finance-panel a{color:#5982ab;text-decoration:underline;text-underline-offset:3px}.dsg-finance-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.dsg-finance-actions button{border:1px solid #bbcee0;border-radius:11px;padding:7px 13px;background:#fff;color:#537898;font:inherit;font-size:12px;cursor:pointer}.dsg-finance-actions button:disabled{opacity:.55;cursor:wait}.dsg-finance-actions button:focus-visible{outline:2px dashed #50769f;outline-offset:2px}
+@media(max-width:360px){.dsg-finance-panel{padding:16px}.dsg-finance-panel h2{font-size:21px}.dsg-finance-amount{font-size:20px}}
 `;
     const decoded=new Map();
     const CACHE_LIMIT=8;
@@ -191,11 +312,14 @@ function rememberGreeting(previous, key, now) {
       return h('span',{className:'dsg-clip','aria-busy':!loaded},h('img',{key:key+':'+play,className:artClass,'data-outfit':normalizeOutfit(outfit),'data-state':state,src:play?asset.strip:asset.still,alt:label,draggable:false,
         style:{width:play?asset.count*100+'%':'100%',animationName:play?'dsg-frames-'+state:'none',animationDuration:asset.duration+'ms',animationDelay:play&&!asset.loop?'-'+Math.min(asset.duration,ready.elapsed||0)+'ms':'0ms',animationIterationCount:asset.loop?'infinite':1}}),!loaded&&loadingLabel&&h('span',{className:'dsg-loading-art',role:'status'},loadingLabel));
     }
-    function Mascot({running=false,phase='thinking',status,sessionId='',t=key=>DICTIONARIES.zh[key]||key}){
+    function Mascot({running=false,phase='thinking',status,sessionId='',finance=FINANCE_IDLE_STORE,t=key=>DICTIONARIES.zh[key]||key}){
       const [prefs,setPrefs]=React.useState(()=>({...readPrefs(),...viewport(readPrefs())}));
       const [dragging,setDragging]=React.useState(false),[dropping,setDropping]=React.useState(false);
       const [preview,setPreview]=React.useState(null),[menu,setMenu]=React.useState(false);
       const [wardrobe,setWardrobe]=React.useState(null),[outfitReadiness,setOutfitReadiness]=React.useState(null);
+      const [financePanel,setFinancePanel]=React.useState(false);
+      const [financeCardHeight,setFinanceCardHeight]=React.useState(104);
+      const financeSnapshot=React.useSyncExternalStore(finance.subscribe,finance.getSnapshot,finance.getSnapshot);
       const [sleeping,setSleeping]=React.useState(false),[celebrating,setCelebrating]=React.useState(false);
       const [eating,setEating]=React.useState(false),[begging,setBegging]=React.useState(false);
       const [touch,setTouch]=React.useState(null);
@@ -206,13 +330,23 @@ function rememberGreeting(previous, key, now) {
       const root=React.useRef(null), drag=React.useRef(null), prefsRef=React.useRef(prefs);
       const greetingRef=React.useRef(null);
       const wardrobeRef=React.useRef(null),wardrobeFocus=React.useRef(null),wardrobeWasOpen=React.useRef(false);
+      const financePanelRef=React.useRef(null),financeCardRef=React.useRef(null),financeWasOpen=React.useRef(false),financeHeightRef=React.useRef(104);
       const mealStarted=React.useRef(0),previewStarted=React.useRef(0),dropStarted=React.useRef(0),visualTimeline=React.useRef({key:'',startedAt:0});
       prefsRef.current=prefs;
       const feedingRef=React.useRef(false);
       const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
       const task=taskState(running,phase,status,sleeping,celebrating);
       const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
-      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe;
+      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel;
+      (React.useLayoutEffect||React.useEffect)(()=>{const element=financeCardRef.current;if(!element?.getBoundingClientRect)return;const measure=()=>{const height=Math.ceil(element.getBoundingClientRect().height);if(financeHeightRef.current!==height){financeHeightRef.current=height;setFinanceCardHeight(height);}};measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);return()=>observer?.disconnect();},[prefs.financeVisible,financePanel,wardrobe,dragging,greeting?.period,greetingReady]);
+      React.useEffect(()=>finance.acquire(prefs.financeVisible!==false),[finance,prefs.financeVisible]);
+      React.useEffect(()=>{if(prefs.financeVisible===false)setFinancePanel(false);},[prefs.financeVisible]);
+      (React.useLayoutEffect||React.useEffect)(()=>{if(financePanel){financeWasOpen.current=true;const panel=financePanelRef.current;if(panel){panel.scrollTop=0;panel.focus?.({preventScroll:true});}}else if(financeWasOpen.current){financeWasOpen.current=false;financeCardRef.current?.focus?.({preventScroll:true});}},[financePanel]);
+      React.useEffect(()=>{
+        if(!financePanel)return;
+        const close=e=>{if(e.type==='pointerdown'){if(!financePanelRef.current?.contains(e.target)){setFinancePanel(false);financeCardRef.current?.focus?.();}return;}if(e.key==='Escape'){e.preventDefault();setFinancePanel(false);financeCardRef.current?.focus?.();return;}if(e.key==='Tab'){const controls=[...(financePanelRef.current?.querySelectorAll('button:not(:disabled),a[href]')||[])],index=controls.indexOf(document.activeElement);if(!controls.length)return;if(e.shiftKey&&index<=0){e.preventDefault();controls.at(-1).focus();}else if(!e.shiftKey&&(index===controls.length-1||index===-1)){e.preventDefault();controls[0].focus();}}};
+        window.addEventListener('pointerdown',close);window.addEventListener('keydown',close);return()=>{window.removeEventListener('pointerdown',close);window.removeEventListener('keydown',close);};
+      },[financePanel]);
       (React.useLayoutEffect||React.useEffect)(()=>{
         const element=greetingRef.current;if(!greeting||!greetingReady||!element?.getBoundingClientRect)return;
         let live=true;const measure=()=>{if(!live)return;const height=Math.ceil(element.getBoundingClientRect().height);setGreetingHeight(previous=>previous===height?previous:height);};
@@ -292,6 +426,14 @@ function rememberGreeting(previous, key, now) {
       const startedAt=preview&&state===preview?previewStarted.current:eating&&state==='eating'?mealStarted.current:touch&&state===touch.kind?touch.startedAt:state==='drop'?dropStarted.current:visualTimeline.current.startedAt;
       const animate=prefs.animate!==false&&!reduced;
       const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight);
+      const accountFinance=financeSnapshot.account,summaryFinance=financeSnapshot.summary;
+      const financeStatus=value=>t(value==='loading'?'financeLoading':value==='failed'?'financeFailed':value==='signed-out'?'financeSignedOut':'financeUnavailable');
+      const balanceText=accountFinance.status==='ready'?(financeBalanceText(accountFinance.wallets)||t('financeNoWallet')):financeStatus(accountFinance.status);
+      const estimateText=summaryFinance.status==='ready'?financeEstimateText(summaryFinance.estimate):financeStatus(summaryFinance.status);
+      const tokenCount=value=>Number.isSafeInteger(value)&&value>=0?value.toLocaleString():'—';
+      const financeWidth=Math.max(1,Math.min(220,window.innerWidth-16)),financeBelow=prefs.y+prefs.size+39,financeAbove=financeBelow+financeCardHeight>window.innerHeight-8;
+      const financePosition={left:clamp(prefs.x+prefs.size/2-financeWidth/2,8,Math.max(8,window.innerWidth-financeWidth-8))-prefs.x,top:Math.max(8,financeAbove?prefs.y-financeCardHeight-8:financeBelow)-prefs.y,width:financeWidth};
+      const financeUpdated=Math.max(accountFinance.updatedAt||0,summaryFinance.updatedAt||0);
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
       function pet(){if(feedingRef.current||touchRef.current?.kind==='pouting')return;const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
@@ -317,6 +459,10 @@ function rememberGreeting(previous, key, now) {
           state==='petting'&&h('span',{className:'dsg-affection',key:touch?.sequence||'preview','aria-hidden':true},[0,1,2].map(index=>h('svg',{className:'dsg-heart',key:index,viewBox:'0 0 24 24'},h('path',{d:'M12 20 C4 14 1 10 3 6 C5 2 10 3 12 7 C14 3 19 2 21 6 C23 10 20 14 12 20Z',fill:'currentColor'}))))),
         h('div',{className:'dsg-footer'},h('span',{className:'dsg-label'},(preview?t('preview'):'')+t(state)),
           h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating,title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
+        prefs.financeVisible!==false&&!dragging&&!wardrobe&&!financePanel&&!(greeting&&greetingReady)&&h('button',{ref:financeCardRef,type:'button',className:'dsg-finance-card',style:financePosition,'aria-label':t('financeOpen'),'aria-busy':financeSnapshot.refreshing,onClick:()=>{setFinancePanel(true);setMenu(false);}},
+          h('span',{className:'dsg-finance-line'},h('span',null,t('financeBalance')),h('span',{className:'dsg-finance-value','data-finance-balance':accountFinance.status},balanceText)),
+          h('span',{className:'dsg-finance-line'},h('span',null,t('financeToday')),h('span',{className:'dsg-finance-value','data-finance-estimate':summaryFinance.status},estimateText)),
+          h('small',null,summaryFinance.status==='ready'?(financeIncomplete(summaryFinance)?t('financePartial')+' · ':'')+t('financeTokens')+' '+tokenCount(summaryFinance.tokens.total):t('financeSnapshot'))),
         menu&&h('div',{className:'dsg-menu',role:'dialog','aria-label':t('menu'),style:{left:clamp(-42,8-prefs.x,window.innerWidth-prefs.x-260),top:clamp(prefs.y-560,42,Math.max(42,window.innerHeight-616))-prefs.y}},
           h('strong',null,t('menu')),h('div',{className:'dsg-grid'},STATES.map(key=>h('button',{key,type:'button',onClick:()=>{previewStarted.current=Date.now();setPreview(key);setMenu(false);}},t(key)))),
           h('button',{className:'dsg-wide',type:'button',onClick:()=>{setWardrobe({outfit:normalizeOutfit(prefsRef.current.outfit),attempt:0});setMenu(false);}},t('wardrobe')),
@@ -326,6 +472,7 @@ function rememberGreeting(previous, key, now) {
           h('button',{className:'dsg-wide',type:'button','aria-pressed':prefs.beggingEnabled!==false,onClick:()=>writePrefs({...prefsRef.current,beggingEnabled:prefs.beggingEnabled===false})},prefs.beggingEnabled===false?t('begOn'):t('begOff')),
           h('button',{className:'dsg-wide',type:'button',onClick:greet},t('greetNow')),
           h('button',{className:'dsg-wide',type:'button','aria-pressed':prefs.greetingsEnabled!==false,onClick:()=>{setGreeting(null);writePrefs({...prefsRef.current,greetingsEnabled:prefs.greetingsEnabled===false});}},prefs.greetingsEnabled===false?t('greetingsOn'):t('greetingsOff')),
+          h('button',{className:'dsg-wide',type:'button','aria-pressed':prefs.financeVisible!==false,onClick:()=>writePrefs({...prefsRef.current,financeVisible:prefs.financeVisible===false})},prefs.financeVisible===false?t('financeShow'):t('financeHide')),
           h('button',{className:'dsg-wide',type:'button',onClick:()=>{setPreview(null);setMenu(false);}},t('follow')),
           h('button',{className:'dsg-wide',type:'button',onClick:()=>writePrefs({...prefsRef.current,animate:prefs.animate===false})},prefs.animate===false?t('resume'):t('pause')),
           h('button',{className:'dsg-wide',type:'button',onClick:()=>{writePrefs({...prefsRef.current,...viewport({})});setMenu(false);}},t('reset')),
@@ -334,22 +481,32 @@ function rememberGreeting(previous, key, now) {
           h('h2',{id:'dsg-wardrobe-title'},t('wardrobeTitle')),h('p',{id:'dsg-wardrobe-hint'},t('wardrobeHint')),
           h('div',{className:'dsg-outfits'},OUTFITS.map(item=>h('button',{key:item.id,type:'button',className:'dsg-outfit','data-outfit-choice':item.id,'aria-pressed':outfit===item.id,onClick:()=>{if(outfit===item.id&&outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:(wardrobe.attempt||0)+1});}else if(outfit!==item.id){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:0});}}},outfit===item.id?h('span',{className:'dsg-outfit-preview'},h(SpriteArt,{state,outfit,animate,hidden,startedAt,loadAttempt:wardrobe.attempt||0,label:t(state),artClass:'dsg-wardrobe-art'}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false})):h('img',{src:assetFor(item.id,'idle').still,alt:'',draggable:false}),h('span',null,t('outfit_'+item.id)),h('small',null,normalizeOutfit(prefs.outfit)===item.id?t('outfitSaved'):outfit===item.id?t('outfitPreview'):' ')))),
           h('p',{className:'dsg-wardrobe-status',role:'status','aria-live':'polite'},outfitReady?' ':outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false?t('outfitError'):t('outfitLoading')),
-          h('div',{className:'dsg-wardrobe-actions'},h('button',{type:'button',onClick:()=>setWardrobe(null)},t('cancelOutfit')),h('button',{className:'dsg-wear',type:'button',disabled:!outfitReady,onClick:()=>{writePrefs({...prefsRef.current,outfit});setWardrobe(null);}},t('wear'))))));
+          h('div',{className:'dsg-wardrobe-actions'},h('button',{type:'button',onClick:()=>setWardrobe(null)},t('cancelOutfit')),h('button',{className:'dsg-wear',type:'button',disabled:!outfitReady,onClick:()=>{writePrefs({...prefsRef.current,outfit});setWardrobe(null);}},t('wear'))))),
+        financePanel&&h('div',{className:'dsg-finance-backdrop'},h('section',{ref:financePanelRef,className:'dsg-finance-panel',role:'dialog',tabIndex:-1,'aria-modal':true,'aria-labelledby':'dsg-finance-title'},
+          h('h2',{id:'dsg-finance-title'},t('financeTitle')),h('p',{className:'dsg-finance-date'},summaryFinance.status==='ready'?summaryFinance.day+' · '+t('financeSnapshot'):t('financeSnapshot')),
+          h('section',{className:'dsg-finance-section'},h('h3',null,t('financeBalance')),h('p',{className:'dsg-finance-amount'},balanceText),
+            accountFinance.status==='ready'&&h('dl',null,h('dt',null,t('financeRecharge')),h('dd',null,financeBalanceText(accountFinance.recharge)||'—'),h('dt',null,t('financeBonus')),h('dd',null,financeBalanceText(accountFinance.bonus)||'—')),h('p',{className:'dsg-finance-note'},t('financeAccountScope'))),
+          h('section',{className:'dsg-finance-section'},h('h3',null,t('financeToday')),h('p',{className:'dsg-finance-amount'},estimateText),
+            summaryFinance.status==='ready'?h(React.Fragment,null,h('dl',null,['input','output','cacheRead','cacheWrite','total'].flatMap(key=>[h('dt',{key:'label-'+key},t('finance'+key[0].toUpperCase()+key.slice(1))),h('dd',{key:'value-'+key,'data-finance-token':key},tokenCount(summaryFinance.tokens[key]))])),h('dl',null,h('dt',null,t('financeRequests')),h('dd',null,tokenCount(summaryFinance.requests)),h('dt',null,t('financeMissing')),h('dd',null,tokenCount(summaryFinance.missingUsage)),h('dt',null,t('financeUnpriced')),h('dd',null,tokenCount(summaryFinance.estimate.unpricedRequests))),financeIncomplete(summaryFinance)&&h('p',{className:'dsg-finance-note'},t('financePartial')),h('p',{className:'dsg-finance-note'},t('financePricing')),summaryFinance.estimate.sourceUrl&&h('a',{href:summaryFinance.estimate.sourceUrl,target:'_blank',rel:'noopener noreferrer'},t('financePriceSource')+(summaryFinance.estimate.asOf?' · '+summaryFinance.estimate.asOf:''))):h('p',{className:'dsg-finance-note'},t('financeNoSummary')),
+            h('p',{className:'dsg-finance-note'},t('financeScope')),h('a',{className:'dsg-finance-official-bill',href:'https://platform.deepseek.com/usage',target:'_blank',rel:'noopener noreferrer'},t('financeOfficialBill'))),
+          h('p',{className:'dsg-finance-note','data-finance-updated':financeUpdated||''},t('financeUpdated')+' '+(financeUpdated?new Date(financeUpdated).toLocaleTimeString():'—')),
+          h('div',{className:'dsg-finance-actions'},h('button',{type:'button',disabled:financeSnapshot.refreshing,onClick:()=>finance.refresh(true)},t(financeSnapshot.refreshing?'financeRefreshing':'financeRefresh')),h('button',{type:'button',onClick:()=>setFinancePanel(false)},t('financeClose'))))));
     }
     class Boundary extends React.Component{constructor(props){super(props);this.state={failed:false};}static getDerivedStateFromError(){return{failed:true};}componentDidCatch(error){console.error('[DeepSeek Girl]',error);}render(){return this.state.failed?null:this.props.children;}}
     const guarded=Component=>function Entry(props){if(!props)return null;return h(Boundary,null,h(Component,props));};
     return {inject:['slots','sessions','uiConversation','locale'],apply(ctx){
       ctx.effect(()=>ctx.locale.register('@local/dsh-deepseek-girl',DICTIONARIES));
+      const finance=createFinanceClient(ctx);ctx.effect(()=>()=>finance.dispose?.());
       function SessionGirl(props){
         const running=props.useSession(s=>s?.running===true);
         const status=props.useProjection('deepseekGirlStatus');
         const key=props.useChat(latestAssistantKey);
         const phase=props.useGirlNode(key,assistantPhase);
         React.useEffect(()=>{docks++;notify();return()=>{docks--;notify();};},[]);
-        return h(Mascot,{running,status,phase,sessionId:props.sessionId,t:props.t});
+        return h(Mascot,{running,status,phase,sessionId:props.sessionId,finance,t:props.t});
       }
       function FloatingGirl(props){const dock=React.useSyncExternalStore(presence.subscribe,presence.snapshot,presence.snapshot);
-        return dock?null:h(Mascot,{t:props.t});
+        return dock?null:h(Mascot,{finance,t:props.t});
       }
       ctx.effect(()=>{const el=document.createElement('style');el.textContent=CSS;document.head.appendChild(el);return()=>el.remove();});
       ctx.effect(()=>()=>decoded.clear());

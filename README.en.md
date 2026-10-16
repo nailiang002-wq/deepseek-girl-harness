@@ -2,13 +2,13 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.6.0**
+English · [中文](README.md) · **v1.7.0**
 
 ![Three outfits and the live wardrobe preview](docs/images/wardrobe.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.6.0/DeepSeekGirl-Harness-v1.6.0.zip"><strong>⬇ Download v1.6.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.0/DeepSeekGirl-Harness-v1.7.0.zip"><strong>⬇ Download v1.7.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
@@ -82,6 +82,21 @@ Outfit, position, size, hat, and interaction preferences are stored locally. Dis
 Open the character menu and choose **Open wardrobe**. Select an outfit to preview it, then choose **Wear this outfit** to remember it. Cancel, Escape, or clicking outside restores the saved outfit. The selected card also shows a live preview when the panel covers the character.
 
 All three outfits cover thinking, answering, feeding, head pats, pouting, dragging, sleeping, and the other states. Changing clothes preserves the current task and meal progress, along with the basin hat and character position. The twelve meal poses now play three complete bites instead of stopping after one.
+
+## Her little rice-money ledger
+
+Version 1.7 adds a small card beside the character. Click it for native-account balances, today's estimated fees, and Token details. The character menu can hide the card. Values refresh about once a minute while visible, with a manual refresh in the details panel. Financial values stay in memory; only the display preference is saved.
+
+![Ledger preview using synthetic example values](docs/images/finance.png)
+
+**The image uses synthetic example values, not a real account.**
+
+- **Balance** comes from the account signed in to Harness, including recharge and bonus wallets. CNY and USD remain separate. This account may differ from the owner of a configured API key; API-key and third-party account balances are not queried by this release.
+- **Today's Tokens** come from provider-reported usage in this local Harness profile's durable session records. The local calendar day is used. Forked inherited history is excluded; retries count separately and final samples replace earlier samples from the same attempt. Reloads derive the totals again from the logs.
+- **Estimated today** uses known official DeepSeek model rates and reported uncached input, cache reads, and output. It shows an off-peak-to-peak **CNY range**, with pricing checked on 2026-10-16. It is not the account's settled bill, and does not include other devices or services. [Official pricing](https://api-docs.deepseek.com/quick_start/pricing/) and the panel's official-bill link let you check the source and actual spending.
+- Missing usage, unsupported models/providers, and insufficient cache evidence are disclosed. Title/search requests without reported Tokens count as coverage gaps. Missing totals show **—**; login, network, and scan failures are distinct from a confirmed zero. A failed session scan never becomes a zero daily total.
+
+The feature uses the existing authenticated Harness Remote APIs. It does not ask for an API key or send chat text to a new service. Polling stops when hidden or disabled. Balances are cleared after sign-out.
 
 ## Time greetings
 

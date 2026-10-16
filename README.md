@@ -2,13 +2,13 @@
 
 **让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.6.0**
+[English](README.en.md) · 中文 · **v1.7.0**
 
 ![三套衣服与小衣柜试穿预览](docs/images/wardrobe.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.6.0/DeepSeekGirl-Harness-v1.6.0.zip"><strong>⬇ 下载插件 v1.6.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.0/DeepSeekGirl-Harness-v1.7.0.zip"><strong>⬇ 下载插件 v1.7.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
@@ -82,6 +82,21 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 从角色菜单选择 **打开小衣柜**，点选衣服试穿，再点 **就穿这套** 保存。取消、按 Escape 或点击衣柜外面，会恢复已经保存的衣服。选中的衣服卡片也会同步展示当前动作，方便在小窗口中预览。
 
 三套衣服都支持思考、回答、吃饭、摸头、鼓脸、拖动和休息等全部状态。换衣服会接着播放当前动作，保留正在进行的任务、吃饭进度、铁盆帽和位置。吃白饭现在会连续完成三次舀饭入口，不再只吃一口就结束。
+
+## 她的饭钱小账本
+
+v1.7 在角色旁新增一张小卡片，点击可查看登录账户余额、今日预估费用和 Token 明细。角色菜单中可以隐藏卡片；显示时约每分钟刷新一次，详情里也可手动刷新。金额只保存在内存中，本地仅记住是否显示。
+
+![饭钱小账本：使用虚构示例数据的独立测试页预览](docs/images/finance.png)
+
+**图片使用虚构示例数据，不是实际账户余额。**
+
+- **余额**：读取 Harness 当前登录账户的充值与赠送余额，人民币和美元分开显示。它可能与配置的 API Key 所属账户不同；本版不查询 API Key 或第三方账户余额。
+- **今日 Token**：按电脑本地日历日，汇总这个 Harness 配置中的会话持久记录，以提供方上报用量为准。分支继承历史不重复统计，重试分别计入，同次请求的最终样本替换早期样本；重新打开后可从记录恢复。
+- **今日预估**：按已知 DeepSeek 官方模型的非缓存输入、缓存读取和输出用量，显示峰谷费率对应的**人民币费用区间**，单价核对日期为 2026-10-16。它不代表账户实扣账单，也不包含其他设备或平台的调用。可通过[官方价格](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/)和详情中的“查看官方账单”核对。
+- 缺失用量、未知模型或渠道、缓存证据不足会明确标注。标题生成、搜索等未上报 Token 的请求计入覆盖缺口；无法确定的总量显示 **—**。未登录、联网失败、记录扫描失败都不会伪装成余额或消耗为零。
+
+功能复用 Harness 已有的认证接口，不要求额外填写 API Key，也不会把聊天文字发送到新增服务。隐藏窗口或关闭卡片时暂停轮询，退出账户后清除旧余额。
 
 ## 时间问候
 
