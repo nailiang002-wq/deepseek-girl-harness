@@ -3,7 +3,7 @@ const root=path.resolve(__dirname,'..'),definitions=JSON.parse(fs.readFileSync(p
 (async()=>{
  const client=fs.readFileSync(path.join(root,'client.js'),'utf8');
  const all={maid:JSON.parse(client.match(/const ASSETS = (.+);/)[1]),...JSON.parse(client.match(/const OUTFIT_ASSETS = (.+);/)[1])};let frames=0;
- assert.deepEqual(Object.keys(all),['maid','hoodie','pajamas']);
+ assert.deepEqual(Object.keys(all),['maid','hoodie','pajamas','winter-puffer','winter-cape']);
  for(const [outfit,assets]of Object.entries(all)){
   assert.deepEqual(Object.keys(assets),Object.keys(definitions));
   for(const [state,definition]of Object.entries(definitions)){
@@ -27,5 +27,5 @@ const root=path.resolve(__dirname,'..'),definitions=JSON.parse(fs.readFileSync(p
   }
   assert.equal(assets.eating.biteCount,3);assert.equal(assets.eating.duration,13080);
  }
- assert.equal(frames,234);console.log(JSON.stringify({passed:true,outfits:3,statesPerOutfit:12,sourceFrames:frames,trueAlpha:true,unclippedOutfits:true,mealBites:3,mealDuration:13080}));
+ assert.equal(frames,390);console.log(JSON.stringify({passed:true,outfits:5,statesPerOutfit:12,sourceFrames:frames,trueAlpha:true,unclippedOutfits:true,mealBites:3,mealDuration:13080}));
 })().catch(error=>{console.error(error);process.exitCode=1;});

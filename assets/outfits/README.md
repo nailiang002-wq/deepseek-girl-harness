@@ -1,8 +1,8 @@
 # Outfit artwork / 换装素材
 
-`hoodie` is the blue & white pullover outfit; `pajamas` is the lavender star-pajama outfit. The original maid outfit remains in `../frames`. These are complete outfit sets, each covering the same twelve animation states.
+`hoodie` is the blue & white pullover outfit; `pajamas` is the lavender star-pajama outfit. `winter-puffer` adds a cream and blue quilted jacket with a knitted scarf; `winter-cape` adds a teal cape with ivory fur trim and a crescent clasp. The original maid outfit remains in `../frames`. These are complete outfit sets, each covering the same twelve animation states.
 
-`hoodie` 为蓝白卫衣，`pajamas` 为紫色星星睡衣。原版女仆装保留在 `../frames`。每套衣服都覆盖相同的十二种状态。
+`hoodie` 为蓝白卫衣，`pajamas` 为紫色星星睡衣。`winter-puffer` 为奶油蓝羽绒服配针织围巾，`winter-cape` 为月牙绒绒斗篷。原版女仆装保留在 `../frames`。每套衣服都覆盖相同的十二种状态。
 
 - `source-sheets/{state}.png`: selected ImageGen output, before mechanical slicing and normalization.
 - `frames/{state}/{00..}.png`: normalized 512 × 512 transparent frames, ready for the build.

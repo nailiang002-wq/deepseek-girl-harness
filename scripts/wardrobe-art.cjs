@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),sharp=require('sharp');
 const root=path.resolve(__dirname,'..'),assets=path.join(root,'assets'),manifest=JSON.parse(fs.readFileSync(path.join(assets,'manifest.json'),'utf8'));
 const [action,outfit,state,inputFile]=process.argv.slice(2);
-if(!['hoodie','pajamas'].includes(outfit)||!manifest.states[state])throw Error('Expected: reference|import hoodie|pajamas state [source.png]');
+if(!['hoodie','pajamas','winter-puffer','winter-cape'].includes(outfit)||!manifest.states[state])throw Error('Expected: reference|import outfit state [source.png]');
 const definition=manifest.states[state],count=definition.delays.length,cols=count===12?4:3,rows=count/cols;
 function isolate(data,width,height){
  const seen=new Uint8Array(width*height),queue=new Uint32Array(width*height);let largest=[];

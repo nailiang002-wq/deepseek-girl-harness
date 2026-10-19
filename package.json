@@ -1,9 +1,9 @@
 {
   "name": "@local/dsh-deepseek-girl",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "private": true,
   "type": "module",
-  "description": "DeepSeek 娘：三套服装、白饭互动、余额与本机今日费用预估和 Token 用量。",
+  "description": "DeepSeek 娘：五套服装、冬装小衣柜、白饭互动、余额与本机今日费用预估和 Token 用量。",
   "icon": "./icon.png",
   "exports": {
     ".": "./index.js",

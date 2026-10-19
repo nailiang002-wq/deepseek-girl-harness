@@ -2,17 +2,17 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.7.1**
+English · [中文](README.md) · **v1.8.0**
 
-![Three outfits and the live wardrobe preview](docs/images/wardrobe.png)
+![Winter wardrobe: cream and blue puffer, and moonlit winter cape](docs/images/winter.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.1/DeepSeekGirl-Harness-v1.7.1.zip"><strong>⬇ Download v1.7.1 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.8.0/DeepSeekGirl-Harness-v1.8.0.zip"><strong>⬇ Download v1.8.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
-DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. Version 1.6 adds a wardrobe with three complete outfits and a three-bite meal.
+DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. Version 1.8 adds a cream and blue puffer and a moonlit winter cape, bringing the wardrobe to five complete outfits, each with a three-bite meal.
 
 ## Install in three steps
 
@@ -34,14 +34,14 @@ If installation fails, open an [issue](https://github.com/nailiang002-wq/deepsee
 
 <p align="center"><img src="docs/images/petting.gif" width="420" alt="Head-pat and repeated-tap pout animation preview"></p>
 
-These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Each outfit covers all twelve states, with 78 key poses per outfit (234 in total). A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. They are combined with continuous breathing, swaying, and a soft landing.
+These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Each outfit covers all twelve states, with 78 key poses per outfit (390 in total). A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. They are combined with continuous breathing, swaying, and a soft landing.
 
 ## What she does
 
 | Feature | Behavior |
 | --- | --- |
 | Task expressions | Thinks during reasoning, types while the answer streams, celebrates completion, and looks upset after an error |
-| Wardrobe | Classic maid, blue & white hoodie, and star pajamas; preview first, then confirm to save |
+| Wardrobe | Classic maid, blue & white hoodie, star pajamas, cream & blue puffer, and moonlit winter cape; preview first, then confirm to save |
 | White-rice feeding | Three full bites with scooping, lifting the spoon, chewing, and a satisfied smile; returns to the current task after about 13 seconds |
 | Head pats | Tap her head to see her close her eyes and nuzzle, with little floating hearts; also available in the menu |
 | Repeated taps | Three quick head taps trigger a brief playful pout, returning after about 1.8 seconds; head pats do not interrupt a meal |
@@ -79,9 +79,13 @@ Outfit, position, size, hat, and interaction preferences are stored locally. Dis
 
 ## A small wardrobe
 
+**Winter additions:** A cream and blue quilted puffer with a knitted blue scarf, and a teal winter cape with ivory fur trim, a gold crescent clasp, and a cream turtleneck. Both cover all twelve states and retain the basin hat and three-bite feeding animation.
+
+![Five-outfit wardrobe with a winter preview](docs/images/wardrobe-winter.png)
+
 Open the character menu and choose **Open wardrobe**. Select an outfit to preview it, then choose **Wear this outfit** to remember it. Cancel, Escape, or clicking outside restores the saved outfit. The selected card also shows a live preview when the panel covers the character.
 
-All three outfits cover thinking, answering, feeding, head pats, pouting, dragging, sleeping, and the other states. Changing clothes preserves the current task and meal progress, along with the basin hat and character position. The twelve meal poses now play three complete bites instead of stopping after one.
+All five outfits cover thinking, answering, feeding, head pats, pouting, dragging, sleeping, and the other states. Changing clothes preserves the current task and meal progress, along with the basin hat and character position. The twelve meal poses now play three complete bites instead of stopping after one.
 
 ## Her little rice-money ledger
 
@@ -145,7 +149,7 @@ For the native connection regression, point `DSG_HARNESS_NODE_MODULES` at Harnes
 
 `client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames`, `assets/outfits`, and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
 
-Browser checks cover all 36 outfit/state atlases, wardrobe preview/apply/cancel and saved reloads, three-bite meal timing, switching outfits during a meal, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
+Browser checks cover all 60 outfit/state atlases, wardrobe preview/apply/cancel and saved reloads, three-bite meal timing, switching outfits during a meal, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
 
 ## Artwork
 
