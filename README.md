@@ -2,13 +2,13 @@
 
 **让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.7.0**
+[English](README.en.md) · 中文 · **v1.7.1**
 
 ![三套衣服与小衣柜试穿预览](docs/images/wardrobe.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.0/DeepSeekGirl-Harness-v1.7.0.zip"><strong>⬇ 下载插件 v1.7.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.1/DeepSeekGirl-Harness-v1.7.1.zip"><strong>⬇ 下载插件 v1.7.1（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
@@ -89,6 +89,8 @@ v1.7 在角色旁新增一张小卡片，点击可查看登录账户余额、今
 
 ![饭钱小账本：使用虚构示例数据的独立测试页预览](docs/images/finance.png)
 
+**v1.7.1 修复：** 今日用量连接恢复，解决余额正常但“今日预估”一直显示“暂不可用”的问题。余额与用量各自刷新，一项超时不会挡住另一项；超时后可以重试。更新后请重新载入界面。
+
 **图片使用虚构示例数据，不是实际账户余额。**
 
 - **余额**：读取 Harness 当前登录账户的充值与赠送余额，人民币和美元分开显示。它可能与配置的 API Key 所属账户不同；本版不查询 API Key 或第三方账户余额。
@@ -138,6 +140,8 @@ npm test
 npx playwright install chromium
 npm run test:browser
 ```
+
+原生连接回归：将 `DSG_HARNESS_NODE_MODULES` 指向 Harness 的 `node_modules` 目录，再运行 `npm run test:native`。该检查使用原生 Cordis、Typert 和客户端网关，配合虚构会话验证完整用量链路；不读取个人配置或真实会话，不调用网络。
 
 `client.template.js` 是客户端模板，`scripts/build.cjs` 将 `assets/frames`、`assets/outfits` 与 `assets/props` 编译成 `client.js`。`logic.js` 负责状态和时间规则，`projection.js` 负责正常完成、错误和停止的区分。测试临时文件写入 `.cache/`。
 

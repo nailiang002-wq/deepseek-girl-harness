@@ -42,52 +42,108 @@ function financeSummary(value){
 function financeIncomplete(value){return value?.status==='ready'&&(value.missingUsage>0||value.tokens.total===null||value.estimate.unpricedRequests>0);}
 function createFinanceClient(ctx){
   if(typeof ctx.inject!=='function')return FINANCE_IDLE_STORE;
-  let snapshot=FINANCE_EMPTY,disposed=false,timer=null,inflight=null,lastAttempt=0,account=null,summary=null,summaryRevision=0,streamFactory=null,accountStream=null,accountRevision=0,accountView,refreshAgain=false;
+  const RPC_TIMEOUT_MS=15000,DONE=Promise.resolve(),CANCELLED=Symbol('finance request cancelled');
+  let snapshot=FINANCE_EMPTY,disposed=false,timer=null,account=null,summary=null,summaryRevision=0,streamFactory=null,accountStream=null,accountRevision=0,accountView,aggregate=null;
+  const channels={account:{pending:null,lastAttempt:0,sequence:0},summary:{pending:null,lastAttempt:0,sequence:0}};
   const listeners=new Set(),consumers=new Set(),cleanups=[];
-  const publish=patch=>{if(disposed)return;snapshot={...snapshot,...patch};for(const listener of listeners)listener();};
+  const publish=patch=>{if(disposed)return;snapshot={...snapshot,...patch};for(const listener of listeners){try{listener();}catch{}}};
   const active=()=>!disposed&&consumers.size>0&&document.hidden!==true;
   const metadata=()=>({version:FINANCE_ACCOUNT_VERSION,locale:ctx.locale?.getSnapshot?.().active||'zh',timezoneOffsetSeconds:-new Date().getTimezoneOffset()*60});
-  const stopWatch=()=>{const stream=accountStream;accountStream=null;try{stream?.dispose?.();}catch{}};
+  const stopWatch=()=>{const stream=accountStream;accountStream=null;try{return Promise.resolve(stream?.dispose?.()).catch(()=>{});}catch{return DONE;}};
   const clearTimer=()=>{if(timer!==null){clearTimeout(timer);timer=null;}};
-  function schedule(){clearTimer();if(active())timer=setTimeout(()=>{timer=null;refresh(false);},Math.max(1,FINANCE_POLL_MS-(Date.now()-lastAttempt)));}
-  function signedOut(){accountRevision++;accountView='signed-out';publish({account:{status:'signed-out',wallets:[],updatedAt:null}});}
+  function publishBusy(){const refreshing=!!(channels.account.pending||channels.summary.pending);if(snapshot.refreshing!==refreshing)publish({refreshing});}
+  function cancelChannel(name,retry=false){const channel=channels[name],pending=channel.pending;if(retry)channel.lastAttempt=0;if(!pending)return;channel.sequence++;channel.pending=null;pending.cancel();publishBusy();}
+  function schedule(){
+    clearTimer();if(!active())return;
+    const waits=[];for(const name of ['account','summary']){const available=name==='account'?account:summary,channel=channels[name];if(available&&!channel.pending)waits.push(channel.lastAttempt?FINANCE_POLL_MS-(Date.now()-channel.lastAttempt):1);}
+    if(waits.length)timer=setTimeout(()=>{timer=null;refresh(false);},Math.max(1,Math.min(...waits)));
+  }
+  function signedOut(){accountRevision++;accountView='signed-out';cancelChannel('account');publish({account:{status:'signed-out',wallets:[],updatedAt:null}});}
   function startWatch(){
     if(!active()||!account?.watch||accountStream)return;
-    let stream;try{stream=streamFactory?streamFactory({name:'deepseek-girl-finance-account',open:signal=>account.watch(signal),ended:()=>new Error('account stream ended')}):account.watch();}catch{return;}
+    const source=account;let stream;try{stream=streamFactory?streamFactory({name:'deepseek-girl-finance-account',open:signal=>source.watch(signal),ended:()=>new Error('account stream ended')}):source.watch();}catch{return;}
     accountStream=stream;let firstFrame=true;
-    (async()=>{for await(const frame of stream){if(disposed||accountStream!==stream)break;const view=frame?.value??frame;if(view?.status!=='credential-stored'&&view?.status!=='signed-out'){frame?.accept?.();continue;}const changed=!firstFrame||accountView==='signed-out';firstFrame=false;if(view.status==='signed-out')signedOut();else {if(changed){accountRevision++;publish({account:{status:'loading',wallets:[],updatedAt:null}});}accountView='credential-stored';if(changed){if(inflight)refreshAgain=true;else refresh(true);}}frame?.accept?.();}})().catch(()=>{if(!disposed&&accountStream===stream&&active())publish({account:{status:'failed',wallets:[],updatedAt:null}});});
+    (async()=>{
+      for await(const frame of stream){
+        if(disposed||accountStream!==stream)break;
+        const view=frame?.value??frame;
+        if(view?.status!=='credential-stored'&&view?.status!=='signed-out'){frame?.accept?.();continue;}
+        const changed=!firstFrame||accountView==='signed-out';firstFrame=false;
+        if(view.status==='signed-out')signedOut();
+        else {if(changed){accountRevision++;cancelChannel('account',true);publish({account:{status:'loading',wallets:[],updatedAt:null}});}accountView='credential-stored';if(changed){runChannel('account',true);schedule();}}
+        frame?.accept?.();
+      }
+    })().catch(()=>{if(!disposed&&accountStream===stream){accountStream=null;if(active())publish({account:{status:'failed',wallets:[],updatedAt:null}});}});
   }
-  async function readAccount(){
-    if(!account)return {status:'unavailable',wallets:[],updatedAt:null};
-    const revision=accountRevision;
+  async function readAccount(valid){
+    const source=account,revision=accountRevision;
+    if(!source)return {status:'unavailable',wallets:[],updatedAt:null};
+    const current=()=>valid()&&source===account&&revision===accountRevision;
+    if(!current())return null;
     try{
-      if(accountView!=='credential-stored'&&account.getState){const state=await account.getState();if(!active()||revision!==accountRevision)return null;if(!state?.ok)throw Error('unavailable');if(state.value?.status==='signed-out'){signedOut();return null;}if(state.value?.status!=='credential-stored')throw Error('unavailable');accountView='credential-stored';}
+      if(accountView!=='credential-stored'&&source.getState){const state=await source.getState();if(!current())return null;if(!state?.ok)throw Error('unavailable');if(state.value?.status==='signed-out'){signedOut();return null;}if(state.value?.status!=='credential-stored')throw Error('unavailable');accountView='credential-stored';}
       if(accountView==='signed-out')return {status:'signed-out',wallets:[],updatedAt:null};
-      const response=await account.getBalance(metadata());if(!active()||revision!==accountRevision)return null;if(!response?.ok)throw Error('unavailable');const value=response.value;if(value===null){signedOut();return null;}if(value.status!=='ready')throw Error('unavailable');
+      if(!current())return null;
+      const response=await source.getBalance(metadata());if(!current())return null;if(!response?.ok)throw Error('unavailable');const value=response.value;if(value===null){signedOut();return null;}if(value.status!=='ready')throw Error('unavailable');
       const recharge=financeWallets(value.value),bonus=financeWallets(value.bonusWallets);if(recharge===null||bonus===null)throw Error('invalid balance');return {status:'ready',wallets:recharge.concat(bonus),recharge,bonus,updatedAt:Date.now()};
-    }catch{return active()&&revision===accountRevision?{status:'failed',wallets:[],updatedAt:null}:null;}
+    }catch{return current()?{status:'failed',wallets:[],updatedAt:null}:null;}
   }
-  async function readSummary(){if(!summary)return {status:'unavailable'};const source=summary,revision=summaryRevision;try{const result=await source({timezoneOffsetSeconds:-new Date().getTimezoneOffset()*60});return revision!==summaryRevision?null:result?.ok?financeSummary(result.value):{status:'failed'};}catch{return revision===summaryRevision?{status:'failed'}:null;}}
+  async function readSummary(valid){
+    const source=summary,revision=summaryRevision;if(!source)return {status:'unavailable'};
+    const current=()=>valid()&&source===summary&&revision===summaryRevision;
+    if(!current())return null;
+    try{const result=await source({timezoneOffsetSeconds:-new Date().getTimezoneOffset()*60});return !current()?null:result?.ok?financeSummary(result.value):{status:'failed'};}catch{return current()?{status:'failed'}:null;}
+  }
+  function runChannel(name,force){
+    const channel=channels[name],source=name==='account'?account:summary;
+    if(!active()||!source)return DONE;
+    if(channel.pending)return channel.pending.promise;
+    if(!force&&channel.lastAttempt&&Date.now()-channel.lastAttempt<FINANCE_POLL_MS)return DONE;
+    channel.lastAttempt=Date.now();const sequence=++channel.sequence;
+    let timeout,resolveCancel;
+    const record={promise:null,expired:false,cancel:()=>resolveCancel(CANCELLED)};channel.pending=record;
+    const current=()=>active()&&channel.pending===record&&channel.sequence===sequence;
+    const valid=()=>current()&&!record.expired;
+    const cancelled=new Promise(resolve=>resolveCancel=resolve);
+    const expired=new Promise(resolve=>{timeout=setTimeout(()=>{record.expired=true;resolve({status:'failed',...(name==='account'?{wallets:[],updatedAt:null}:{})});},RPC_TIMEOUT_MS);});
+    if(snapshot[name].status==='unavailable')publish({[name]:name==='account'?{status:'loading',wallets:[],updatedAt:null}:{status:'loading'}});
+    publishBusy();
+    // The race observes every rejection, including a transport rejecting after timeout/cancellation.
+    const task=Promise.resolve().then(()=>name==='account'?readAccount(valid):readSummary(valid));
+    record.promise=Promise.race([task,cancelled,expired]).then(value=>{if(value!==CANCELLED&&value!==null&&current())publish({[name]:value});},()=>{if(current())publish({[name]:name==='account'?{status:'failed',wallets:[],updatedAt:null}:{status:'failed'}});}).then(()=>{
+      clearTimeout(timeout);if(channel.pending===record){channel.pending=null;publishBusy();schedule();}
+    });
+    return record.promise;
+  }
   function refresh(force=true){
-    if(!active())return Promise.resolve();if(inflight)return inflight;if(!force&&Date.now()-lastAttempt<FINANCE_POLL_MS){schedule();return Promise.resolve();}
-    lastAttempt=Date.now();publish({refreshing:true,account:snapshot.account.status==='unavailable'&&account?{status:'loading',wallets:[],updatedAt:null}:snapshot.account,summary:snapshot.summary.status==='unavailable'&&summary?{status:'loading'}:snapshot.summary});
-    const request=Promise.all([readAccount(),readSummary()]).then(([balance,total])=>{if(active()){const patch={};if(total!==null)patch.summary=total;if(balance!==null)patch.account=balance;publish(patch);}}).finally(()=>{if(inflight!==request)return;inflight=null;if(!disposed)publish({refreshing:false});if(refreshAgain&&active()){refreshAgain=false;refresh(true);}else schedule();});inflight=request;return request;
+    if(!active())return DONE;
+    startWatch();
+    const balance=runChannel('account',force),total=runChannel('summary',force);
+    schedule();
+    if(aggregate?.balance===balance&&aggregate?.total===total)return aggregate.promise;
+    if(balance===DONE&&total===DONE)return DONE;
+    const current={balance,total,promise:null};current.promise=Promise.all([balance,total]).then(()=>{if(aggregate===current)aggregate=null;});aggregate=current;return current.promise;
   }
-  function reconcile(){clearTimer();if(active()){startWatch();refresh(false);}else stopWatch();}
+  function reconcile(){clearTimer();if(active()){startWatch();refresh(false);}else{stopWatch();cancelChannel('account',!!channels.account.pending);cancelChannel('summary',!!channels.summary.pending);}}
   const visibility=()=>reconcile();document.addEventListener('visibilitychange',visibility);window.addEventListener('focus',visibility);
   cleanups.push(()=>document.removeEventListener('visibilitychange',visibility),()=>window.removeEventListener('focus',visibility));
   if(typeof ctx.inject==='function'){
-    ctx.inject(['remote'],scope=>{
+    // $mount registers descriptors through the calling scope's Typert service.
+    // Cordis does not inherit a service's own dependencies into this caller.
+    ctx.inject(['remote','typert'],scope=>{
       if(typeof FINANCE_REMOTE==='undefined'||typeof scope.remote.$mount!=='function')return;
       const mount=scope.remote.$mount.bind(scope.remote);let live=true,release;
       scope.effect(()=>()=>{live=false;try{return Promise.resolve(release?.()).catch(()=>{});}catch{}});
       Promise.resolve().then(()=>mount(FINANCE_REMOTE)).then(dispose=>{if(!live){try{return Promise.resolve(dispose?.()).catch(()=>{});}catch{}}else release=dispose;}).catch(()=>{if(!summary)publish({summary:{status:'unavailable'}});});
     });
     ctx.inject(['remote','remote.account'],scope=>{
-      const remote=scope.remote,source=remote.account;account={getBalance:source.getBalance.bind(source),...(typeof source.getState==='function'?{getState:source.getState.bind(source)}:{}),...(typeof source.watch==='function'?{watch:source.watch.bind(source)}:{})};streamFactory=typeof remote.$stream==='function'?remote.$stream.bind(remote):null;accountView=undefined;accountRevision++;lastAttempt=0;reconcile();
-      scope.effect(()=>()=>{stopWatch();account=null;streamFactory=null;accountRevision++;publish({account:{status:'unavailable',wallets:[],updatedAt:null}});});
+      const remote=scope.remote,source=remote.account;cancelChannel('account',true);account={getBalance:source.getBalance.bind(source),...(typeof source.getState==='function'?{getState:source.getState.bind(source)}:{}),...(typeof source.watch==='function'?{watch:source.watch.bind(source)}:{})};const current=account;streamFactory=typeof remote.$stream==='function'?remote.$stream.bind(remote):null;accountView=undefined;accountRevision++;reconcile();
+      scope.effect(()=>()=>{if(account!==current)return;stopWatch();account=null;streamFactory=null;accountRevision++;cancelChannel('account',true);publish({account:{status:'unavailable',wallets:[],updatedAt:null}});schedule();});
     });
-    ctx.inject(['remote','remote.deepseekGirlFinance'],scope=>{const source=scope.remote.deepseekGirlFinance;summary=source.summary.bind(source);summaryRevision++;lastAttempt=0;reconcile();scope.effect(()=>()=>{summary=null;summaryRevision++;publish({summary:{status:'unavailable'}});});});
+    ctx.inject(['remote','remote.deepseekGirlFinance'],scope=>{
+      const source=scope.remote.deepseekGirlFinance;cancelChannel('summary',true);summary=source.summary.bind(source);const current=summary;summaryRevision++;reconcile();
+      scope.effect(()=>()=>{if(summary!==current)return;summary=null;summaryRevision++;cancelChannel('summary',true);publish({summary:{status:'unavailable'}});schedule();});
+    });
   }
-  return {subscribe(listener){listeners.add(listener);return()=>listeners.delete(listener);},getSnapshot:()=>snapshot,acquire(enabled=true){const token={};if(enabled)consumers.add(token);reconcile();return()=>{consumers.delete(token);reconcile();};},refresh,dispose(){if(disposed)return;disposed=true;clearTimer();stopWatch();consumers.clear();listeners.clear();for(const cleanup of cleanups)cleanup();}};
+  return {subscribe(listener){listeners.add(listener);return()=>listeners.delete(listener);},getSnapshot:()=>snapshot,acquire(enabled=true){const token={};if(enabled)consumers.add(token);reconcile();return()=>{consumers.delete(token);reconcile();};},refresh,dispose(){if(disposed)return;disposed=true;clearTimer();stopWatch();cancelChannel('account');cancelChannel('summary');consumers.clear();listeners.clear();for(const cleanup of cleanups)cleanup();}};
 }

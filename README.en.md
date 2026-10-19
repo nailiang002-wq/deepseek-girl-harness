@@ -2,13 +2,13 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.7.0**
+English · [中文](README.md) · **v1.7.1**
 
 ![Three outfits and the live wardrobe preview](docs/images/wardrobe.png)
 
 <p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
 
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.0/DeepSeekGirl-Harness-v1.7.0.zip"><strong>⬇ Download v1.7.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.7.1/DeepSeekGirl-Harness-v1.7.1.zip"><strong>⬇ Download v1.7.1 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
@@ -89,6 +89,8 @@ Version 1.7 adds a small card beside the character. Click it for native-account 
 
 ![Ledger preview using synthetic example values](docs/images/finance.png)
 
+**v1.7.1 fix:** Restores the daily-usage connection when the balance works but the estimate stays unavailable. Balance and usage refresh independently; a stalled request times out and can be retried. Reload the interface after updating.
+
 **The image uses synthetic example values, not a real account.**
 
 - **Balance** comes from the account signed in to Harness, including recharge and bonus wallets. CNY and USD remain separate. This account may differ from the owner of a configured API key; API-key and third-party account balances are not queried by this release.
@@ -138,6 +140,8 @@ Optional checks in a real browser:
 npx playwright install chromium
 npm run test:browser
 ```
+
+For the native connection regression, point `DSG_HARNESS_NODE_MODULES` at Harness's `node_modules` directory and run `npm run test:native`. It uses native Cordis, Typert, and Client Gateway with synthetic sessions to verify the complete usage path. It does not read personal profiles or real conversations, or make network requests.
 
 `client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames`, `assets/outfits`, and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
 
