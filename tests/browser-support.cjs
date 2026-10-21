@@ -6,4 +6,21 @@ function browserFixture(){
   const mount=`window.__regs=new Map();window.__cleanup=[];window.__language=null;window.__plugin.apply({effect:fn=>{const cleanup=fn();if(typeof cleanup==='function')__cleanup.push(cleanup);},locale:{register:(_name,dict)=>{__language=dict;return()=>{};}},slots:{inject:(_name,fn)=>fn(),register:(opts,component)=>{__regs.set(opts.name,component);return()=>{};}}});const root=ReactDOM.createRoot(document.getElementById('mount'));window.__running=true;window.__phase='thinking';window.__props={sessionId:'animation-browser-test',t:k=>__language.zh[k]||k,useSession:select=>select({running:__running}),useProjection:()=>({endSeq:1,outcome:'working'}),useChat:select=>select({order:['a'],nodes:new Map([['a',{kind:'assistant-step'}]])}),useGirlNode:()=>__phase};window.__rerender=()=>root.render(React.createElement(__regs.get('conversation.composer.dock'),__props));window.__unmount=()=>{root.unmount();__cleanup.reverse().forEach(fn=>fn());};__rerender();`;
   return {fixture,mount};
 }
-module.exports={browserFixture};
+async function wheelAction(page,label){
+ const wheel=page.locator('.dsg-menu');
+ if(!await wheel.count())await page.locator('.dsg-character').press('Enter');
+ const button=()=>wheel.getByRole('button',{name:label,exact:true});
+ if(await button().count())return button().click();
+ await page.keyboard.press('Escape');await page.locator('.dsg-character').press('Enter');
+ if(await button().count())return button().click();
+ await wheel.getByRole('button',{name:/^(更多|More)$/}).click();
+ if(await button().count())return button().click();
+ await wheel.getByRole('button',{name:/^(小设置|Settings)$/}).click();
+ if(await button().count())return button().click();
+ await wheel.getByRole('button',{name:/^(返回上一层|Back)$/}).click();
+ await wheel.getByRole('button',{name:/^(表情预览|Expressions)$/}).click();
+ if(await button().count())return button().click();
+ await wheel.getByRole('button',{name:/^(下一页表情|Next expressions)$/}).click();
+ return button().click();
+}
+module.exports={browserFixture,wheelAction};

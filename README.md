@@ -2,29 +2,55 @@
 
 **让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
 
-[English](README.en.md) · 中文 · **v1.8.0**
+[English](README.en.md) · 中文 · **v1.9.0**
 
-![冬日衣柜：奶油蓝羽绒服与月牙绒绒斗篷](docs/images/winter.png)
+<p align="center"><img src="docs/images/quick-tour.gif" width="760" alt="实际插件界面演示：跟随任务、转轮菜单、摸头和连续三口白饭"></p>
 
-<p align="center"><img src="docs/images/feeding.gif" width="420" alt="点击白饭铁盆，DeepSeek 娘开心吃饭的动画预览"></p>
-
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.8.0/DeepSeekGirl-Harness-v1.8.0.zip"><strong>⬇ 下载插件 v1.8.0（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/latest/download/DeepSeekGirl-Harness.zip"><strong>⬇ 下载最新版插件（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
-DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。她会跟随当前任务改变表情，你也可以把她拎到窗口另一边、喂她一盆白饭，或给她戴上铁盆帽。早晨、午间和夜晚，她会用小气泡跟你打招呼。v1.8 新增奶油蓝羽绒服和月牙绒绒斗篷，衣柜共有五套完整服装；每套都能连续吃三口白饭。
+DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。她会跟随当前任务改变表情，你也可以把她拎到窗口另一边、喂她一盆白饭，或给她戴上铁盆帽。早晨、午间和夜晚，她会用小气泡跟你打招呼。点一下身体就能打开紧凑转轮，常用互动就在手边。摸摸头后，余额与今日用量短暂出现。衣柜共有五套完整服装，每套都能连续吃三口白饭。
+
+首页动图使用实际插件界面与虚构任务、账本数据；下方转轮与安装窗口图来自 Harness 实机。
 
 ## 三步安装
 
-![下载、添加插件、启用：三步安装图解](docs/images/install.png)
+**下载的是插件 ZIP，不要选择 GitHub 的 “Source code”。解压后保留整个文件夹，不要只取 `client.js`。**
 
 1. **下载并解压**上面的 ZIP，找到 `DshDeepSeekGirl` 文件夹。
-2. 在 Harness 打开 **插件 → 添加插件**，填写这个文件夹的完整路径。
+2. 在 Harness 左侧打开 **插件 → 添加插件**；有下拉选项时选 **安装第三方插件**。把包含 `package.json` 的 `DshDeepSeekGirl` 文件夹完整路径粘贴到“包名或地址”。
 3. **安装并启用**，按提示重新载入界面；没有重新载入入口时，退出并重新打开 Harness。
+
+例如解压后的目录是 `D:\Plugins\DshDeepSeekGirl`，就填写这个路径，不要填写 ZIP 的路径或更外层目录：
+
+```text
+DshDeepSeekGirl/
+├─ package.json   ← 这个文件所在的文件夹
+├─ index.js
+└─ client.js
+```
+
+![Harness 实际添加插件窗口，使用示例路径](docs/images/install-dialog.png)
+
+已有旧版：先保留解压目录。可把新版文件覆盖到原来的插件目录并重新载入；若 Harness 提示需要重新安装，请先在插件列表卸载旧版，再添加新版目录。
 
 第一次使用：轻点头部摸摸头，快速点三次会鼓脸；点击身体或右键打开菜单。点击旁边的白饭盆喂饭，按住角色拖动，Ctrl + 滚轮调整大小。
 
 遇到安装问题，请到 [Issues](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) 告诉我你的 Harness 版本、系统和报错内容。也欢迎反馈最喜欢的动作、哪里卡顿或下一步想加入的互动。
+
+**第一次体验？** 正在找 5 位 Windows / Mac 用户试试“安装 → 换装 → 喂饭”，欢迎[留下哪里顺手、哪里卡住](https://github.com/nailiang002-wq/deepseek-girl-harness/issues/new?template=first-try.md)。Mac 仍需要真机验证。
+
+## 转轮更小，互动更近
+
+点击身体或右键角色，六个常用入口围成一个小转轮：喂饭、摸头、换装、帽子、问候、更多。奶油色底、蓝色小涂鸦和离线手写字体；原来整页的选项放到第二层。
+
+![实际 Harness 窗口：角色旁的紧凑手绘转轮](docs/images/harness-wheel.png)
+
+- **更多 → 表情预览**：十二种表情，分两页。
+- **更多 → 小设置**：开关求饭、时间问候、摸头账本。
+- **更多 → 小账本**：随时主动查看明细。
+- 点击中央或按 Esc 收起；支持方向键和窗口边缘避让。
 
 ## 图片与动画演示
 
@@ -67,17 +93,19 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 | 按住角色拖动 | 移动角色 |
 | Ctrl + 滚轮 | 调整大小 |
 | 轻点头部 | 摸头；快速点三次会鼓脸 |
-| 点击身体 / 右键角色 / Enter 或空格 | 打开表情与互动菜单 |
+| 点击身体 / 右键角色 / Enter 或空格 | 打开小转轮 |
 | 点击旁边的白饭盆 | 喂饭 |
 | 菜单：打开小衣柜 | 试穿、确认或取消换装 |
 | 菜单：戴上 / 摘下铁盆帽 | 切换帽子 |
 | 菜单：和我打个招呼 | 手动触发当前时段的问候 |
-| 菜单：关闭时间问候 / 待机捧盆求饭 | 关闭对应的自动互动 |
-| 菜单：暂停动画 | 停止姿势播放和连续摆动 |
+| 转轮：更多 → 小设置 | 开关问候、求饭和摸头账本 |
+| 转轮：更多 → 暂停 | 停止姿势播放和连续摆动 |
 
 服装、位置、大小、帽子和互动开关会保存在本地。插件列表中可关闭或卸载本插件。
 
 ## 今天穿哪一套
+
+![冬日衣柜：奶油蓝羽绒服与月牙绒绒斗篷](docs/images/winter.png)
 
 **冬日新装：** 奶油蓝羽绒服搭配蓝色针织围巾；月牙绒绒斗篷搭配奶油色高领毛衣、绒毛镶边和金色月牙扣。两套各自配齐十二种状态，也能戴铁盆帽和连续吃三口白饭。
 
@@ -89,11 +117,11 @@ DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。�
 
 ## 她的饭钱小账本
 
-v1.7 在角色旁新增一张小卡片，点击可查看登录账户余额、今日预估费用和 Token 明细。角色菜单中可以隐藏卡片；显示时约每分钟刷新一次，详情里也可手动刷新。金额只保存在内存中，本地仅记住是否显示。
+**摸摸头，给你看看今天的小账本。** 平时不显示；轻点头部后，余额、今日预估费用和 Token 小卡片出现约 10 秒。鼠标移到卡片上或用键盘聚焦时保持显示，方便慢慢看；点卡片展开明细。也可以从 **更多 → 小账本** 主动打开。
+
+**更多 → 小设置 → 摸头账本** 可关闭这项互动。仅在卡片或详情打开时查询；持续查看时约每分钟刷新一次，关闭后停止。金额保存在内存中，本地只记住功能开关。
 
 ![饭钱小账本：使用虚构示例数据的独立测试页预览](docs/images/finance.png)
-
-**v1.7.1 修复：** 今日用量连接恢复，解决余额正常但“今日预估”一直显示“暂不可用”的问题。余额与用量各自刷新，一项超时不会挡住另一项；超时后可以重试。更新后请重新载入界面。
 
 **图片使用虚构示例数据，不是实际账户余额。**
 
@@ -102,7 +130,7 @@ v1.7 在角色旁新增一张小卡片，点击可查看登录账户余额、今
 - **今日预估**：按已知 DeepSeek 官方模型的非缓存输入、缓存读取和输出用量，显示峰谷费率对应的**人民币费用区间**，单价核对日期为 2026-10-16。它不代表账户实扣账单，也不包含其他设备或平台的调用。可通过[官方价格](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/)和详情中的“查看官方账单”核对。
 - 缺失用量、未知模型或渠道、缓存证据不足会明确标注。标题生成、搜索等未上报 Token 的请求计入覆盖缺口；无法确定的总量显示 **—**。未登录、联网失败、记录扫描失败都不会伪装成余额或消耗为零。
 
-功能复用 Harness 已有的认证接口，不要求额外填写 API Key，也不会把聊天文字发送到新增服务。隐藏窗口或关闭卡片时暂停轮询，退出账户后清除旧余额。
+功能复用 Harness 已有的认证接口，不要求额外填写 API Key，也不会把聊天文字发送到新增服务。隐藏窗口或收起账本时暂停轮询，退出账户后清除旧余额。
 
 ## 时间问候
 

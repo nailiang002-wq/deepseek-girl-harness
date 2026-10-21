@@ -1,9 +1,9 @@
 {
   "name": "@local/dsh-deepseek-girl",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "type": "module",
-  "description": "DeepSeek 娘：五套服装、冬装小衣柜、白饭互动、余额与本机今日费用预估和 Token 用量。",
+  "description": "DeepSeek 娘：手绘转轮、摸头小账本、五套服装和白饭互动。",
   "icon": "./icon.png",
   "exports": {
     ".": "./index.js",
@@ -46,7 +46,7 @@
   "scripts": {
     "build": "node scripts/build.cjs",
     "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/artwork.cjs && node tests/usage.mjs && node tests/finance-host.mjs",
-    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs && node tests/finance-browser.cjs",
+    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs && node tests/finance-browser.cjs && node tests/radial-browser.cjs",
     "test:native": "node tests/finance-native.mjs"
   },
   "engines": {

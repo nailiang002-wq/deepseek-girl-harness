@@ -26,17 +26,17 @@ const output=path.resolve('.cache/greeting-browser');fs.mkdirSync(output,{recurs
       const text=await page.locator('.dsg-greeting-text').innerText();const expected=await page.evaluate(({language,period})=>__language[language]['greet_'+period],{language,period});assert.equal(text,expected);cases.push({language,period,height:box.height});
       if(language==='zh'&&period==='morning')await page.screenshot({path:path.join(output,'morning.png')});
       if(language==='en'&&period==='noon')await page.screenshot({path:path.join(output,'english.png')});
-      await page.locator('.dsg-greeting button').click();assert.equal(await page.locator('.dsg-greeting').count(),0);await page.locator('.dsg-finance-card').waitFor({state:'visible'});
+      await page.locator('.dsg-greeting button').click();assert.equal(await page.locator('.dsg-greeting').count(),0);assert.equal(await page.locator('.dsg-finance-card').count(),0);
     }
     const font=await page.evaluate(()=>[...document.fonts].find(font=>font.family==='DSG Greeting Hand')?.status);assert.equal(font,'loaded');
-    for(const [x,y]of [[0,0],[9999,0],[0,9999],[9999,9999]]){await hello('en','12:00',{x,y});const box=await bounds();placements.add(box.side);onScreen(box);await page.locator('.dsg-greeting button').click();await page.locator('.dsg-finance-card').waitFor({state:'visible'});}assert.deepEqual([...placements].sort(),['above','below']);
+    for(const [x,y]of [[0,0],[9999,0],[0,9999],[9999,9999]]){await hello('en','12:00',{x,y});const box=await bounds();placements.add(box.side);onScreen(box);await page.locator('.dsg-greeting button').click();assert.equal(await page.locator('.dsg-finance-card').count(),0);}assert.deepEqual([...placements].sort(),['above','below']);
     await page.setViewportSize({width:320,height:240});await hello('zh','23:30',{x:0,y:0,size:96});onScreen(await bounds());await page.setViewportSize({width:250,height:180});await page.waitForTimeout(240);onScreen(await bounds());
     await page.setViewportSize({width:640,height:480});await page.locator('.dsg-greeting button').click();
     await page.evaluate(()=>{document.body.style.background='#1f273b';document.body.style.setProperty('--dsw-alias-bg-layer-1','#263248');document.body.style.setProperty('--dsw-alias-label-primary','#f3f6ff');});
     await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});await hello('zh','23:30');const dark=await bounds();assert.equal(dark.background,'#fff9ee');assert.equal(await page.locator('.dsg-greeting').evaluate(element=>element.getAnimations().length),0);await page.screenshot({path:path.join(output,'night.png')});
     fs.writeFileSync(path.join(output,'night-bubble.html'),await page.locator('.dsg-greeting').evaluate(element=>element.outerHTML));
     assert.deepEqual(externalRequests,[]);assert.deepEqual(await page.evaluate(()=>__fixtureErrors),[]);await page.evaluate(()=>__unmount());assert.equal(await page.locator('.dsg-root').count(),0);
-    const report={passed:true,version:JSON.parse(fs.readFileSync('package.json','utf8')).version,fontLoaded:true,externalRequests,cases,corners:4,greetingPlacements:[...placements].sort(),financeHiddenDuringGreeting:true,financeReturnsAfterDismissal:true,narrowWindowResize:true,darkPaperContrast:true,reducedMotion:true,dismissal:true};
+    const report={passed:true,version:JSON.parse(fs.readFileSync('package.json','utf8')).version,fontLoaded:true,externalRequests,cases,corners:4,greetingPlacements:[...placements].sort(),financeHiddenDuringGreeting:true,financeStaysHiddenWithoutPat:true,narrowWindowResize:true,darkPaperContrast:true,reducedMotion:true,dismissal:true};
     fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

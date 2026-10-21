@@ -2,29 +2,55 @@
 
 **Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
 
-English · [中文](README.md) · **v1.8.0**
+English · [中文](README.md) · **v1.9.0**
 
-![Winter wardrobe: cream and blue puffer, and moonlit winter cape](docs/images/winter.png)
+<p align="center"><img src="docs/images/quick-tour.gif" width="760" alt="Live plugin demo: task expressions, a compact action wheel, head pats and three bites of rice"></p>
 
-<p align="center"><img src="docs/images/feeding.gif" width="420" alt="Animation preview: DeepSeek Girl happily eats rice from an iron basin"></p>
-
-<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/download/v1.8.0/DeepSeekGirl-Harness-v1.8.0.zip"><strong>⬇ Download v1.8.0 (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
+<p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/latest/download/DeepSeekGirl-Harness.zip"><strong>⬇ Download the latest plugin (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
-DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. Version 1.8 adds a cream and blue puffer and a moonlit winter cape, bringing the wardrobe to five complete outfits, each with a three-bite meal.
+DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. A compact action wheel keeps frequent interactions close by. Pat her head to briefly reveal your balance and today’s local usage. Five complete outfits each include a three-bite meal.
+
+The opening GIF shows the real plugin in a standalone demo with synthetic task and financial data. The wheel and installation screenshots below come from Harness itself.
 
 ## Install in three steps
 
-![Download, add the plugin, and enable it: three installation steps](docs/images/install.png)
+**Download the plugin ZIP, rather than GitHub’s “Source code”. Extract and keep the entire folder.**
 
 1. **Download and extract** the ZIP above; find the `DshDeepSeekGirl` folder.
-2. In Harness, open **Plugins → Add plugin** and enter that folder’s full path.
+2. In Harness, open **Plugins → Add plugin** (choose **Install third-party plugin** if a dropdown appears). Paste the full path of the `DshDeepSeekGirl` folder containing `package.json` into **Package name or address**.
 3. **Install and enable** the plugin, then reload when prompted. If your version has no reload option, quit and reopen Harness.
+
+For example, enter `D:\Plugins\DshDeepSeekGirl`, pointing to this folder rather than the ZIP or its parent:
+
+```text
+DshDeepSeekGirl/
+├─ package.json   ← Choose the folder containing this file
+├─ index.js
+└─ client.js
+```
+
+![Actual Harness installation dialog with an example path](docs/images/install-dialog.png)
+
+Updating: keep your extracted plugin folder. Replace its files with the new version and reload. If Harness requires a reinstall, uninstall the old plugin from the list, then add the new folder.
 
 Tap her head for a gentle pat; three quick taps make her pout. Click her body or right-click for the menu. Feed her using the rice basin, drag to move, or use Ctrl + mouse wheel to resize.
 
 If installation fails, open an [issue](https://github.com/nailiang002-wq/deepseek-girl-harness/issues) with your Harness version, operating system, and error message. Feedback about favorite motions, stuttering, and future interactions is welcome.
+
+**Trying it for the first time?** We are looking for five Windows or Mac volunteers to try installing, changing outfits and feeding rice. [Share what worked and where you got stuck](https://github.com/nailiang002-wq/deepseek-girl-harness/issues/new?template=first-try.md). Mac support still needs real-device testing.
+
+## A smaller wheel, closer interactions
+
+Click her body or right-click to open six frequent actions: rice, head pats, outfits, hat, greetings, and More. Cream paper, blue doodles, and bundled handwriting replace the tall menu.
+
+![Actual Harness window: compact action wheel next to the character](docs/images/harness-wheel.png)
+
+- **More → Expressions**: twelve previews across two pages.
+- **More → Settings**: toggle rice requests, greetings, and the head-pat ledger.
+- **More → Ledger**: open details whenever you like.
+- Use the center button or Esc to close; arrow keys and edge-aware positioning are supported.
 
 ## Image and animation demos
 
@@ -67,17 +93,19 @@ Tested on DeepSeek Harness Desktop for Windows. Other operating systems have not
 | Drag the character | Move her |
 | Ctrl + mouse wheel | Resize her |
 | Tap her head | Pet her; three quick taps make her pout |
-| Click her body / Right-click / Enter or Space | Open expressions and interactions |
+| Click her body / Right-click / Enter or Space | Open the action wheel |
 | Click the rice basin | Feed her |
 | Menu: Open wardrobe | Preview, apply, or cancel an outfit change |
 | Menu: Wear / Remove basin hat | Toggle the hat |
 | Menu: Say hello | Show the current time greeting manually |
-| Menu: Disable time greetings / idle rice requests | Turn off an automatic interaction |
-| Menu: Pause animation | Stop pose playback and continuous motion |
+| Wheel: More → Settings | Toggle greetings, rice requests and the pat-to-peek ledger |
+| Wheel: More → Pause | Stop pose playback and continuous motion |
 
 Outfit, position, size, hat, and interaction preferences are stored locally. Disable or uninstall the plugin from the Harness plugin list.
 
 ## A small wardrobe
+
+![Winter wardrobe: cream and blue puffer, and moonlit winter cape](docs/images/winter.png)
 
 **Winter additions:** A cream and blue quilted puffer with a knitted blue scarf, and a teal winter cape with ivory fur trim, a gold crescent clasp, and a cream turtleneck. Both cover all twelve states and retain the basin hat and three-bite feeding animation.
 
@@ -89,11 +117,11 @@ All five outfits cover thinking, answering, feeding, head pats, pouting, draggin
 
 ## Her little rice-money ledger
 
-Version 1.7 adds a small card beside the character. Click it for native-account balances, today's estimated fees, and Token details. The character menu can hide the card. Values refresh about once a minute while visible, with a manual refresh in the details panel. Financial values stay in memory; only the display preference is saved.
+**A head pat, a little peek at today.** The card stays hidden at rest. Pat her head to show your balance, estimated cost and tokens for about ten seconds. Hover or focus the card to keep it readable; click for details. **More → Ledger** opens details directly.
+
+Toggle this interaction under **More → Settings → Pat to peek**. Queries run only while the card or details are open, with at most one automatic refresh per minute. Money values stay in memory; only the feature toggle is saved locally.
 
 ![Ledger preview using synthetic example values](docs/images/finance.png)
-
-**v1.7.1 fix:** Restores the daily-usage connection when the balance works but the estimate stays unavailable. Balance and usage refresh independently; a stalled request times out and can be retried. Reload the interface after updating.
 
 **The image uses synthetic example values, not a real account.**
 

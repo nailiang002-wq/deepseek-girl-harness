@@ -2,20 +2,20 @@
 import hashlib
 import json
 from pathlib import Path
-import re
 import sys
 from fontTools import subset
 from fontTools.ttLib import TTFont
 
 root = Path(__file__).resolve().parent.parent
 source = Path(sys.argv[1])
-dictionary = json.loads(re.search(r"const DICTIONARIES = (.+);", (root / "client.template.js").read_text(encoding="utf-8"))[1])
-text = "".join(value for locale in dictionary.values() for key, value in locale.items() if key.startswith("greet_"))
-codepoints = set(map(ord, text)) | set(range(32, 127))
+client = (root / "client.template.js").read_text(encoding="utf-8")
+# Include every UI label, including Object.assign additions for the wheel and ledger.
+text = client[client.index("const DICTIONARIES ="):client.index("// Small, local SVG")]
+codepoints = {ord(character) for character in text if ord(character) >= 32} | set(range(32, 127))
 font = TTFont(source)
 missing = codepoints - set(font.getBestCmap())
 if missing:
-    raise ValueError(f"Source font misses greeting characters: {missing}")
+    raise ValueError(f"Source font misses UI characters: {missing}")
 options = subset.Options()
 options.flavor = "woff2"
 options.name_IDs = [0, 1, 2, 3, 4, 5, 6, 13, 14, 16, 17]

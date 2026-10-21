@@ -1,3 +1,4 @@
+const {wheelAction}=require('./browser-support.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require('playwright'),{browserFixture}=require('./browser-support.cjs');
 const {fixture,mount}=browserFixture(),clientFile=process.env.DSG_CLIENT_FILE||'client.js';
@@ -33,7 +34,7 @@ const labels={idle:'待机',thinking:'思考中',generating:'正在回答',succe
   for(const outfit of ['maid','hoodie','pajamas','winter-puffer','winter-cape']){
     await wardrobe();await choose(outfit);await page.getByRole('button',{name:'就穿这套',exact:true}).click();
     for(const [state,label]of Object.entries(labels)){
-      await openMenu();await page.getByRole('button',{name:label,exact:true}).click();await waitState(state);await page.waitForFunction(state=>document.querySelector('.dsg-art')?.getAnimations().some(a=>a.animationName==='dsg-frames-'+state),state);
+      await openMenu();await wheelAction(page,label);await waitState(state);await page.waitForFunction(state=>document.querySelector('.dsg-art')?.getAnimations().some(a=>a.animationName==='dsg-frames-'+state),state);
       const image=await page.locator('.dsg-art').evaluate(img=>{let code=2166136261;for(let i=0;i<img.src.length;i++)code=Math.imul(code^img.src.charCodeAt(i),16777619);return{outfit:img.dataset.outfit,state:img.dataset.state,width:img.naturalWidth,hash:code>>>0};});
       assert.equal(image.outfit,outfit);assert.equal(image.state,state);assert.equal(image.width,outfits[outfit][state].count*320);assert.equal(image.hash,hash(outfits[outfit][state].strip));checked.push(outfit+':'+state);const decodedSize=await page.evaluate(()=>__wardrobeDecodeCache.size);assert.ok(decodedSize<=8);peakDecoded=Math.max(peakDecoded,decodedSize);
     }
