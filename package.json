@@ -1,9 +1,9 @@
 {
   "name": "@local/dsh-deepseek-girl",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "private": true,
   "type": "module",
-  "description": "DeepSeek 娘：手绘转轮、摸头小账本、五套服装和白饭互动。",
+  "description": "DeepSeek 娘：Flash / Pro 自动变身、成熟鲸鱼女仆、转轮、白饭与摸头账本。",
   "icon": "./icon.png",
   "exports": {
     ".": "./index.js",
@@ -28,7 +28,9 @@
     "usage.js",
     "finance-host.js",
     "finance-protocol.js",
-    "finance-client.js"
+    "finance-client.js",
+    "model-form.js",
+    "pro-motion.js"
   ],
   "dsh": {
     "manifestVersion": 1,
@@ -39,14 +41,15 @@
       "platform": "web",
       "inject": [
         "@deepseek-ai/dsh-client-ui-conversation",
-        "@deepseek-ai/dsh-client-ui-chat"
+        "@deepseek-ai/dsh-client-ui-chat",
+        "@deepseek-ai/dsh-client-ui-model-selection"
       ]
     }
   },
   "scripts": {
     "build": "node scripts/build.cjs",
-    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/artwork.cjs && node tests/usage.mjs && node tests/finance-host.mjs",
-    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs && node tests/finance-browser.cjs && node tests/radial-browser.cjs",
+    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/artwork.cjs && node tests/usage.mjs && node tests/finance-host.mjs && node tests/model-form.mjs && node tests/pro-artwork.cjs",
+    "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs && node tests/finance-browser.cjs && node tests/radial-browser.cjs && node tests/transformation-browser.cjs && node tests/pro-tail-browser.cjs && node tests/pro-meal-browser.cjs",
     "test:native": "node tests/finance-native.mjs"
   },
   "engines": {

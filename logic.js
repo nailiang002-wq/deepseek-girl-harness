@@ -11,19 +11,20 @@ export function geometry(value, width, height) {
   return { size, x: clamp(Number.isFinite(value?.x) ? value.x : w - size - 28, 0, Math.max(0, w - size)),
     y: clamp(Number.isFinite(value?.y) ? value.y : h - size - 156, 0, Math.max(0, h - size - 32)) };
 }
-export function greetingGeometry(value, width, height, measuredHeight = 128) {
+export function greetingGeometry(value, width, height, measuredHeight = 128, bounds = null) {
   const w = Number.isFinite(width) && width > 0 ? width : 1280;
   const h = Number.isFinite(height) && height > 0 ? height : 800;
   const margin = Math.min(12, w / 4, h / 4), gap = 15;
-  const anchor = geometry(value, w, h), bubbleWidth = Math.min(288, w - margin * 2);
+  const anchor = bounds ? {x:bounds.x,y:bounds.y,size:bounds.height,width:bounds.width} : geometry(value, w, h), bubbleWidth = Math.min(288, w - margin * 2);
   const maxHeight = Math.max(1, h - margin * 2);
   const bubbleHeight = clamp(Number.isFinite(measuredHeight) ? measuredHeight : 128, 1, maxHeight);
-  const left = clamp(anchor.x + anchor.size / 2 - bubbleWidth / 2, margin, w - bubbleWidth - margin);
+  const center = anchor.x + (anchor.width ?? anchor.size) / 2;
+  const left = clamp(center - bubbleWidth / 2, margin, w - bubbleWidth - margin);
   const above = anchor.y - gap - margin, below = h - anchor.y - anchor.size - 32 - gap - margin;
   const side = above >= bubbleHeight || above >= below ? 'above' : 'below';
   const top = clamp(side === 'above' ? anchor.y - bubbleHeight - gap : anchor.y + anchor.size + 32 + gap, margin, h - bubbleHeight - margin);
   const tailMargin = Math.min(28, bubbleWidth / 2);
-  return { width: bubbleWidth, maxHeight, left, top, side, tailX: clamp(anchor.x + anchor.size / 2 - left, tailMargin, bubbleWidth - tailMargin) };
+  return { width: bubbleWidth, maxHeight, left, top, side, tailX: clamp(center - left, tailMargin, bubbleWidth - tailMargin) };
 }
 export function latestAssistantKey(snapshot) {
   const order = snapshot?.order;

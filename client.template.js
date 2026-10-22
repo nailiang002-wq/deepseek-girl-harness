@@ -4,9 +4,12 @@ window.__ModuleLoader__.load({
     const React = require('react'), h = React.createElement;
     const ASSETS = __ASSETS__;
     const OUTFIT_ASSETS = __OUTFIT_ASSETS__;
+    const PRO_ASSETS = __PRO_ASSETS__;
     const OUTFITS = [{id:'maid',zh:'经典女仆装',en:'Classic maid'},{id:'hoodie',zh:'蓝白休闲卫衣',en:'Blue & white hoodie'},{id:'pajamas',zh:'星星睡衣',en:'Star pajamas'},{id:'winter-puffer',zh:'奶油蓝羽绒服',en:'Cream & blue puffer'},{id:'winter-cape',zh:'月牙绒绒斗篷',en:'Moonlit winter cape'}];
     const PROPS = __PROPS__;
     __LOGIC__
+    __MODEL_FORM__
+    __PRO_MOTION__
     __FINANCE__
     const STATES = ["idle","thinking","generating","success","error","dragging","drop","sleeping","begging","eating","petting","pouting"];
     const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"轻点头部：摸头 · 身体 / 右键：菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"轻点头部摸摸头，快速点三次会鼓脸。身体点击 / 右键打开菜单。点白饭盆喂饭；拖动移动，Ctrl + 滚轮缩放。帽子可开关，喂饱后两分钟不再求饭。","accessible":"轻点头部摸头，身体点击或右键打开菜单，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡","petting":"被摸头","pouting":"鼓脸啦","pet":"摸摸头"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Tap head: pet · Body / right click: menu · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Tap her head for a pat; three quick taps make her pout. Click her body or right-click for the menu. Feed with the rice basin, drag to move, Ctrl + wheel to resize. Toggle her hat; feeding pauses rice requests for two minutes.","accessible":"Tap her head to pet, click her body or right-click for the menu, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting","petting":"Enjoying head pats","pouting":"Pouting","pet":"Pat her head"}};
@@ -16,6 +19,8 @@ window.__ModuleLoader__.load({
     Object.assign(DICTIONARIES.en,{financeShow:'Show balance and daily estimate',financeHide:'Hide balance and daily estimate',financeTitle:'Her little rice ledger',financeOpen:'View balance and today’s usage details',financeBalance:'Signed-in account balance',financeToday:'Estimated today',financeLoading:'Loading…',financeFailed:'Could not refresh',financeUnavailable:'Unavailable',financeSignedOut:'Sign in to view',financeRefresh:'Refresh ledger',financeRefreshing:'Refreshing…',financeClose:'Close ledger',financeScope:'Only model usage recorded by this Harness installation today. Excludes other devices and platforms; this is not your account bill.',financePricing:'Estimated from known models’ public prices. Ranges reflect different time bands; actual charges may differ.',financeAccountScope:'Balance belongs to the account signed in to Harness and includes topped-up and granted credits. Your API key may belong to another account.',financeTokens:'Today’s tokens',financeInput:'Uncached input',financeOutput:'Output',financeCacheRead:'Cache read',financeCacheWrite:'Cache write',financeTotal:'Total',financeRequests:'Recorded requests',financeMissing:'Requests missing usage',financeUnpriced:'Requests without prices',financeRecharge:'Topped-up balance',financeBonus:'Granted balance',financeUpdated:'Last updated',financePriceSource:'Price source',financeOfficialBill:'View official bill',financeNoWallet:'No balance data',financePartial:'Known portion only',financeSnapshot:'Today on this installation',financeNoSummary:'Usage totals are unavailable in this environment.'});
     Object.assign(DICTIONARIES.zh,{wheelName:'小鲸鱼',wheelMore:'更多',wheelSettings:'小设置',wheelExpressions:'表情预览',wheelClose:'收起转轮',wheelBack:'返回上一层',wheelNext:'下一页表情',wheelPrevious:'上一页表情',wheelHint:'方向键选择 · Esc 收起',wheelFeed:'喂白饭',wheelPet:'摸摸头',wheelWardrobe:'换衣服',wheelHatOn:'戴帽子',wheelHatOff:'摘帽子',wheelHello:'打招呼',wheelLedger:'小账本',wheelFollow:'跟随任务',wheelPause:'暂停',wheelResume:'播放',wheelReset:'归位',wheelBeg:'捧盆求饭',wheelGreetings:'时间问候',wheelFinance:'摸头账本',wheelOn:'开',wheelOff:'关',financePeekHint:'摸摸头，给你看看今天的小账本',financeShow:'开启摸头显示账本',financeHide:'关闭摸头显示账本'});
     Object.assign(DICTIONARIES.en,{wheelName:'Little Whale',wheelMore:'More',wheelSettings:'Settings',wheelExpressions:'Expressions',wheelClose:'Close wheel',wheelBack:'Back',wheelNext:'Next expressions',wheelPrevious:'Previous expressions',wheelHint:'Arrows to select · Esc to close',wheelFeed:'Feed rice',wheelPet:'Head pat',wheelWardrobe:'Dress up',wheelHatOn:'Hat on',wheelHatOff:'Hat off',wheelHello:'Say hello',wheelLedger:'Ledger',wheelFollow:'Follow task',wheelPause:'Pause',wheelResume:'Play',wheelReset:'Reset',wheelBeg:'Ask for rice',wheelGreetings:'Greetings',wheelFinance:'Pat to peek',wheelOn:'On',wheelOff:'Off',financePeekHint:'A head pat, a little peek at today',financeShow:'Enable ledger after head pats',financeHide:'Disable ledger after head pats'});
+    Object.assign(DICTIONARIES.zh,{formPro:'Pro · 成熟形态',formFlash:'Flash · 小鲸鱼',formToPro:'这次，交给我吧。',formToFlash:'变回小鲸鱼啦～',formChanging:'正在变身',proWardrobeHint:'Pro 当前穿专属鲸鱼女仆装。这里可预选 Flash 的服装，切回 Flash 后生效。',proWardrobe:'Flash 衣柜'});
+    Object.assign(DICTIONARIES.en,{formPro:'Pro · Mature form',formFlash:'Flash · Little Whale',formToPro:'Leave this one to me.',formToFlash:'Little Whale is back!',formChanging:'Transforming',proWardrobeHint:'Pro wears her whale-maid dress. Choose a Flash outfit here; it will be worn when you switch back to Flash.',proWardrobe:'Flash looks'});
     // Small, local SVG drawings keep the wheel sharp without downloading icons.
     function WheelIcon({name}){
       const paths={rice:'M3 11h18c-1 6-4 9-9 9S4 17 3 11Zm2-2c0-3 3-5 7-5s7 2 7 5M8 7l1-1m3 1 1-1m3 1 1 1',pet:'M5 12V9a2 2 0 0 1 4 0v2-6a2 2 0 0 1 4 0v6-5a2 2 0 0 1 4 0v7-3a2 2 0 0 1 4 0v5c0 5-4 7-8 7-3 0-5-2-7-4l-3-3a2 2 0 0 1 2-3Z',wardrobe:'m8 4 4 3 4-3 6 5-4 4-2-2v10H8V11l-2 2-4-4 6-5Z',hat:'M3 16h18M5 14l2-8h10l2 8M9 9h6',hello:'M4 5h16v12h-7l-5 4v-4H4V5Zm4 5h1m5 0h1m-7 3q4 3 8 0',more:'M4 12h1m6 0h1m6 0h1',expressions:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM8 9h1m6 0h1m-8 5q4 5 8 0',settings:'M4 7h16M4 17h16M8 4v6m8 4v6',ledger:'M5 3h14v18H5V3Zm4 5h6m-6 4h6m-6 4h3',follow:'m5 6 14 6-7 2-2 7L5 6Z',pause:'M8 5v14m8-14v14',play:'m8 4 12 8-12 8V4Z',reset:'M5 8a8 8 0 1 1-1 8M5 3v5h5',back:'m14 5-7 7 7 7M7 12h14',close:'m6 6 12 12M18 6 6 18',star:'m12 3 3 6 7 1-5 5 1 6-6-3-6 3 1-6-5-5 7-1 3-6Z'};
@@ -35,23 +40,45 @@ window.__ModuleLoader__.load({
 .dsg-character:active{cursor:grabbing}.dsg-character:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary));outline-offset:2px}
 .dsg-motion{width:100%;height:100%;display:block;position:relative;pointer-events:none;transform-origin:50% 85%;will-change:transform;filter:drop-shadow(0 3px 4px rgba(0,0,0,.14));animation:dsg-breathe 3.6s ease-in-out infinite}
 .dsg-clip{width:100%;height:100%;display:block;overflow:hidden;contain:paint;pointer-events:none;border-radius:0}
-.dsg-art,.dsg-wardrobe-art{height:100%;display:block;max-width:none;pointer-events:none;will-change:transform;animation-timing-function:steps(1,end);animation-fill-mode:forwards}
+.dsg-art,.dsg-wardrobe-art,.dsg-transform-art{height:100%;display:block;max-width:none;pointer-events:none;will-change:transform;animation-timing-function:steps(1,end);animation-fill-mode:forwards}
 .dsg-motion[data-motion="thinking"]{animation:dsg-sway 2.6s ease-in-out infinite}.dsg-motion[data-motion="generating"]{animation:dsg-breathe 1.8s ease-in-out infinite}.dsg-motion[data-motion="sleeping"]{animation:dsg-breathe 4.4s ease-in-out infinite}
 .dsg-motion[data-motion="begging"]{animation:dsg-sway 2s ease-in-out infinite}.dsg-motion[data-motion="eating"]{animation:dsg-breathe .9s ease-in-out infinite}.dsg-motion[data-motion="dragging"]{transform-origin:50% 20%;animation:dsg-swing 1.5s ease-in-out infinite}.dsg-motion[data-motion="success"]{animation:dsg-happy 1s ease-in-out infinite}.dsg-motion[data-motion="drop"]{animation:dsg-land .6s ease-out both}
 .dsg-motion[data-motion="petting"]{animation:dsg-nuzzle 1.8s ease-in-out both}.dsg-motion[data-motion="pouting"]{animation:dsg-pout 1.8s ease-in-out both}
 .dsg-motion[data-animate="false"]{animation:none;will-change:auto}.dsg-root[data-hidden="true"] .dsg-motion,.dsg-root[data-hidden="true"] .dsg-art,.dsg-root[data-hidden="true"] .dsg-wardrobe-art{animation-play-state:paused}
 @keyframes dsg-breathe{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-1%,0) scale(1.008)}}
-@keyframes dsg-sway{0%,100%{transform:translate3d(0,0,0) rotate(-.7deg)}50%{transform:translate3d(0,-1.2%,0) rotate(.7deg)}}
-@keyframes dsg-swing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-@keyframes dsg-happy{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-3%,0) rotate(.6deg)}}
+@keyframes dsg-sway{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-.6%,0)}}
+@keyframes dsg-swing{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-.5%,0)}}
+@keyframes dsg-happy{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-1%,0)}}
 @keyframes dsg-land{0%{transform:translate3d(0,-3%,0) scale(1.01)}40%{transform:translate3d(0,1%,0) scale(1.02,.98)}100%{transform:translate3d(0,0,0) scale(1)}}
-@keyframes dsg-nuzzle{0%,100%{transform:rotate(0)}35%{transform:translate3d(-1%,-1%,0) rotate(-2deg)}70%{transform:translate3d(1%,-.5%,0) rotate(1.5deg)}}
-@keyframes dsg-pout{0%,100%{transform:translate3d(0,0,0)}35%{transform:translate3d(0,-1%,0) rotate(-1deg)}65%{transform:rotate(1deg)}}
+@keyframes dsg-nuzzle{0%,100%{transform:translate3d(0,0,0)}35%,70%{transform:translate3d(0,-.5%,0)}}
+@keyframes dsg-pout{0%,100%{transform:translate3d(0,0,0)}35%,65%{transform:translate3d(0,-.4%,0)}}
 .dsg-affection{position:absolute;inset:0;overflow:visible;pointer-events:none}.dsg-heart{position:absolute;width:13%;height:13%;left:12%;top:17%;color:#e7a2b7;opacity:0;animation:dsg-heart-rise 1.3s ease-out both}.dsg-heart:nth-child(2){left:auto;right:9%;top:26%;width:10%;animation-delay:.15s}.dsg-heart:nth-child(3){left:22%;top:9%;width:8%;animation-delay:.3s}
 @keyframes dsg-heart-rise{0%{opacity:0;transform:translate3d(0,5px,0) scale(.75)}20%{opacity:.9}100%{opacity:0;transform:translate3d(1px,-18px,0) scale(1.08)}}
 .dsg-root[data-motion-enabled='false'] .dsg-heart{animation:none;opacity:.65}.dsg-root[data-hidden='true'] .dsg-heart{animation-play-state:paused}
 __SPRITE_CSS__
 .dsg-hat{position:absolute;left:20%;top:11%;width:60%;height:auto;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));transform:rotate(-5deg);transform-origin:50% 80%}
+.dsg-root[data-form='pro']>.dsg-character>.dsg-motion .dsg-hat{left:39%;top:7.3%;width:31%}
+.dsg-root[data-form='pro']>.dsg-character>.dsg-motion{animation:none;transform:none;will-change:auto}
+.dsg-pro-rig{position:relative;display:block;width:100%;height:100%;pointer-events:none}
+.dsg-pro-tail,.dsg-pro-body{position:absolute;inset:0;display:block;pointer-events:none}
+.dsg-pro-tail{animation:dsg-tail-wave 4.4s ease-in-out infinite;will-change:transform}.dsg-pro-tail img{display:block;width:100%;height:100%;max-width:none}
+.dsg-pro-body .dsg-art{will-change:auto}.dsg-pro-rig[data-animate='false'] .dsg-pro-tail{animation:none;will-change:auto}
+.dsg-root[data-hidden='true'] .dsg-pro-tail{animation-play-state:paused}
+@keyframes dsg-tail-wave{0%,50%,100%{transform:rotate(0deg)}25%{transform:rotate(2.4deg)}75%{transform:rotate(-2.4deg)}}
+.dsg-root[data-form='pro'] .dsg-heart{left:27%;top:10%;width:8%;height:5.33%}.dsg-root[data-form='pro'] .dsg-heart:nth-child(2){left:auto;right:15%;top:15%}.dsg-root[data-form='pro'] .dsg-heart:nth-child(3){left:37%;top:3%;width:6%;height:4%}
+.dsg-root[data-transforming='true']>.dsg-character,.dsg-root[data-transforming='true']>.dsg-footer{opacity:0;pointer-events:none}
+.dsg-morph{position:fixed;z-index:2;pointer-events:none;isolation:isolate}.dsg-morph-actor{position:absolute;transform-origin:50% 97%;filter:drop-shadow(0 3px 4px #35557c24)}
+.dsg-morph-from{animation:dsg-form-leave 2.2s ease-in-out both}.dsg-morph-to{animation:dsg-form-arrive 2.2s ease-in-out both}
+.dsg-morph-hat{position:absolute;height:auto;transform:rotate(-5deg);transform-origin:50% 80%}
+.dsg-morph-aura{position:absolute;inset:0;background:radial-gradient(ellipse at 52% 55%,#e8fbffed 0%,#b4e7ffbd 28%,#89c6f244 48%,transparent 72%);animation:dsg-form-aura 2.2s ease-in-out both;z-index:2}
+.dsg-morph-water{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:3;animation:dsg-form-water 2.2s ease-in-out both}.dsg-morph-water path,.dsg-morph-water ellipse{vector-effect:non-scaling-stroke}
+.dsg-morph-caption{position:fixed;box-sizing:border-box;max-width:calc(100vw - 16px);padding:6px 13px;border:1px solid #a4c5de;border-radius:15px;background:#fffaf2;color:#4a7699;font:15px/1.5 'DSG Greeting Hand','KaiTi',cursive;text-align:center;box-shadow:0 3px 12px #446d8f14;animation:dsg-form-caption 2.2s ease both;z-index:4}
+@keyframes dsg-form-leave{0%,22%{opacity:1;transform:translateY(0) scale(1)}40%{opacity:1;transform:translateY(-2%) scale(1.06)}53%,100%{opacity:0;transform:translateY(-4%) scale(.98)}}
+@keyframes dsg-form-arrive{0%,43%{opacity:0;transform:translateY(3%) scale(.9)}65%{opacity:1;transform:translateY(-1%) scale(1.015)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dsg-form-aura{0%,20%,100%{opacity:0;transform:scale(.75)}43%,55%{opacity:1;transform:scale(1.06)}78%{opacity:.25;transform:scale(1.04)}}
+@keyframes dsg-form-water{0%,12%{opacity:0;transform:translateY(10%) scale(.7)}30%,60%{opacity:.9}80%{opacity:.4;transform:translateY(-8%) scale(1.03)}100%{opacity:0;transform:translateY(-15%) scale(1.08)}}
+@keyframes dsg-form-caption{0%,45%{opacity:0;translate:0 3px}62%,93%{opacity:1;translate:0 0}100%{opacity:0}}
+.dsg-root[data-hidden='true'] .dsg-morph *{animation-play-state:paused}
 .dsg-footer{display:flex;align-items:center;justify-content:center;gap:3px;height:32px;max-width:100%}
 .dsg-food{display:flex;align-items:center;justify-content:center;width:40px;height:32px;flex-shrink:0;border:0;background:transparent;cursor:pointer;border-radius:8px;padding:1px}
 .dsg-food img{width:100%;height:100%;object-fit:contain;pointer-events:none}.dsg-food:hover{background:var(--dsw-alias-interactive-bg-hover);transform:scale(1.08)}.dsg-food:disabled{cursor:default;opacity:.55;transform:none}.dsg-food:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary))}
@@ -95,9 +122,11 @@ __SPRITE_CSS__
 `;
     const decoded=new Map();
     const CACHE_LIMIT=8;
-    function assetFor(outfit,state){return (normalizeOutfit(outfit)==='maid'?ASSETS:OUTFIT_ASSETS[normalizeOutfit(outfit)])[state];}
+    const EMPTY_MODEL_SOURCE={subscribe:()=>()=>{},getSnapshot:()=>null};
+    const artOutfit=value=>value==='pro'?'pro':normalizeOutfit(value);
+    function assetFor(outfit,state){if(outfit==='pro')return PRO_ASSETS[state];return (normalizeOutfit(outfit)==='maid'?ASSETS:OUTFIT_ASSETS[normalizeOutfit(outfit)])[state];}
     function warmAsset(state,outfit='maid'){
-      const key=normalizeOutfit(outfit)+':'+state;
+      const key=artOutfit(outfit)+':'+state;
       if(decoded.has(key)){const entry=decoded.get(key);decoded.delete(key);decoded.set(key,entry);return entry.promise;}
       if(typeof Image==='undefined')return Promise.resolve(false);
       const image=new Image();image.decoding='async';
@@ -105,8 +134,17 @@ __SPRITE_CSS__
       entry.promise=new Promise(resolve=>{const done=ok=>{entry.ready=ok;if(!ok&&decoded.get(key)===entry)decoded.delete(key);resolve(ok);};image.onload=()=>{if(typeof image.decode==='function')image.decode().then(()=>done(true),()=>done(false));else done(true);};image.onerror=()=>done(false);image.src=assetFor(outfit,state).strip;});
       decoded.set(key,entry);while(decoded.size>CACHE_LIMIT)decoded.delete(decoded.keys().next().value);return entry.promise;
     }
-    function SpriteArt({state,outfit='maid',animate,label,startedAt,onReady,loadingLabel,loadAttempt=0,artClass='dsg-art',hidden=false}){
-      const asset=assetFor(outfit,state),key=normalizeOutfit(outfit)+':'+state;
+    function SpriteArt(props){return h(props.outfit==='pro'&&props.artClass!=='dsg-transform-art'?ProSpriteArt:AtlasArt,props);}
+    function ProSpriteArt(props){
+      const {state,animate,artClass='dsg-art'}=props,rig=proTailRig(state),asset=assetFor('pro',state);
+      if(state==='eating')return h('span',{className:'dsg-pro-rig','data-state':state,'data-animate':String(animate),'data-playback':'whole-frame'},
+        h('span',{className:'dsg-pro-body'},h(AtlasArt,{...props,artClass:artClass+' dsg-pro-meal-art'})));
+      return h('span',{className:'dsg-pro-rig','data-state':state,'data-animate':String(animate)},
+        h('span',{className:'dsg-pro-tail',style:{transformOrigin:rig.origin},'aria-hidden':true},h('img',{src:asset.still,alt:'',draggable:false,style:{clipPath:rig.tailClip}})),
+        h('span',{className:'dsg-pro-body',style:{clipPath:rig.bodyClip}},h(AtlasArt,{...props,animate:false,artClass})));
+    }
+    function AtlasArt({state,outfit='maid',animate,label,startedAt,onReady,loadingLabel,loadAttempt=0,delayMs=0,artClass='dsg-art',hidden=false}){
+      const asset=assetFor(outfit,state),key=artOutfit(outfit)+':'+state;
       const [ready,setReady]=React.useState(null);
       const playback=String(animate)+':'+String(!asset.loop&&hidden);
       const requested=React.useRef({key:'',startedAt:0,attempt:-1,playback:'',token:0});
@@ -115,11 +153,24 @@ __SPRITE_CSS__
       const notifyReady=React.useRef(onReady);notifyReady.current=onReady;
       React.useEffect(()=>{let live=true;warmAsset(state,outfit).then(ok=>{if(live){setReady({key,token,ok,elapsed:Math.max(0,Date.now()-(startedAt||Date.now()))});notifyReady.current?.({key,ok});}});return()=>{live=false;};},[token]);
       const loaded=ready?.key===key&&ready.token===token&&ready.ok,play=animate&&loaded;
-      return h('span',{className:'dsg-clip','aria-busy':!loaded},h('img',{key:key+':'+play,className:artClass,'data-outfit':normalizeOutfit(outfit),'data-state':state,src:play?asset.strip:asset.still,alt:label,draggable:false,
-        style:{width:play?asset.count*100+'%':'100%',animationName:play?'dsg-frames-'+state:'none',animationDuration:asset.duration+'ms',animationDelay:play&&!asset.loop?'-'+Math.min(asset.duration,ready.elapsed||0)+'ms':'0ms',animationIterationCount:asset.loop?'infinite':1}}),!loaded&&loadingLabel&&h('span',{className:'dsg-loading-art',role:'status'},loadingLabel));
+      return h('span',{className:'dsg-clip','aria-busy':!loaded},h('img',{key:key+':'+play,className:artClass,'data-outfit':artOutfit(outfit),'data-state':state,src:play?asset.strip:asset.still,alt:label,draggable:false,
+        style:{width:play?asset.count*100+'%':'100%',animationName:play?'dsg-frames-'+state:'none',animationDuration:asset.duration+'ms',animationDelay:delayMs>0?delayMs+'ms':play&&!asset.loop?'-'+Math.min(asset.duration,ready.elapsed||0)+'ms':'0ms',animationIterationCount:asset.loop?'infinite':1}}),!loaded&&loadingLabel&&h('span',{className:'dsg-loading-art',role:'status'},loadingLabel));
     }
-    function Mascot({running=false,phase='thinking',status,sessionId='',finance=FINANCE_IDLE_STORE,t=key=>DICTIONARIES.zh[key]||key}){
+    function Transformation({event,prefs,animate,hidden,t}){
+      const from=formGeometry(prefs,window.innerWidth,window.innerHeight,event.from),to=formGeometry(prefs,window.innerWidth,window.innerHeight,event.to);
+      const left=Math.min(from.x,to.x),top=Math.min(from.y,to.y),width=Math.max(from.x+from.width,to.x+to.width)-left,height=Math.max(from.y+from.height,to.y+to.height)-top;
+      const actor=(box,form,which)=>h('div',{key:which,className:'dsg-morph-actor dsg-morph-'+which,style:{left:box.x-left,top:box.y-top,width:box.width,height:box.height},'data-actor-form':form},
+        h(SpriteArt,{state:form==='pro'?(which==='from'?'transform-out':'transform-in'):(which==='from'?'success':'idle'),outfit:form==='pro'?'pro':event.flashOutfit,animate,hidden,startedAt:event.startedAt,delayMs:which==='to'?1100:0,label:t(form==='pro'?'formPro':'formFlash'),artClass:'dsg-transform-art'}),
+        prefs.hat&&h('img',{className:'dsg-morph-hat',src:PROPS.hat,alt:'',style:form==='pro'?{left:'39%',top:'7.3%',width:'31%'}:{left:'20%',top:'11%',width:'60%'}}));
+      return h('div',{className:'dsg-morph','data-direction':event.to==='pro'?'to-pro':'to-flash',style:{left,top,width,height},role:'status','aria-live':'polite','aria-label':t('formChanging')},actor(from,event.from,'from'),actor(to,event.to,'to'),
+        h('div',{className:'dsg-morph-aura','aria-hidden':true}),
+        h('svg',{className:'dsg-morph-water',viewBox:'0 0 100 150',preserveAspectRatio:'none','aria-hidden':true},h('ellipse',{cx:50,cy:104,rx:44,ry:10,fill:'none',stroke:'#91cde8',strokeWidth:2}),h('path',{d:'M8 108C24 121 91 99 83 74C79 61 33 67 22 51C9 33 62 26 72 8',fill:'none',stroke:'#b8e5f4',strokeWidth:4,strokeLinecap:'round'}),h('path',{d:'M20 122Q50 139 81 116M28 20Q50 32 74 18',fill:'none',stroke:'#d8f3fb',strokeWidth:2,strokeLinecap:'round'}),[0,1,2,3].map(index=>h('circle',{key:index,cx:[18,78,29,85][index],cy:[83,53,29,103][index],r:[2.1,1.8,1.3,1.7][index],fill:'#b6e5f4'}))),
+        h('span',{className:'dsg-morph-caption',style:{left:clamp(left+width/2-120,8,Math.max(8,window.innerWidth-248)),top:Math.max(8,top-39),width:240}},t(event.to==='pro'?'formToPro':'formToFlash')));
+    }
+    function Mascot({running=false,phase='thinking',status,sessionId='',modelTarget=null,finance=FINANCE_IDLE_STORE,t=key=>DICTIONARIES.zh[key]||key}){
       const [prefs,setPrefs]=React.useState(()=>({...readPrefs(),...viewport(readPrefs())}));
+      const [form,setForm]=React.useState(()=>modelTarget||'flash'),[morph,setMorph]=React.useState(null);
+      const modelObserved=React.useRef(modelTarget!==null);
       const [dragging,setDragging]=React.useState(false),[dropping,setDropping]=React.useState(false);
       const [preview,setPreview]=React.useState(null),[menu,setMenu]=React.useState(false);
       const [wardrobe,setWardrobe]=React.useState(null),[outfitReadiness,setOutfitReadiness]=React.useState(null);
@@ -143,9 +194,10 @@ __SPRITE_CSS__
       prefsRef.current=prefs;
       const feedingRef=React.useRef(false);
       const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
+      const renderBox=formGeometry(prefs,window.innerWidth,window.innerHeight,form);
       const task=taskState(running,phase,status,sleeping,celebrating);
       const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
-      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!financePeek;
+      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!financePeek&&!morph;
       (React.useLayoutEffect||React.useEffect)(()=>{const element=financeCardRef.current;if(!element?.getBoundingClientRect)return;const measure=()=>{const height=Math.ceil(element.getBoundingClientRect().height);if(financeHeightRef.current!==height){financeHeightRef.current=height;setFinanceCardHeight(height);}};measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);return()=>observer?.disconnect();},[financePeek,financePanel,wardrobe,dragging,greeting?.period,greetingReady]);
       const financeActive=prefs.financeVisible!==false&&Boolean(financePeek||financePanel);
       React.useEffect(()=>finance.acquire(financeActive),[finance,financeActive]);
@@ -171,6 +223,27 @@ __SPRITE_CSS__
       React.useEffect(()=>{if(running){setCelebrating(false);setSleeping(false);}},[running]);
       React.useEffect(()=>{if(!celebrating)return;const timer=setTimeout(()=>setCelebrating(false),Math.max(3200,ASSETS.success.delays.reduce((a,b)=>a+b,0)));return()=>clearTimeout(timer);},[celebrating]);
       React.useEffect(()=>{if(!dropping)return;const timer=setTimeout(()=>setDropping(false),ASSETS.drop.delays.reduce((a,b)=>a+b,0));return()=>clearTimeout(timer);},[dropping]);
+      // A settled model choice is the only trigger. Mounts hydrate immediately;
+      // meals, dragging and open dialogs defer visual changes without blocking Harness.
+      React.useEffect(()=>{
+        if(!modelTarget)return;
+        if(!modelObserved.current){modelObserved.current=true;setForm(modelTarget);return;}
+        if(morph||modelTarget===form)return;
+        if(hidden||reduced||prefs.animate===false){setForm(modelTarget);return;}
+        if(eating||dragging||dropping||touch||wardrobe||financePanel||preview)return;
+        let live=true;
+        const timer=setTimeout(async()=>{
+          const targetArt=modelTarget==='pro'?'pro':normalizeOutfit(prefsRef.current.outfit);
+          const ready=await Promise.all([warmAsset('idle',targetArt),warmAsset(task,targetArt),warmAsset(modelTarget==='pro'?'transform-in':'transform-out','pro')]);
+          if(!live)return;
+          setMenu(false);setGreeting(null);setFinancePeek(0);setFinanceHeld(false);
+          if(ready.every(Boolean))setMorph({from:form,to:modelTarget,flashOutfit:normalizeOutfit(prefsRef.current.outfit),startedAt:Date.now()});
+          setForm(modelTarget);
+        },MODEL_SETTLE_MS);
+        return()=>{live=false;clearTimeout(timer);};
+      },[modelTarget,form,morph,eating,dragging,dropping,touch,wardrobe,financePanel,preview,hidden,reduced,prefs.animate,task]);
+      React.useEffect(()=>{if(!morph)return;const timer=setTimeout(()=>setMorph(null),MORPH_DURATION);return()=>clearTimeout(timer);},[morph]);
+      React.useEffect(()=>{if(hidden||reduced||prefs.animate===false)setMorph(null);},[hidden,reduced,prefs.animate]);
       React.useEffect(()=>{if(!preview)return;const timer=setTimeout(()=>setPreview(null),Math.max(3500,ASSETS[preview].duration));return()=>clearTimeout(timer);},[preview]);
       React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{feedingRef.current=false;setEating(false);},Math.max(0,ASSETS.eating.duration-(Date.now()-mealStarted.current)));return()=>clearTimeout(timer);},[eating]);
       React.useEffect(()=>{if(!touch)return;const timer=setTimeout(()=>{touchRef.current=null;touchTaps.current=[];setTouch(null);},ASSETS[touch.kind].duration);return()=>clearTimeout(timer);},[touch]);
@@ -236,31 +309,31 @@ __SPRITE_CSS__
       },[Boolean(wardrobe)]);
       React.useEffect(()=>{warmAsset('idle',prefs.outfit);},[prefs.outfit]);
       const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible,touch?.kind);
-      const outfit=wardrobe?.outfit||normalizeOutfit(prefs.outfit),outfitKey=outfit+':'+state;
+      const flashOutfit=wardrobe?.outfit||normalizeOutfit(prefs.outfit),outfit=form==='pro'?'pro':flashOutfit,outfitKey=flashOutfit+':'+state;
       const outfitReady=decoded.get(outfitKey)?.ready===true||outfitReadiness?.key===outfitKey&&outfitReadiness.ok;
       const timelineKey=state+':'+(preview?'preview-'+previewStarted.current:eating?'meal-'+mealStarted.current:touch?'touch-'+touch.sequence:'task');
       if(visualTimeline.current.key!==timelineKey)visualTimeline.current={key:timelineKey,startedAt:Date.now()};
       const startedAt=preview&&state===preview?previewStarted.current:eating&&state==='eating'?mealStarted.current:touch&&state===touch.kind?touch.startedAt:state==='drop'?dropStarted.current:visualTimeline.current.startedAt;
       const animate=prefs.animate!==false&&!reduced;
-      const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight);
+      const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight,renderBox);
       const accountFinance=financeSnapshot.account,summaryFinance=financeSnapshot.summary;
       const financeStatus=value=>t(value==='loading'?'financeLoading':value==='failed'?'financeFailed':value==='signed-out'?'financeSignedOut':'financeUnavailable');
       const balanceText=accountFinance.status==='ready'?(financeBalanceText(accountFinance.wallets)||t('financeNoWallet')):financeStatus(accountFinance.status);
       const estimateText=summaryFinance.status==='ready'?financeEstimateText(summaryFinance.estimate):financeStatus(summaryFinance.status);
       const tokenCount=value=>Number.isSafeInteger(value)&&value>=0?value.toLocaleString():'—';
-      const financeWidth=Math.max(1,Math.min(220,window.innerWidth-16)),financeBelow=prefs.y+prefs.size+39,financeAbove=financeBelow+financeCardHeight>window.innerHeight-8;
-      const financePosition={left:clamp(prefs.x+prefs.size/2-financeWidth/2,8,Math.max(8,window.innerWidth-financeWidth-8))-prefs.x,top:Math.max(8,financeAbove?prefs.y-financeCardHeight-8:financeBelow)-prefs.y,width:financeWidth};
+      const financeWidth=Math.max(1,Math.min(220,window.innerWidth-16)),financeBelow=renderBox.y+renderBox.height+39,financeAbove=financeBelow+financeCardHeight>window.innerHeight-8;
+      const financePosition={left:clamp(renderBox.x+renderBox.width/2-financeWidth/2,8,Math.max(8,window.innerWidth-financeWidth-8))-renderBox.x,top:Math.max(8,financeAbove?renderBox.y-financeCardHeight-8:financeBelow)-renderBox.y,width:financeWidth};
       const financeUpdated=Math.max(accountFinance.updatedAt||0,summaryFinance.updatedAt||0);
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
-      function pet(){if(feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false){setFinancePeek(Date.now());setGreeting(null);}const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
-      function feed(){if(feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
-      function down(e){if(e.button!==0)return;setFinancePeek(0);setFinanceHeld(false);setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
-      function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}d.position=viewport({...d.start,x:d.start.x+dx,y:d.start.y+dy});
-        if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.position.x-d.start.x}px,${d.position.y-d.start.y}px,0)`;});}
-      function finish(e,cancel=false){const d=drag.current;if(!d||d.id!==e.pointerId)return;drag.current=null;if(d.raf)cancelAnimationFrame(d.raf);setDragging(false);if(d.moved){const next={...prefsRef.current,...d.position};if(root.current){root.current.style.left=next.x+'px';root.current.style.top=next.y+'px';root.current.style.transform='';}setPrefs(next);writePrefs(next);if(!cancel){dropStarted.current=Date.now();setDropping(true);}}else if(!cancel){const bounds=e.currentTarget.getBoundingClientRect();if(d.y-bounds.top<=bounds.height*.68)pet();else{toggleMenu();}}}
+      function pet(){if(morph||feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false){setFinancePeek(Date.now());setGreeting(null);}const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
+      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
+      function down(e){if(e.button!==0||morph)return;setFinancePeek(0);setFinanceHeld(false);setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},render:{...renderBox},form,moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
+      function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}const x=clamp(d.render.x+dx,0,Math.max(0,window.innerWidth-d.render.width)),y=clamp(d.render.y+dy,0,Math.max(0,window.innerHeight-d.render.height-32));d.position=viewport({...d.start,x:x+d.render.width/2-d.start.size/2,y:y+d.render.height-d.start.size});d.renderPosition=formGeometry(d.position,window.innerWidth,window.innerHeight,d.form);
+        if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.renderPosition.x-d.render.x}px,${d.renderPosition.y-d.render.y}px,0)`;});}
+      function finish(e,cancel=false){const d=drag.current;if(!d||d.id!==e.pointerId)return;drag.current=null;if(d.raf)cancelAnimationFrame(d.raf);setDragging(false);if(d.moved){const next={...prefsRef.current,...d.position};if(root.current){root.current.style.left=d.renderPosition.x+'px';root.current.style.top=d.renderPosition.y+'px';root.current.style.transform='';}setPrefs(next);writePrefs(next);if(!cancel){dropStarted.current=Date.now();setDropping(true);}}else if(!cancel){const bounds=e.currentTarget.getBoundingClientRect();if(isHeadTap((d.x-bounds.left)/bounds.width,(d.y-bounds.top)/bounds.height,form))pet();else{toggleMenu();}}}
       function closeMenu(){setMenu(false);root.current?.querySelector?.('.dsg-character')?.focus?.({preventScroll:true});}
-      function toggleMenu(){setFinancePeek(0);setFinanceHeld(false);setMenu(value=>value?false:'main');}
+      function toggleMenu(){if(morph)return;setFinancePeek(0);setFinanceHeld(false);setMenu(value=>value?false:'main');}
       function closeFinance(){setFinancePeek(Date.now());setFinancePanel(false);}
       const wheelPage=typeof menu==='string'?menu:'main';
       const wheelEntry=(icon,label,action,extra={})=>({icon,label,action,...extra});
@@ -269,7 +342,7 @@ __SPRITE_CSS__
       const commonWheel=[
         wheelEntry('rice','feed',feed,{short:'wheelFeed',disabled:eating}),
         wheelEntry('pet','pet',pet,{short:'wheelPet',disabled:eating||touch?.kind==='pouting'}),
-        wheelEntry('wardrobe','wardrobe',()=>{setWardrobe({outfit:normalizeOutfit(prefsRef.current.outfit),attempt:0});setMenu(false);},{short:'wheelWardrobe'}),
+        wheelEntry('wardrobe','wardrobe',()=>{setWardrobe({outfit:normalizeOutfit(prefsRef.current.outfit),attempt:0});setMenu(false);},{short:form==='pro'?'proWardrobe':'wheelWardrobe'}),
         wheelEntry('hat',prefs.hat?'hatOff':'hatOn',()=>writePrefs({...prefsRef.current,hat:!prefs.hat}),{short:prefs.hat?'wheelHatOff':'wheelHatOn',pressed:prefs.hat===true}),
         wheelEntry('hello','greetNow',greet,{short:'wheelHello'}),wheelEntry('more','wheelMore',switchPage('more'))];
       const moreWheel=[wheelEntry('expressions','wheelExpressions',switchPage('expressions-0')),wheelEntry('ledger','financeOpen',()=>{setFinancePanel(true);setFinancePeek(Date.now());setMenu(false);},{short:'wheelLedger',disabled:prefs.financeVisible===false}),wheelEntry('settings','wheelSettings',switchPage('settings')),wheelEntry('follow','follow',()=>{setPreview(null);closeMenu();},{short:'wheelFollow'}),wheelEntry(prefs.animate===false?'play':'pause',prefs.animate===false?'resume':'pause',()=>writePrefs({...prefsRef.current,animate:prefs.animate===false}),{short:prefs.animate===false?'wheelResume':'wheelPause'}),wheelEntry('reset','reset',()=>{writePrefs({...prefsRef.current,...viewport({})});closeMenu();},{short:'wheelReset'})];
@@ -277,9 +350,10 @@ __SPRITE_CSS__
       const expressionPage=wheelPage==='expressions-1'?1:0,isExpressions=wheelPage.startsWith('expressions-');
       const wheelEntries=wheelPage==='main'?commonWheel:wheelPage==='more'?moreWheel:wheelPage==='settings'?settingsWheel:STATES.slice(expressionPage*6,expressionPage*6+6).map(key=>wheelEntry('expressions',key,chooseState(key)));
       const wheelWidth=Math.min(256,window.innerWidth-16),wheelHeight=wheelWidth+32;
-      const wheelLeft=prefs.x>=wheelWidth+20?prefs.x-wheelWidth-12:prefs.x+prefs.size+wheelWidth+20<=window.innerWidth?prefs.x+prefs.size+12:prefs.x+prefs.size/2-wheelWidth/2;
-      const wheelPosition={left:clamp(wheelLeft,8,Math.max(8,window.innerWidth-wheelWidth-8)),top:clamp(prefs.y+(prefs.size+30)/2-wheelHeight/2,8,Math.max(8,window.innerHeight-wheelHeight-8)),width:wheelWidth};
-      return h('div',{ref:root,className:'dsg-root',style:{left:prefs.x,top:prefs.y,width:prefs.size},'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':normalizeOutfit(prefs.outfit),'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
+      const wheelLeft=renderBox.x>=wheelWidth+20?renderBox.x-wheelWidth-12:renderBox.x+renderBox.width+wheelWidth+20<=window.innerWidth?renderBox.x+renderBox.width+12:renderBox.x+renderBox.width/2-wheelWidth/2;
+      const wheelPosition={left:clamp(wheelLeft,8,Math.max(8,window.innerWidth-wheelWidth-8)),top:clamp(renderBox.y+(renderBox.height+30)/2-wheelHeight/2,8,Math.max(8,window.innerHeight-wheelHeight-8)),width:wheelWidth};
+      return h('div',{ref:root,className:'dsg-root',style:{left:renderBox.x,top:renderBox.y,width:renderBox.width},'data-form':form,'data-transforming':String(Boolean(morph)),'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':normalizeOutfit(prefs.outfit),'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
+        morph&&h(Transformation,{event:morph,prefs,animate,hidden,t}),
         greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
           h('span',{className:'dsg-greeting-text'},t('greet_'+greeting.period)),
           h('svg',{className:'dsg-greeting-paper',viewBox:'0 0 360 160',preserveAspectRatio:'none','aria-hidden':true},
@@ -289,13 +363,13 @@ __SPRITE_CSS__
           h('svg',{className:'dsg-greeting-mark',viewBox:'0 0 24 24','aria-hidden':true},h('path',{d:'M12 3 L15 8 L21 10 L16 14 L16 21 L11 17 L5 19 L6 12 L2 8 L9 8 Z',fill:'#f5d595',stroke:'#d7aa67',strokeWidth:1.6,strokeLinejoin:'round',strokeLinecap:'round'})),
           h('svg',{className:'dsg-greeting-doodle',viewBox:'0 0 38 10','aria-hidden':true},h('path',{d:'M2 4 Q12 1 32 4 M5 8 Q16 5 36 6',fill:'none',stroke:'currentColor',strokeWidth:2.1,strokeLinecap:'round'})),
           h('button',{type:'button',title:t('closeGreeting'),'aria-label':t('closeGreeting'),onClick:()=>setGreeting(null)},h('svg',{viewBox:'0 0 20 20','aria-hidden':true},h('path',{d:'M5 4 Q9 9 15 16 M15 5 Q10 10 4 15',fill:'none',stroke:'currentColor',strokeWidth:2.1,strokeLinecap:'round'})))),
-        h('button',{className:'dsg-character',type:'button','aria-label':'DeepSeek 娘：'+t(state)+'；'+t('accessible'),title:t('hint'),
+        h('button',{className:'dsg-character',style:{height:renderBox.height},type:'button','aria-disabled':Boolean(morph),'aria-label':'DeepSeek 娘：'+t(form==='pro'?'formPro':'formFlash')+' · '+t(state)+'；'+t('accessible'),title:t('hint'),
           onPointerDown:down,onPointerMove:move,onPointerUp:e=>finish(e),onPointerCancel:e=>finish(e,true),onLostPointerCapture:e=>finish(e,true),
           onContextMenu:e=>{e.preventDefault();toggleMenu();},onKeyDown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleMenu();}}},
           h('span',{className:'dsg-motion','data-motion':state,'data-animate':String(animate)},h(SpriteArt,{key:state+':'+(preview?'preview':eating?'meal':touch?'touch-'+touch.sequence:'task'),state,outfit,animate,hidden,startedAt,loadAttempt:wardrobe?.attempt||0,label:t(state),loadingLabel:t('outfitLoading'),onReady:setOutfitReadiness}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false})),
           state==='petting'&&h('span',{className:'dsg-affection',key:touch?.sequence||'preview','aria-hidden':true},[0,1,2].map(index=>h('svg',{className:'dsg-heart',key:index,viewBox:'0 0 24 24'},h('path',{d:'M12 20 C4 14 1 10 3 6 C5 2 10 3 12 7 C14 3 19 2 21 6 C23 10 20 14 12 20Z',fill:'currentColor'}))))),
         h('div',{className:'dsg-footer'},h('span',{className:'dsg-label'},(preview?t('preview'):'')+t(state)),
-          h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating,title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
+          h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating||Boolean(morph),title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
         financeActive&&Boolean(financePeek)&&!dragging&&!wardrobe&&!financePanel&&!menu&&!hidden&&h('button',{ref:financeCardRef,type:'button',className:'dsg-finance-card',style:financePosition,'aria-label':t('financeOpen'),'aria-busy':financeSnapshot.refreshing,onPointerEnter:()=>setFinanceHeld(true),onPointerLeave:()=>{if(!financeCardRef.current?.contains(document.activeElement))setFinanceHeld(false);},onFocus:()=>setFinanceHeld(true),onBlur:e=>{if(!e.currentTarget.contains(e.relatedTarget)){setFinanceHeld(false);}},onClick:()=>{setFinancePanel(true);setMenu(false);}},
           h('span',{className:'dsg-finance-line'},h('span',null,t('financeBalance')),h('span',{className:'dsg-finance-value','data-finance-balance':accountFinance.status},balanceText)),
           h('span',{className:'dsg-finance-line'},h('span',null,t('financeToday')),h('span',{className:'dsg-finance-value','data-finance-estimate':summaryFinance.status},estimateText)),
@@ -304,11 +378,11 @@ __SPRITE_CSS__
           h('div',{className:'dsg-wheel'},wheelEntries.map((item,index)=>{const angle=(-90+index*360/wheelEntries.length)*Math.PI/180;return h('button',{key:wheelPage+':'+item.label,type:'button','aria-label':t(item.label),title:t(item.label),disabled:item.disabled,'aria-pressed':item.pressed,onClick:item.action,style:{left:(50+33*Math.cos(angle))+'%',top:(50+33*Math.sin(angle))+'%'}},h(WheelIcon,{name:item.icon}),h('span',null,t(item.short||item.label)));}),
             h('button',{type:'button',className:'dsg-wheel-center','aria-label':t(wheelPage==='main'?'wheelClose':'wheelBack'),onClick:wheelPage==='main'?closeMenu:switchPage(wheelPage==='more'?'main':'more')},h(WheelIcon,{name:wheelPage==='main'?'close':'back'}),h('span',null,t(wheelPage==='main'?'wheelName':'wheelBack')))),
           isExpressions?h('div',{className:'dsg-wheel-pager'},h('button',{type:'button','aria-label':t('wheelPrevious'),onClick:switchPage('expressions-'+(1-expressionPage))},'‹'),h('span',{'aria-live':'polite'},(expressionPage+1)+' / 2'),h('button',{type:'button','aria-label':t('wheelNext'),onClick:switchPage('expressions-'+(1-expressionPage))},'›')):h('p',{className:'dsg-wheel-note'},t('wheelHint'))),
-        wardrobe&&h('div',{className:'dsg-wardrobe-backdrop',style:{justifyContent:prefs.x+prefs.size/2>window.innerWidth/2?'flex-start':'flex-end'}},h('section',{ref:wardrobeRef,className:'dsg-wardrobe',role:'dialog','aria-modal':true,'aria-labelledby':'dsg-wardrobe-title','aria-describedby':'dsg-wardrobe-hint'},
-          h('h2',{id:'dsg-wardrobe-title'},t('wardrobeTitle')),h('p',{id:'dsg-wardrobe-hint'},t('wardrobeHint')),
-          h('div',{className:'dsg-outfits'},OUTFITS.map(item=>h('button',{key:item.id,type:'button',className:'dsg-outfit','data-outfit-choice':item.id,'aria-pressed':outfit===item.id,onClick:()=>{if(outfit===item.id&&outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:(wardrobe.attempt||0)+1});}else if(outfit!==item.id){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:0});}}},outfit===item.id?h('span',{className:'dsg-outfit-preview'},h(SpriteArt,{state,outfit,animate,hidden,startedAt,loadAttempt:wardrobe.attempt||0,label:t(state),artClass:'dsg-wardrobe-art'}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false})):h('img',{src:assetFor(item.id,'idle').still,alt:'',draggable:false}),h('span',null,t('outfit_'+item.id)),h('small',null,normalizeOutfit(prefs.outfit)===item.id?t('outfitSaved'):outfit===item.id?t('outfitPreview'):' ')))),
+        wardrobe&&h('div',{className:'dsg-wardrobe-backdrop',style:{justifyContent:renderBox.x+renderBox.width/2>window.innerWidth/2?'flex-start':'flex-end'}},h('section',{ref:wardrobeRef,className:'dsg-wardrobe',role:'dialog','aria-modal':true,'aria-labelledby':'dsg-wardrobe-title','aria-describedby':'dsg-wardrobe-hint'},
+          h('h2',{id:'dsg-wardrobe-title'},t('wardrobeTitle')),h('p',{id:'dsg-wardrobe-hint'},t(form==='pro'?'proWardrobeHint':'wardrobeHint')),
+          h('div',{className:'dsg-outfits'},OUTFITS.map(item=>h('button',{key:item.id,type:'button',className:'dsg-outfit','data-outfit-choice':item.id,'aria-pressed':flashOutfit===item.id,onClick:()=>{if(flashOutfit===item.id&&outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:(wardrobe.attempt||0)+1});}else if(flashOutfit!==item.id){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:0});}}},flashOutfit===item.id?h('span',{className:'dsg-outfit-preview'},h(SpriteArt,{state,outfit:flashOutfit,animate,hidden,startedAt,loadAttempt:wardrobe.attempt||0,label:t(state),artClass:'dsg-wardrobe-art',onReady:setOutfitReadiness}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false})):h('img',{src:assetFor(item.id,'idle').still,alt:'',draggable:false}),h('span',null,t('outfit_'+item.id)),h('small',null,normalizeOutfit(prefs.outfit)===item.id?t('outfitSaved'):flashOutfit===item.id?t('outfitPreview'):' ')))),
           h('p',{className:'dsg-wardrobe-status',role:'status','aria-live':'polite'},outfitReady?' ':outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false?t('outfitError'):t('outfitLoading')),
-          h('div',{className:'dsg-wardrobe-actions'},h('button',{type:'button',onClick:()=>setWardrobe(null)},t('cancelOutfit')),h('button',{className:'dsg-wear',type:'button',disabled:!outfitReady,onClick:()=>{writePrefs({...prefsRef.current,outfit});setWardrobe(null);}},t('wear'))))),
+          h('div',{className:'dsg-wardrobe-actions'},h('button',{type:'button',onClick:()=>setWardrobe(null)},t('cancelOutfit')),h('button',{className:'dsg-wear',type:'button',disabled:!outfitReady,onClick:()=>{writePrefs({...prefsRef.current,outfit:flashOutfit});setWardrobe(null);}},t('wear'))))),
         financePanel&&h('div',{className:'dsg-finance-backdrop'},h('section',{ref:financePanelRef,className:'dsg-finance-panel',role:'dialog',tabIndex:-1,'aria-modal':true,'aria-labelledby':'dsg-finance-title'},
           h('h2',{id:'dsg-finance-title'},t('financeTitle')),h('p',{className:'dsg-finance-date'},summaryFinance.status==='ready'?summaryFinance.day+' · '+t('financeSnapshot'):t('financeSnapshot')),
           h('section',{className:'dsg-finance-section'},h('h3',null,t('financeBalance')),h('p',{className:'dsg-finance-amount'},balanceText),
@@ -321,24 +395,27 @@ __SPRITE_CSS__
     }
     class Boundary extends React.Component{constructor(props){super(props);this.state={failed:false};}static getDerivedStateFromError(){return{failed:true};}componentDidCatch(error){console.error('[DeepSeek Girl]',error);}render(){return this.state.failed?null:this.props.children;}}
     const guarded=Component=>function Entry(props){if(!props)return null;return h(Boundary,null,h(Component,props));};
-    return {inject:['slots','sessions','uiConversation','locale'],apply(ctx){
+    return {inject:['slots','sessions','uiConversation','locale','modelDirectories'],apply(ctx){
       ctx.effect(()=>ctx.locale.register('@local/dsh-deepseek-girl',DICTIONARIES));
       const finance=createFinanceClient(ctx);ctx.effect(()=>()=>finance.dispose?.());
       function SessionGirl(props){
+        const modelSource=props.modelSource||EMPTY_MODEL_SOURCE;
+        const modelSnapshot=React.useSyncExternalStore(modelSource.subscribe,modelSource.getSnapshot,modelSource.getSnapshot);
+        const modelTarget=modelForm(modelSnapshot,props.useProjection('modelSelection'));
         const running=props.useSession(s=>s?.running===true);
         const status=props.useProjection('deepseekGirlStatus');
         const key=props.useChat(latestAssistantKey);
         const phase=props.useGirlNode(key,assistantPhase);
         React.useEffect(()=>{docks++;notify();return()=>{docks--;notify();};},[]);
-        return h(Mascot,{running,status,phase,sessionId:props.sessionId,finance,t:props.t});
+        return h(Mascot,{key:props.sessionId,running,status,phase,modelTarget,sessionId:props.sessionId,finance,t:props.t});
       }
       function FloatingGirl(props){const dock=React.useSyncExternalStore(presence.subscribe,presence.snapshot,presence.snapshot);
         return dock?null:h(Mascot,{finance,t:props.t});
       }
       ctx.effect(()=>{const el=document.createElement('style');el.textContent=CSS;document.head.appendChild(el);return()=>el.remove();});
       ctx.effect(()=>()=>decoded.clear());
-      ctx.slots.inject('conversation.composer.dock',()=>ctx.slots.register({name:'conversation.composer.dock',id:'deepseek-girl',order:25,locale:'@local/dsh-deepseek-girl',
-        inject:sessionId=>{const binding=ctx.sessions.binding(sessionId),target=ctx.uiConversation.binding(binding).target('chat');return{keyedHooks:{girlNode:key=>key?target.getSnapshot().nodes.source(key):{getSnapshot:()=>undefined,subscribe:()=>()=>{}}}};}
+      ctx.slots.inject('conversation.input.overlay',()=>ctx.slots.register({name:'conversation.input.overlay',id:'deepseek-girl',order:25,locale:'@local/dsh-deepseek-girl',
+        inject:sessionId=>{const binding=ctx.sessions.binding(sessionId),target=ctx.uiConversation.binding(binding).target('chat'),models=ctx.modelDirectories.directoryFor(sessionId).store;return{modelSource:{subscribe:fn=>models.subscribe(fn),getSnapshot:()=>models.getSnapshot()},keyedHooks:{girlNode:key=>key?target.getSnapshot().nodes.source(key):{getSnapshot:()=>undefined,subscribe:()=>()=>{}}}};}
       },guarded(SessionGirl)));
       ctx.slots.inject('shell.overlay',()=>ctx.slots.register({name:'shell.overlay',id:'deepseek-girl-floating',order:25,locale:'@local/dsh-deepseek-girl'},guarded(FloatingGirl)));
     }};

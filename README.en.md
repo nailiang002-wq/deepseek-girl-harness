@@ -1,18 +1,43 @@
 # DeepSeek Girl · Harness Desktop
 
-**Bring DeepSeek Girl into Harness: a companion who thinks with you and happily eats a basin of rice.**
+**Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.9.0**
+English · [中文](README.md) · **v1.10.0**
 
-<p align="center"><img src="docs/images/quick-tour.gif" width="760" alt="Live plugin demo: task expressions, a compact action wheel, head pats and three bites of rice"></p>
+<p align="center"><img src="docs/images/transformation.gif" width="760" alt="Standalone plugin demo: select Pro to transform into a mature whale maid, enjoy three bites of rice, and switch back to Flash"></p>
 
 <p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/latest/download/DeepSeekGirl-Harness.zip"><strong>⬇ Download the latest plugin (ZIP)</strong></a> · <a href="#install-in-three-steps">Install in three steps</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">Report a problem / Suggest an interaction</a></p>
 
 **For DeepSeek Harness Desktop; tested on Windows.** This is an unofficial character plugin that lives inside the Harness window. The prebuilt download needs no Node.js, and animations and interactions require no extra model calls.
 
-DeepSeek Girl is an interactive character plugin for **DeepSeek Harness Desktop**. She changes expressions with your current task. Pick her up, move her around the window, feed her plain white rice, or let her wear an upside-down iron basin as a hat. Time-based speech bubbles bring a small greeting to your day. A compact action wheel keeps frequent interactions close by. Pat her head to briefly reveal your balance and today’s local usage. Five complete outfits each include a three-bite meal.
+The opening GIF uses the real plugin with synthetic model selections and tasks. The earlier interaction demo also uses synthetic financial data. Wheel and installation screenshots below come from Harness itself.
 
-The opening GIF shows the real plugin in a standalone demo with synthetic task and financial data. The wheel and installation screenshots below come from Harness itself.
+## Change the model, watch her transform
+
+Select **DeepSeek Pro** in the current conversation to trigger a **2.2-second** water-wave transformation into a mature whale maid. Select **Flash** to bring Little Whale back with her saved outfit. The animation starts after a successful selection, **without sending a message** or making an extra model call.
+
+The transformation unfolds in three stages:
+
+1. **Water and light gather**: a pale blue glow surrounds her as water rings and droplets rise. A handwritten caption announces the change.
+2. **The new form appears**: Little Whale fades out and the long-haired whale maid emerges through the water effect, with blue hair and pale tips, a curved ahoge, a whale tail, a white whale-emblem apron, and a navy dress.
+3. **She returns to your task**: the glow clears and she follows thinking, answering, completion, and the other task states. Her body stays steady while her tail sways gently. Feeding uses complete character drawings for three consecutive bites.
+
+The transition works **in both directions**. Pro → Flash plays the return animation and restores Little Whale's saved outfit. Harness's successful model selection triggers it automatically; there is no separate transform button. Startup and conversation changes show the matching form directly.
+
+![Mature Pro form with long blue hair, a whale tail, and her dedicated maid dress](docs/images/pro-form.png)
+
+- **A dedicated Pro dress**: long blue hair, blue eyes, a curved ahoge, a whale tail, and a white apron, with all twelve states.
+- **A steady body, a gentle tail**: Pro's idle and expression poses use a fixed body with a separate tail layer. Feeding plays three bites using complete drawings registered at the face and shoes, avoiding mismatched face or arm overlays.
+- **The familiar interactions**: three bites of rice, head pats, pouting, a basin hat, dragging, greetings, and the ledger. Head targets and hat placement follow the mature proportions.
+- **Considerate transitions**: startup and conversation changes show the corresponding form directly. Rapid selections use the last successful choice; eating, dragging, and open wardrobe actions finish before the visual transition.
+- **Separate outfit memory**: Flash retains five outfits. Pro currently wears one dedicated dress; her wardrobe lets you preselect an outfit for the next switch back to Flash.
+- Paused animations, system reduced motion, and hidden windows switch directly. Official DeepSeek Pro model IDs are recognized; other models use Little Whale.
+
+v1.10 uses Harness's model-selection service, verified on Windows with bundled SDK **0.2.1-rc.2**. Upgrade Harness if an older release lacks that service. The earlier [wheel, head-pat, and rice demo](docs/images/quick-tour.gif) remains available.
+
+<p align="center"><img src="docs/images/feeding-pro.gif" width="600" alt="Pro form wearing the basin hat and eating three bites with aligned complete character drawings"></p>
+
+The familiar daily interactions remain: asking for rice, head pats and pouting, a basin hat, handwritten time greetings, a compact action wheel, and a brief balance-and-usage peek after a head pat. Flash retains five complete interactive outfits.
 
 ## Install in three steps
 
@@ -60,12 +85,13 @@ Click her body or right-click to open six frequent actions: rice, head pats, out
 
 <p align="center"><img src="docs/images/petting.gif" width="420" alt="Head-pat and repeated-tap pout animation preview"></p>
 
-These previews use the same sprite atlases and motion rules as the plugin. They contain no personal conversations. Each outfit covers all twelve states, with 78 key poses per outfit (390 in total). A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. They are combined with continuous breathing, swaying, and a soft landing.
+These previews use the plugin's sprite atlases and motion rules, without personal conversations. Flash has 390 key poses across five outfits. Pro adds 78 interaction poses and twelve transformation poses, for 480 in total. A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. Continuous breathing, swaying, and soft landings accompany them.
 
 ## What she does
 
 | Feature | Behavior |
 | --- | --- |
+| Flash ⇄ Pro | A successful model selection triggers the transformation; Flash restores the saved outfit |
 | Task expressions | Thinks during reasoning, types while the answer streams, celebrates completion, and looks upset after an error |
 | Wardrobe | Classic maid, blue & white hoodie, star pajamas, cream & blue puffer, and moonlit winter cape; preview first, then confirm to save |
 | White-rice feeding | Three full bites with scooping, lifting the spoon, chewing, and a satisfied smile; returns to the current task after about 13 seconds |
@@ -175,11 +201,13 @@ npm run test:browser
 
 For the native connection regression, point `DSG_HARNESS_NODE_MODULES` at Harness's `node_modules` directory and run `npm run test:native`. It uses native Cordis, Typert, and Client Gateway with synthetic sessions to verify the complete usage path. It does not read personal profiles or real conversations, or make network requests.
 
-`client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames`, `assets/outfits`, and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
+`client.template.js` is the editable client template. `scripts/build.cjs` embeds `assets/frames`, `assets/outfits`, `assets/forms/pro`, and `assets/props` into `client.js`. `logic.js` contains state and time rules; `projection.js` distinguishes completion, failure, and stopping. Temporary test files go into `.cache/`.
 
 Browser checks cover all 60 outfit/state atlases, wardrobe preview/apply/cancel and saved reloads, three-bite meal timing, switching outfits during a meal, loop and one-shot endings, meal restarts, head/body taps, repeated taps, touch input, keyboard menus, the hat, pause, reduced motion, hidden-window playback, and saved drag positions. In a standalone test page, about three seconds of looping playback reduced character component renders from ten in the earlier version to zero in this version. This is not a fixed frame-rate guarantee for every machine or application load.
 
 ## Artwork
+
+Pro artwork was generated with built-in ImageGen from the new character reference. Transparent source frames, selected sheets, and full prompts are in [assets/forms/pro](assets/forms/pro). Sources are aligned at 512×768 and compiled into 320×480 transparent runtime atlases. The reference itself is not redistributed.
 
 This is an unofficial character plugin, with no affiliation to DeepSeek. Illustrations were generated with ImageGen from a character reference supplied by the project creator. Original prompts are in [assets/generation-prompts.txt](assets/generation-prompts.txt), and the new v1.5 art prompts are in [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt). Wardrobe prompts and selected source sheets are in [assets/outfits](assets/outfits). The original reference image is not included.
 

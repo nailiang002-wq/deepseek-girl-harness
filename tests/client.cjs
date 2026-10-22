@@ -8,14 +8,14 @@ const documentEvents=new Map(),document={hidden:false,createElement:()=>({remove
 vm.runInNewContext(fs.readFileSync('client.js','utf8'),{window,document,localStorage,console,Event:class{constructor(type){this.type=type;}},setTimeout:(fn,delay)=>{const id=next++;timers.set(id,{fn,delay});return id;},clearTimeout:id=>timers.delete(id)});
 const plugin=loadedModule.factory(name=>{assert.equal(name,'react');return React;});
 const source={getSnapshot:()=>({nodes:{source:()=>({getSnapshot:()=>undefined,subscribe:()=>()=>{}})}})};
-const ctx={effect:fn=>{const cleanup=fn();if(typeof cleanup==='function')cleanups.push(cleanup);},locale:{register:()=>()=>{}},sessions:{binding:()=>({})},uiConversation:{binding:()=>({target:()=>source})},slots:{inject:(_slot,fn)=>fn(),register:(opts,component)=>{regs.set(opts.name,{opts,component});return()=>{};}}};plugin.apply(ctx);
+const ctx={modelDirectories:{directoryFor:()=>({store:{subscribe:()=>()=>{},getSnapshot:()=>null}})},effect:fn=>{const cleanup=fn();if(typeof cleanup==='function')cleanups.push(cleanup);},locale:{register:()=>()=>{}},sessions:{binding:()=>({})},uiConversation:{binding:()=>({target:()=>source})},slots:{inject:(_slot,fn)=>fn(),register:(opts,component)=>{regs.set(opts.name,{opts,component});return()=>{};}}};plugin.apply(ctx);
 assert.equal(regs.size,2);for(const reg of regs.values())assert.equal(reg.component(),null);
 function render(element){if(!element||typeof element!=='object')return element;if(Array.isArray(element))return element.map(render);if(typeof element.type==='function'){if(element.type.prototype?.render)return render(new element.type(element.props).render());return render(element.type(element.props));}return {...element,props:{...element.props,children:render(element.props.children)}};}
 function draw(reg,props,keep=false){hook=0;if(!keep){stateValues=[];refs=[];}effects=[];return render(reg.component(props));}
 function find(node,predicate){if(!node||typeof node!=='object')return;if(Array.isArray(node)){for(const child of node){const match=find(child,predicate);if(match)return match;}return;}if(predicate(node))return node;return find(node.props?.children,predicate);}
 const nodes=new Map([['a',{kind:'assistant-step',data:{status:'running',blocks:[{kind:'text',text:'Hello'}]}}]]);
 const props={sessionId:'example',t:k=>k,useSession:select=>select({running:true}),useProjection:()=>({endSeq:3,outcome:'working'}),useChat:select=>select({order:['a'],nodes}),useGirlNode:(key,select)=>select(nodes.get(key))};
-const dock=regs.get('conversation.composer.dock'), root=draw(dock,props);assert.equal(root.props['data-deepseek-girl-state'],'generating');
+const dock=regs.get('conversation.input.overlay'), root=draw(dock,props);assert.equal(root.props['data-deepseek-girl-state'],'generating');
 const imgs=find(root,n=>n.props?.className==='dsg-art');assert.ok(imgs.props.src.startsWith('data:image/webp;base64,'));
 const binding=dock.opts.inject('example');assert.ok(binding.keyedHooks.girlNode('a').getSnapshot);
 for(const fn of effects){const cleanup=fn();if(typeof cleanup==='function')cleanups.push(cleanup);}for(const fn of cleanups.reverse())fn();assert.equal(timers.size,0);assert.equal(events.size,0);

@@ -1,18 +1,43 @@
 # DeepSeek 娘 · Harness Desktop
 
-**让 DeepSeek 娘住进 Harness：陪你思考，捧盆求饭，吃饱后开心地晃一晃。**
+**切到 Pro，小鲸鱼就会变身；切回 Flash，熟悉的小鲸鱼带着原来的衣服回到你身边。**
 
-[English](README.en.md) · 中文 · **v1.9.0**
+[English](README.en.md) · 中文 · **v1.10.0**
 
-<p align="center"><img src="docs/images/quick-tour.gif" width="760" alt="实际插件界面演示：跟随任务、转轮菜单、摸头和连续三口白饭"></p>
+<p align="center"><img src="docs/images/transformation.gif" width="760" alt="实际插件独立演示：选择 Pro 自动变成成熟鲸鱼女仆，连续吃三口白饭，切回 Flash 恢复小鲸鱼"></p>
 
 <p align="center"><a href="https://github.com/nailiang002-wq/deepseek-girl-harness/releases/latest/download/DeepSeekGirl-Harness.zip"><strong>⬇ 下载最新版插件（ZIP）</strong></a> · <a href="#三步安装">三步安装</a> · <a href="https://github.com/nailiang002-wq/deepseek-girl-harness/issues">反馈问题 / 提建议</a></p>
 
 **适用于 DeepSeek Harness Desktop，已在 Windows 验证。** 非官方角色插件；角色显示在 Harness 窗口内。使用预编译安装包无需 Node.js，互动和动画无需额外模型调用。
 
-DeepSeek 娘是为 **DeepSeek Harness Desktop** 制作的互动角色插件。她会跟随当前任务改变表情，你也可以把她拎到窗口另一边、喂她一盆白饭，或给她戴上铁盆帽。早晨、午间和夜晚，她会用小气泡跟你打招呼。点一下身体就能打开紧凑转轮，常用互动就在手边。摸摸头后，余额与今日用量短暂出现。衣柜共有五套完整服装，每套都能连续吃三口白饭。
+首页动图使用实际插件界面、模拟模型选择与虚构任务；先前互动演示中的账本也使用虚构数据。下方转轮与安装窗口图来自 Harness 实机。
 
-首页动图使用实际插件界面与虚构任务、账本数据；下方转轮与安装窗口图来自 Harness 实机。
+## 切换模型，就能看见变身
+
+在当前会话的模型菜单中选择 **DeepSeek Pro**，小鲸鱼会用约 **2.2 秒**的水波动画变成成熟的鲸鱼女仆；切回 **Flash**，她会变回小鲸鱼，恢复之前保存的服装。模型选择成功后即可触发，**不用发送消息**，也不会为动画额外调用模型。
+
+变身过程包含三个阶段：
+
+1. **水光亮起**：角色周围浮现浅蓝色光晕，水环与水滴向上展开，手写小提示说明正在切换形态。
+2. **新形态登场**：小鲸鱼逐渐淡出，长发鲸鱼女仆随水波显现。她有蓝色长发与浅色发梢、弯弯的呆毛、鲸鱼尾巴，以及带鲸鱼图案的白围裙和深蓝长裙。
+3. **回到陪伴状态**：水光散去后，她继续跟随任务显示思考、回答、完成等表情。身体保持站稳，尾巴轻轻摆动；喂饭时播放完整人物动作，连续吃完三口。
+
+这是**双向变身**：Pro → Flash 也会播放过渡，并找回你之前给小鲸鱼选好的衣服。模型变化由 Harness 的选择结果自动触发，无需另点变身按钮。首次打开应用或切换会话时，直接显示当前模型对应的形态。
+
+![Pro 成熟形态：蓝色长发、鲸鱼尾巴与专属长裙女仆装](docs/images/pro-form.png)
+
+- **Pro 专属女仆裙**：按新参考制作蓝色长发、蓝眼睛、弯弯呆毛、鲸鱼尾巴和白色围裙，覆盖全部 12 种状态。
+- **身体站稳，尾巴轻摆**：Pro 待机和其他表情使用固定身体与独立尾巴图层，取消整个人物的左右摇摆。吃饭使用统一对齐的完整人物帧，连续吃三口，避免局部脸部、手臂贴片造成错位。
+- **互动继续保留**：白饭连续三口，摸头、鼓脸、铁盆帽、拖动、问候和小账本均可使用。Pro 的头部点击范围与帽子位置单独调整。
+- **不会反复变身**：启动和切换会话时直接显示对应形态；快速切换以最后一次成功选择为准。正在吃饭、拖动或操作衣柜时，先完成当前动作再变身。
+- **衣柜分开记忆**：Flash 保留五套服装。Pro 暂时只有专属女仆装；此时打开衣柜，可预选下次切回 Flash 的衣服。
+- 关闭动画、开启系统“减少动态效果”或窗口隐藏时直接切换形态。当前仅识别官方 DeepSeek Pro 模型 ID；其他模型使用小鲸鱼形态。
+
+v1.10 使用 Harness 的模型选择服务，在 Windows、应用内 SDK **0.2.1-rc.2** 环境实测。旧版若缺少模型选择服务，请先升级 Harness。完整互动演示仍可查看 [转轮、摸头与白饭](docs/images/quick-tour.gif)。
+
+<p align="center"><img src="docs/images/feeding-pro.gif" width="600" alt="Pro 形态戴着铁盆帽连续吃三口白饭，完整人物帧统一对齐"></p>
+
+除了变身，她还会陪你完成日常任务：捧盆求饭、摸头鼓脸、戴铁盆帽、手写时间问候、紧凑互动转轮，以及摸头后短暂显示的余额和今日用量。Flash 的五套服装继续保留，每套都有完整互动。
 
 ## 三步安装
 
@@ -60,12 +85,13 @@ DshDeepSeekGirl/
 
 <p align="center"><img src="docs/images/petting.gif" width="420" alt="轻点头部摸头，连续轻点后鼓脸的动画预览"></p>
 
-演示使用与插件相同的图集和运动规则生成，不包含个人聊天记录。每套衣服都覆盖十二种状态，每套 78 个关键姿势，五套共 390 个。吃饭用十二个姿势连续完成三口，共 36 次姿势播放；其余状态各六个，叠加连续呼吸、轻晃和落地缓冲。
+演示使用与插件相同的图集和运动规则生成，不包含个人聊天记录。Flash 五套服装共 390 个关键姿势，Pro 新增 78 个互动姿势与 12 个变身姿势，合计 480 个。吃饭用十二个姿势连续完成三口，共 36 次姿势播放；其余状态各六个，叠加连续呼吸、轻晃和落地缓冲。
 
 ## 她会做什么
 
 | 功能 | 表现 |
 | --- | --- |
+| Flash ⇄ Pro | 模型选择成功后自动双向变身；切回 Flash 恢复已保存服装 |
 | 跟随任务 | 推理时思考，正文输出时认真回答，完成后庆祝，出错时露出委屈表情 |
 | 小衣柜 | 经典女仆装、蓝白休闲卫衣、星星睡衣、奶油蓝羽绒服、月牙绒绒斗篷，先试穿再保存 |
 | 喂一盆白饭 | 连续三口，每口依次舀饭、送到嘴边、咀嚼和满足微笑，约 13 秒后恢复当前任务状态 |
@@ -175,11 +201,13 @@ npm run test:browser
 
 原生连接回归：将 `DSG_HARNESS_NODE_MODULES` 指向 Harness 的 `node_modules` 目录，再运行 `npm run test:native`。该检查使用原生 Cordis、Typert 和客户端网关，配合虚构会话验证完整用量链路；不读取个人配置或真实会话，不调用网络。
 
-`client.template.js` 是客户端模板，`scripts/build.cjs` 将 `assets/frames`、`assets/outfits` 与 `assets/props` 编译成 `client.js`。`logic.js` 负责状态和时间规则，`projection.js` 负责正常完成、错误和停止的区分。测试临时文件写入 `.cache/`。
+`client.template.js` 是客户端模板，`scripts/build.cjs` 将 `assets/frames`、`assets/outfits`、`assets/forms/pro` 与 `assets/props` 编译成 `client.js`。`logic.js` 负责状态和时间规则，`model-form.js` 只读监听成功的模型选择并计算形态位置，`projection.js` 负责正常完成、错误和停止的区分。测试临时文件写入 `.cache/`。
 
 浏览器检查覆盖五套衣服的 60 种图集、衣柜试穿 / 确认 / 取消和重新打开后的保存、三口吃饭与途中换装、循环与单次播放、吃饭重播、头部 / 身体点击、连续轻点、触屏、菜单键盘操作、帽子、暂停、减少动态效果、隐藏窗口和拖动保存。独立测试页面中，循环播放约 3 秒时角色组件的刷新由旧版 10 次降至新版 0 次；这不代表所有机器或应用负载下都能保持固定帧率。
 
 ## 关于素材
+
+Pro 素材使用内置 ImageGen 根据新参考生成，透明源图、选定图集和完整提示词见 [assets/forms/pro](assets/forms/pro)。源图按 512×768 对齐，运行时编译为 320×480 透明图集。参考图片本身不随仓库分发。
 
 这是一个非官方角色插件，与 DeepSeek 官方无隶属关系。插画通过 ImageGen 根据项目创建者提供的角色参考生成，原始提示词见 [assets/generation-prompts.txt](assets/generation-prompts.txt)，v1.5 的新插画提示词见 [assets/v1.5-generation-prompts.txt](assets/v1.5-generation-prompts.txt)。换装提示词和选定原始图集见 [assets/outfits](assets/outfits)。原始参考图片未包含在仓库中。
 

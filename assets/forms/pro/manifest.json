@@ -1,0 +1,181 @@
+{
+  "frameWidth": 512,
+  "frameHeight": 768,
+  "spriteWidth": 320,
+  "spriteHeight": 480,
+  "states": {
+    "idle": {
+      "label": "待机眨眼",
+      "delays": [
+        1800,
+        100,
+        90,
+        130,
+        400,
+        700
+      ],
+      "loop": true
+    },
+    "thinking": {
+      "label": "思考",
+      "delays": [
+        350,
+        300,
+        130,
+        300,
+        350,
+        350
+      ],
+      "loop": true
+    },
+    "generating": {
+      "label": "生成回答",
+      "delays": [
+        180,
+        180,
+        120,
+        180,
+        180,
+        180
+      ],
+      "loop": true
+    },
+    "success": {
+      "label": "结果完成",
+      "delays": [
+        160,
+        160,
+        220,
+        160,
+        230,
+        400
+      ],
+      "loop": false
+    },
+    "error": {
+      "label": "出错委屈",
+      "delays": [
+        800,
+        400,
+        120,
+        200,
+        500,
+        600
+      ],
+      "loop": true
+    },
+    "dragging": {
+      "label": "被拖动",
+      "delays": [
+        150,
+        150,
+        150,
+        150,
+        150,
+        150
+      ],
+      "loop": true
+    },
+    "drop": {
+      "label": "松手回弹",
+      "delays": [
+        100,
+        120,
+        140,
+        160,
+        220,
+        300
+      ],
+      "loop": false
+    },
+    "sleeping": {
+      "label": "休眠",
+      "delays": [
+        450,
+        450,
+        450,
+        450,
+        450,
+        450
+      ],
+      "loop": true
+    },
+    "eating": {
+      "label": "开心吃白饭",
+      "delays": [
+        280,
+        240,
+        240,
+        240,
+        320,
+        380,
+        360,
+        360,
+        420,
+        420,
+        500,
+        600
+      ],
+      "loop": false,
+      "sourceFolder": "eating-v2"
+    },
+    "begging": {
+      "label": "捧盆求喂饭",
+      "delays": [
+        400,
+        400,
+        400,
+        220,
+        400,
+        480
+      ],
+      "loop": true
+    },
+    "petting": {
+      "label": "被摸头",
+      "delays": [
+        200,
+        260,
+        380,
+        380,
+        320,
+        260
+      ],
+      "loop": false
+    },
+    "pouting": {
+      "label": "鼓脸啦",
+      "delays": [
+        350,
+        250,
+        350,
+        250,
+        300,
+        300
+      ],
+      "loop": false
+    },
+    "transform-in": {
+      "delays": [
+        160,
+        180,
+        180,
+        180,
+        180,
+        220
+      ],
+      "loop": false
+    },
+    "transform-out": {
+      "delays": [
+        180,
+        180,
+        180,
+        180,
+        180,
+        200
+      ],
+      "loop": false
+    }
+  }
+}
