@@ -2,7 +2,27 @@
 
 **Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.10.0**
+English · [中文](README.md) · **v1.11.0**
+
+## A winter wardrobe for Pro
+
+Pro can now preview and save a **Cream & blue puffer** or **Moonlit winter cape**, alongside her original whale-maid dress. In Pro form, click her body and open the wardrobe. Cancel restores the saved outfit; confirm remembers it across transformations and reloads. Flash retains its separate five-outfit wardrobe.
+
+![Pro winter outfits: a long puffer coat and a fur-trimmed crescent cape](docs/images/pro-winter.png)
+
+Both outfits cover all twelve states. Idle and expression poses keep the body still with a gently moving tail. Feeding uses twelve complete character drawings for three consecutive bites. Hat placement follows each pose, and changing clothes during a meal preserves elapsed progress. Winter transformations use the existing water effect and whole-character fades with the saved outfit. Non-feeding states use complete still poses and tail motion rather than face or arm overlays. The new outfits add 48 independent character drawings; see [sources and prompts](assets/forms/pro/outfits).
+
+![Pro wardrobe: preview, confirm and remember the maid dress or two winter outfits](docs/images/pro-winter-wardrobe.png)
+
+<details>
+<summary>Watch both winter outfits eat three consecutive bites</summary>
+
+<p align="center"><img src="docs/images/pro-winter-puffer-feeding.gif" width="600" alt="Pro in the puffer coat and basin hat, eating three consecutive bites"></p>
+<p align="center"><img src="docs/images/pro-winter-cape-feeding.gif" width="600" alt="Pro in the winter cape and basin hat, eating three consecutive bites"></p>
+
+</details>
+
+The winter artwork, wardrobe screenshot and feeding GIFs use the real plugin in a standalone test page, without personal conversations or real account data.
 
 <p align="center"><img src="docs/images/transformation.gif" width="760" alt="Standalone plugin demo: select Pro to transform into a mature whale maid, enjoy three bites of rice, and switch back to Flash"></p>
 
@@ -30,7 +50,7 @@ The transition works **in both directions**. Pro → Flash plays the return anim
 - **A steady body, a gentle tail**: Pro's idle and expression poses use a fixed body with a separate tail layer. Feeding plays three bites using complete drawings registered at the face and shoes, avoiding mismatched face or arm overlays.
 - **The familiar interactions**: three bites of rice, head pats, pouting, a basin hat, dragging, greetings, and the ledger. Head targets and hat placement follow the mature proportions.
 - **Considerate transitions**: startup and conversation changes show the corresponding form directly. Rapid selections use the last successful choice; eating, dragging, and open wardrobe actions finish before the visual transition.
-- **Separate outfit memory**: Flash retains five outfits. Pro currently wears one dedicated dress; her wardrobe lets you preselect an outfit for the next switch back to Flash.
+- **Separate outfit memory**: Flash retains five outfits. Pro offers her maid dress and two winter outfits. Each form previews and remembers its own clothes.
 - Paused animations, system reduced motion, and hidden windows switch directly. Official DeepSeek Pro model IDs are recognized; other models use Little Whale.
 
 v1.10 uses Harness's model-selection service, verified on Windows with bundled SDK **0.2.1-rc.2**. Upgrade Harness if an older release lacks that service. The earlier [wheel, head-pat, and rice demo](docs/images/quick-tour.gif) remains available.
@@ -85,7 +105,7 @@ Click her body or right-click to open six frequent actions: rice, head pats, out
 
 <p align="center"><img src="docs/images/petting.gif" width="420" alt="Head-pat and repeated-tap pout animation preview"></p>
 
-These previews use the plugin's sprite atlases and motion rules, without personal conversations. Flash has 390 key poses across five outfits. Pro adds 78 interaction poses and twelve transformation poses, for 480 in total. A meal plays its twelve-pose bite three times, for 36 pose visits; other states have six poses. Continuous breathing, swaying, and soft landings accompany them.
+These previews use the plugin's artwork without personal conversations. Flash has 390 source poses, Pro's maid dress has 90, and the winter outfits add 48, for 528 in total. A meal plays its twelve-pose bite three times, for 36 pose visits. Pro's non-feeding states keep the body still with a separate tail animation.
 
 ## What she does
 

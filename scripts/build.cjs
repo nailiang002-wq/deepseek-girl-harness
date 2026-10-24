@@ -3,6 +3,7 @@ const {registerMeal}=require('./register-pro-meal.cjs');
 const root=path.resolve(__dirname,'..'),source=path.join(root,'assets');
 const definitions=JSON.parse(fs.readFileSync(path.join(source,'manifest.json'),'utf8')).states;
 const outfits=['maid','hoodie','pajamas','winter-puffer','winter-cape'];
+const proOutfits=['winter-puffer','winter-cape'];
 function playback(state,definition){
  const count=definition.delays.length,repeats=state==='eating'?3:1;
  const sequence=Array.from({length:count*repeats},(_,index)=>index%count);
@@ -31,9 +32,29 @@ async function buildOutfit(outfit,portrait=false){
  }
  return assets;
 }
+async function buildProWinter(id){
+ const outfit='pro-'+id,folder=path.join(source,'forms/pro/outfits',id),manifest=JSON.parse(fs.readFileSync(path.join(folder,'manifest.json'),'utf8'));
+ const timings=JSON.parse(fs.readFileSync(path.join(source,'forms/pro/manifest.json'),'utf8')).states,assets={};
+ for(const[state,timing]of Object.entries(timings)){
+  const sourceState=state==='transform-in'?'idle':state;
+  const definition=manifest.states[sourceState];if(!definition)throw Error('Missing '+outfit+'/'+sourceState);
+  let frames=[];for(let i=0;i<definition.frames;i++)frames.push(await sharp(path.join(folder,'frames',sourceState,String(i).padStart(2,'0')+'.png')).resize(320,480).png().toBuffer());
+  let alignment;if(state==='eating'){
+   const registered=await registerMeal(frames,{headband:true});frames=registered.frames;alignment=registered.alignment;
+   const proof=path.join(root,'.cache/pro-meal-registered',outfit);fs.mkdirSync(proof,{recursive:true});
+   for(let i=0;i<frames.length;i++)fs.writeFileSync(path.join(proof,String(i).padStart(2,'0')+'.png'),frames[i]);
+  }
+  const plan=state==='eating'?playback(state,timing):{count:1,sequence:[0],delays:[timing.delays.reduce((a,b)=>a+b,0)]};
+  const strip=await sharp({create:{width:frames.length*320,height:480,channels:4,background:{r:0,g:0,b:0,alpha:0}}}).composite(frames.map((input,i)=>({input,left:i*320,top:0}))).webp({quality:90,alphaQuality:100}).toBuffer();
+  const still=await sharp(frames[0]).webp({quality:90,alphaQuality:100}).toBuffer();
+  assets[state]={strip:'data:image/webp;base64,'+strip.toString('base64'),still:'data:image/webp;base64,'+still.toString('base64'),...plan,duration:plan.delays.reduce((a,b)=>a+b,0),loop:timing.loop,outfit,...alignment?{alignment}:{},...definition.tailRig?{tailRig:definition.tailRig}:{},hat:definition.hat};
+ }
+ return assets;
+}
 (async()=>{
  const all={};for(const outfit of outfits)all[outfit]=await buildOutfit(outfit);
  const pro=await buildOutfit('pro',true);
+ const proWinter={};for(const id of proOutfits)proWinter['pro-'+id]=await buildProWinter(id);
  const spriteCSS=Object.entries({...all.maid,'transform-in':pro['transform-in'],'transform-out':pro['transform-out']}).map(([state,asset])=>{
   let elapsed=0;const stops=asset.delays.map((delay,index)=>{const position=asset.sequence[index],stop=`${(elapsed/asset.duration*100).toFixed(6)}%{transform:translate3d(${(-position/asset.count*100).toFixed(6)}%,0,0)}`;elapsed+=delay;return stop;});
   stops.push(`100%{transform:translate3d(${asset.loop?0:(-asset.sequence.at(-1)/asset.count*100).toFixed(6)}%,0,0)}`);
@@ -43,14 +64,15 @@ async function buildOutfit(outfit,portrait=false){
  const font=fs.readFileSync(path.join(source,'fonts/greeting-hand.woff2'));
  const template=fs.readFileSync(path.join(root,'client.template.js'),'utf8');
  if(!template.includes('__OUTFIT_ASSETS__'))throw Error('Wardrobe client template is required');
- const code=template.replace('__ASSETS__',()=>JSON.stringify(all.maid)).replace('__OUTFIT_ASSETS__',()=>JSON.stringify(Object.fromEntries(Object.entries(all).filter(([id])=>id!=='maid')))).replace('__PRO_ASSETS__',()=>JSON.stringify(pro)).replace('__PROPS__',()=>JSON.stringify(props)).replace('__GREETING_FONT__',()=>'data:font/woff2;base64,'+font.toString('base64')).replace('__SPRITE_CSS__',()=>spriteCSS).replace('__LOGIC__',()=>fs.readFileSync(path.join(root,'logic.js'),'utf8').replace(/export /g,'')).replace('__MODEL_FORM__',()=>fs.readFileSync(path.join(root,'model-form.js'),'utf8').replace(/export /g,'')).replace('__PRO_MOTION__',()=>fs.readFileSync(path.join(root,'pro-motion.js'),'utf8').replace(/export /g,'')).replace('__FINANCE__',()=>fs.readFileSync(path.join(root,'finance-protocol.js'),'utf8').replace(/export /g,'')+'\n'+fs.readFileSync(path.join(root,'finance-client.js'),'utf8'));
+ const code=template.replace('__ASSETS__',()=>JSON.stringify(all.maid)).replace('__OUTFIT_ASSETS__',()=>JSON.stringify(Object.fromEntries(Object.entries(all).filter(([id])=>id!=='maid')))).replace('__PRO_ASSETS__',()=>JSON.stringify(pro)).replace('__PRO_OUTFIT_ASSETS__',()=>JSON.stringify(proWinter)).replace('__PROPS__',()=>JSON.stringify(props)).replace('__GREETING_FONT__',()=>'data:font/woff2;base64,'+font.toString('base64')).replace('__SPRITE_CSS__',()=>spriteCSS).replace('__LOGIC__',()=>fs.readFileSync(path.join(root,'logic.js'),'utf8').replace(/export /g,'')).replace('__MODEL_FORM__',()=>fs.readFileSync(path.join(root,'model-form.js'),'utf8').replace(/export /g,'')).replace('__PRO_MOTION__',()=>fs.readFileSync(path.join(root,'pro-motion.js'),'utf8').replace(/export /g,'')).replace('__FINANCE__',()=>fs.readFileSync(path.join(root,'finance-protocol.js'),'utf8').replace(/export /g,'')+'\n'+fs.readFileSync(path.join(root,'finance-client.js'),'utf8'));
  if(/__[A-Z_]+__/.test(code))throw Error('Unresolved build placeholder');
  fs.writeFileSync(path.join(root,'client.js'),code);
  fs.mkdirSync(path.join(root,'.cache'),{recursive:true});
  fs.writeFileSync(path.join(root,'.cache/animation-assets.json'),JSON.stringify(all.maid));
  fs.writeFileSync(path.join(root,'.cache/outfit-assets.json'),JSON.stringify(all));
  fs.writeFileSync(path.join(root,'.cache/pro-assets.json'),JSON.stringify(pro));
+ fs.writeFileSync(path.join(root,'.cache/pro-outfit-assets.json'),JSON.stringify(proWinter));
  await sharp(path.join(source,'frames/idle/00.png')).resize(128,128).png().toFile(path.join(root,'icon.png'));
- const flashFrames=outfits.reduce((sum,outfit)=>sum+Object.values(all[outfit]).reduce((total,asset)=>total+asset.count,0),0),proFrames=Object.values(pro).reduce((sum,a)=>sum+a.count,0);
- console.log(JSON.stringify({bundleBytes:Buffer.byteLength(code),outfits,states:Object.keys(all.maid),physicalFrames:flashFrames,proFrames,totalFrames:flashFrames+proFrames,meal:{physicalFrames:all.maid.eating.count,playbackPoses:all.maid.eating.sequence.length,bites:all.maid.eating.biteCount,duration:all.maid.eating.duration}}));
+ const flashFrames=outfits.reduce((sum,outfit)=>sum+Object.values(all[outfit]).reduce((total,asset)=>total+asset.count,0),0),proFrames=Object.values(pro).reduce((sum,a)=>sum+a.count,0),proWinterFrames=proOutfits.length*24;
+ console.log(JSON.stringify({bundleBytes:Buffer.byteLength(code),outfits,proOutfits:['pro',...Object.keys(proWinter)],states:Object.keys(all.maid),physicalFrames:flashFrames,proFrames,proWinterFrames,totalFrames:flashFrames+proFrames+proWinterFrames,meal:{physicalFrames:all.maid.eating.count,playbackPoses:all.maid.eating.sequence.length,bites:all.maid.eating.biteCount,duration:all.maid.eating.duration}}));
 })().catch(error=>{console.error(error);process.exitCode=1;});

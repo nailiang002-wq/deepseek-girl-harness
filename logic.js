@@ -3,6 +3,8 @@ export const DEFAULT_SIZE = 144;
 export const MIN_SIZE = 64;
 export const MAX_SIZE = 320;
 export function normalizeOutfit(value) { return ['hoodie','pajamas','winter-puffer','winter-cape'].includes(value) ? value : 'maid'; }
+export function normalizeProOutfit(value) { return ['pro-winter-puffer','pro-winter-cape'].includes(value) ? value : 'pro'; }
+export function isProOutfit(value) { return value === 'pro' || value === 'pro-winter-puffer' || value === 'pro-winter-cape'; }
 export function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 export function geometry(value, width, height) {
   const w = Number.isFinite(width) && width > 0 ? width : 1280;
