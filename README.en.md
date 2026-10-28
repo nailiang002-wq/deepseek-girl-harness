@@ -2,7 +2,9 @@
 
 **Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.11.0**
+English · [中文](README.md) · **v1.11.1**
+
+**v1.11.1: less frequent rice requests.** The first and each subsequent automatic request waits a random **10–15 minutes**. Feeding starts a fresh wait. Busy, sleeping, open-menu and hidden-window states defer the request; conversation changes preserve the deadline. She holds out the basin for about six seconds per request. Manual feeding remains available.
 
 ## A winter wardrobe for Pro
 
@@ -117,7 +119,7 @@ These previews use the plugin's artwork without personal conversations. Flash ha
 | White-rice feeding | Three full bites with scooping, lifting the spoon, chewing, and a satisfied smile; returns to the current task after about 13 seconds |
 | Head pats | Tap her head to see her close her eyes and nuzzle, with little floating hearts; also available in the menu |
 | Repeated taps | Three quick head taps trigger a brief playful pout, returning after about 1.8 seconds; head pats do not interrupt a meal |
-| Asking for rice | Holds out an empty basin while idle; feeding pauses requests for two minutes |
+| Asking for rice | Waits a random 10–15 minutes, then holds an empty basin for about 6 seconds while idle; feeding restarts the wait. Busy, sleeping or hidden states defer the request |
 | Basin hat | Toggle an upside-down silver basin that moves with her |
 | Pick up and drop | Gently swings while dragged and settles when released; remembers her position |
 | Time greetings | Greets you using your computer’s local time and reminds you to rest late at night |

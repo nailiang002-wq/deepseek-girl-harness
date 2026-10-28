@@ -28,6 +28,8 @@ function createHarness(storage=new Map(),start=new Date(2026,9,10,10,59,50).getT
   function change(value){storage.set('deepseek-girl.preferences.v1',JSON.stringify({...prefs(),...value}));window.dispatchEvent({type:'deepseek-girl-preferences'});flush();}
   flush();return{storage,find,tick,prefs,change,setRunning(value){running=value;flush();},wake(){emit(winEvents,{type:'pointerdown'});flush();},hidden(value){document.hidden=value;emit(docEvents,{type:'visibilitychange'});flush();},unmount(){for(const item of hooks)item?.cleanup?.();assert.equal(timers.size,0);assert.equal(winEvents.size,0);assert.equal(docEvents.size,0);}};
 }
+module.exports={createHarness};
+if(require.main===module){
 const bubble=h=>h.find(node=>node.props?.className==='dsg-greeting');
 let h=createHarness();h.tick(799);assert.equal(bubble(h),undefined);h.tick(1);assert.match(bubble(h).props.children[0].props.children,/早上好/);assert.ok(h.prefs().greetingSeen['2026-10-10:morning']);
 h.tick(9200);h.tick(800);assert.match(bubble(h).props.children[0].props.children,/中午好/);h.tick(10000);assert.equal(bubble(h),undefined);const storage=h.storage;h.unmount();
@@ -38,3 +40,4 @@ h=createHarness(new Map(),new Date(2026,9,10,18).getTime());h.hidden(true);h.tic
 h.change({greetingsEnabled:false});h.wake();h.tick(800);assert.equal(bubble(h),undefined);h.unmount();
 h=createHarness(new Map([['deepseek-girl.preferences.v1',JSON.stringify({greetingsEnabled:false,hat:true})]]),new Date(2026,9,10,14).getTime());h.tick(1000);assert.equal(bubble(h),undefined);h.find(n=>n.props?.className==='dsg-character').props.onKeyDown({key:'Enter',preventDefault(){}});h.tick(0);h.find(n=>n.type==='button'&&n.props['aria-label']==='和我打个招呼').props.onClick();h.tick(0);assert.match(bubble(h).props.children[0].props.children,/下午好/);assert.equal(h.prefs().hat,true);h.tick(9000);h.find(n=>n.props?.className==='dsg-character').props.onKeyDown({key:'Enter',preventDefault(){}});h.tick(0);h.find(n=>n.type==='button'&&n.props['aria-label']==='和我打个招呼').props.onClick();h.tick(0);h.tick(1100);assert.ok(bubble(h));h.tick(8900);assert.equal(bubble(h),undefined);h.unmount();
 console.log(JSON.stringify({passed:true,checks:['automatic greeting and dismissal','clock transition to noon','persisted deduplication after remount','busy task deferral','one late-night greeting across midnight','hidden window deferral','dismiss button','disabled automatic greetings','manual greeting preserves hat','complete timer and listener cleanup']}));
+}

@@ -48,7 +48,18 @@ export function taskState(running, phase, status, sleeping, celebrating) {
   if (celebrating) return 'success';
   return sleeping ? 'sleeping' : 'idle';
 }
-export const FEED_QUIET_MS = 120000;
+export const BEG_MIN_MS = 10 * 60 * 1000;
+export const BEG_MAX_MS = 15 * 60 * 1000;
+export const FEED_QUIET_MS = BEG_MIN_MS;
+export function nextBegAt(now, random = Math.random()) {
+  const sample = Number.isFinite(random) ? clamp(random, 0, 1) : .5;
+  return now + BEG_MIN_MS + Math.floor(sample * (BEG_MAX_MS - BEG_MIN_MS));
+}
+export function savedBegAt(preferences, now) {
+  const due = preferences?.nextBegAt;
+  return Number.isFinite(due) && due > 0 && due <= now + BEG_MAX_MS
+    ? Math.max(due, lastFedAt(preferences?.lastFed, now) + FEED_QUIET_MS) : 0;
+}
 export function lastFedAt(value, now) {
   return Number.isFinite(value) && value > 0 && value <= now ? value : 0;
 }

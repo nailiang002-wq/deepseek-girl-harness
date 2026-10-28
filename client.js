@@ -59,7 +59,18 @@ function taskState(running, phase, status, sleeping, celebrating) {
   if (celebrating) return 'success';
   return sleeping ? 'sleeping' : 'idle';
 }
-const FEED_QUIET_MS = 120000;
+const BEG_MIN_MS = 10 * 60 * 1000;
+const BEG_MAX_MS = 15 * 60 * 1000;
+const FEED_QUIET_MS = BEG_MIN_MS;
+function nextBegAt(now, random = Math.random()) {
+  const sample = Number.isFinite(random) ? clamp(random, 0, 1) : .5;
+  return now + BEG_MIN_MS + Math.floor(sample * (BEG_MAX_MS - BEG_MIN_MS));
+}
+function savedBegAt(preferences, now) {
+  const due = preferences?.nextBegAt;
+  return Number.isFinite(due) && due > 0 && due <= now + BEG_MAX_MS
+    ? Math.max(due, lastFedAt(preferences?.lastFed, now) + FEED_QUIET_MS) : 0;
+}
 function lastFedAt(value, now) {
   return Number.isFinite(value) && value > 0 && value <= now ? value : 0;
 }
@@ -320,7 +331,7 @@ function createFinanceClient(ctx){
 }
 
     const STATES = ["idle","thinking","generating","success","error","dragging","drop","sleeping","begging","eating","petting","pouting"];
-    const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"轻点头部：摸头 · 身体 / 右键：菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"轻点头部摸摸头，快速点三次会鼓脸。身体点击 / 右键打开菜单。点白饭盆喂饭；拖动移动，Ctrl + 滚轮缩放。帽子可开关，喂饱后两分钟不再求饭。","accessible":"轻点头部摸头，身体点击或右键打开菜单，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡","petting":"被摸头","pouting":"鼓脸啦","pet":"摸摸头"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Tap head: pet · Body / right click: menu · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Tap her head for a pat; three quick taps make her pout. Click her body or right-click for the menu. Feed with the rice basin, drag to move, Ctrl + wheel to resize. Toggle her hat; feeding pauses rice requests for two minutes.","accessible":"Tap her head to pet, click her body or right-click for the menu, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting","petting":"Enjoying head pats","pouting":"Pouting","pet":"Pat her head"}};
+    const DICTIONARIES = {"zh":{"idle":"待机","thinking":"思考中","generating":"正在回答","success":"完成啦","error":"遇到错误","dragging":"被拎起来啦","drop":"落地啦","sleeping":"休息中","hint":"轻点头部：摸头 · 身体 / 右键：菜单 · 拖动：移动 · Ctrl+滚轮：缩放","preview":"预览 · ","menu":"DeepSeek 娘 · 表情与互动","follow":"跟随当前任务","resume":"开启动画","pause":"暂停动画","reset":"恢复默认位置和大小","help":"轻点头部摸摸头，快速点三次会鼓脸。身体点击 / 右键打开菜单。点白饭盆喂饭；拖动移动，Ctrl + 滚轮缩放。帽子可开关，求饭间隔为10～15分钟，喂饭后重新计时。","accessible":"轻点头部摸头，身体点击或右键打开菜单，拖动移动，Ctrl 加滚轮缩放","begging":"捧盆求喂饭","eating":"开心吃白饭","feed":"喂她一盆白饭","hat":"铁盆帽","hatOn":"戴上铁盆帽","hatOff":"摘下铁盆帽","begOn":"开启待机捧盆求饭","begOff":"关闭待机捧盆求饭","greet_morning":"早上好～今天也一起加油吧！","greet_noon":"中午好～记得吃午饭，我也想要一盆白饭！","greet_afternoon":"下午好～忙了一阵，喝口水休息一下吧。","greet_evening":"晚上好～辛苦啦，记得放松一下。","greet_late":"已经很晚啦～熬夜也要注意身体，记得休息哦。","greetNow":"和我打个招呼","greetingsOn":"开启时间问候","greetingsOff":"关闭时间问候","closeGreeting":"关闭问候气泡","petting":"被摸头","pouting":"鼓脸啦","pet":"摸摸头"},"en":{"idle":"Idle","thinking":"Thinking","generating":"Answering","success":"Done!","error":"Error","dragging":"Picked up!","drop":"Landed!","sleeping":"Sleeping","hint":"Tap head: pet · Body / right click: menu · Drag: move · Ctrl+wheel: resize","preview":"Preview · ","menu":"DeepSeek Girl · Expressions & interactions","follow":"Follow task","resume":"Resume animation","pause":"Pause animation","reset":"Reset position and size","help":"Tap her head for a pat; three quick taps make her pout. Click her body or right-click for the menu. Feed with the rice basin, drag to move, Ctrl + wheel to resize. Toggle her hat; rice requests are spaced 10–15 minutes apart; feeding restarts the wait.","accessible":"Tap her head to pet, click her body or right-click for the menu, drag to move, Ctrl plus wheel to resize","begging":"Asking for rice","eating":"Enjoying white rice","feed":"Feed a basin of white rice","hat":"Iron basin hat","hatOn":"Wear basin hat","hatOff":"Remove basin hat","begOn":"Enable idle rice requests","begOff":"Disable idle rice requests","greet_morning":"Good morning! Let’s make it a lovely day.","greet_noon":"Good afternoon! Remember lunch. I’d love a basin of rice, too!","greet_afternoon":"Hello! Take a moment to rest and have some water.","greet_evening":"Good evening! You’ve worked hard. Remember to relax.","greet_late":"It’s getting late. Take care of yourself and get some rest.","greetNow":"Say hello","greetingsOn":"Enable time greetings","greetingsOff":"Disable time greetings","closeGreeting":"Dismiss greeting","petting":"Enjoying head pats","pouting":"Pouting","pet":"Pat her head"}};
     Object.assign(DICTIONARIES.zh,{wardrobe:'打开小衣柜',wardrobeTitle:'今天想穿哪一套？',wardrobeHint:'点选衣服预览，确认后会记住你的选择。',wear:'就穿这套',cancelOutfit:'取消',outfitLoading:'正在整理衣服…',outfitError:'衣服暂时没准备好，请重新点选。',outfitSaved:'正在穿',outfitPreview:'预览中',outfit_maid:'经典女仆装',outfit_hoodie:'蓝白休闲卫衣',outfit_pajamas:'星星睡衣','outfit_winter-puffer':'奶油蓝羽绒服','outfit_winter-cape':'月牙绒绒斗篷'});
     Object.assign(DICTIONARIES.en,{wardrobe:'Open wardrobe',wardrobeTitle:'What shall I wear today?',wardrobeHint:'Choose a look to preview; confirm to remember it.',wear:'Wear this outfit',cancelOutfit:'Cancel',outfitLoading:'Getting dressed…',outfitError:'This outfit could not load. Please select it again.',outfitSaved:'Wearing',outfitPreview:'Preview',outfit_maid:'Classic maid',outfit_hoodie:'Blue & white hoodie',outfit_pajamas:'Star pajamas','outfit_winter-puffer':'Cream & blue puffer','outfit_winter-cape':'Moonlit winter cape'});
     Object.assign(DICTIONARIES.zh,{financeShow:'显示余额与今日预估',financeHide:'隐藏余额与今日预估',financeTitle:'她的饭钱小账本',financeOpen:'查看余额与今日用量明细',financeBalance:'登录账户余额',financeToday:'今日预估',financeLoading:'查询中…',financeFailed:'暂时查询失败',financeUnavailable:'暂不可用',financeSignedOut:'登录后查看',financeRefresh:'刷新账本',financeRefreshing:'正在刷新…',financeClose:'收起账本',financeScope:'仅本机 Harness 今日已记录的模型用量；不包含其他设备或平台用量，也不是账户账单。',financePricing:'按已知模型公开价格估算；区间对应不同时段价格，实际扣费可能不同。',financeAccountScope:'余额来自 Harness 登录账户，包含充值与赠送余额；可能与 API Key 所属账户不同。',financeTokens:'今日 Token',financeInput:'非缓存输入',financeOutput:'输出',financeCacheRead:'缓存命中',financeCacheWrite:'缓存写入',financeTotal:'总计',financeRequests:'已记录请求',financeMissing:'缺少用量的请求',financeUnpriced:'未匹配价格的请求',financeRecharge:'充值余额',financeBonus:'赠送余额',financeUpdated:'上次更新',financePriceSource:'价格来源',financeOfficialBill:'查看官方账单',financeNoWallet:'暂无余额数据',financePartial:'仅已知部分',financeSnapshot:'本机今日记录',financeNoSummary:'当前环境暂未提供用量汇总。'});
@@ -519,7 +530,7 @@ function createFinanceClient(ctx){
       const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
       const renderBox=formGeometry(prefs,window.innerWidth,window.innerHeight,form);
       const task=taskState(running,phase,status,sleeping,celebrating);
-      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&prefs.beggingEnabled!==false;
+      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!morph&&prefs.beggingEnabled!==false;
       const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!financePeek&&!morph;
       (React.useLayoutEffect||React.useEffect)(()=>{const element=financeCardRef.current;if(!element?.getBoundingClientRect)return;const measure=()=>{const height=Math.ceil(element.getBoundingClientRect().height);if(financeHeightRef.current!==height){financeHeightRef.current=height;setFinanceCardHeight(height);}};measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);return()=>observer?.disconnect();},[financePeek,financePanel,wardrobe,dragging,greeting?.period,greetingReady]);
       const financeActive=prefs.financeVisible!==false&&Boolean(financePeek||financePanel);
@@ -589,13 +600,20 @@ function createFinanceClient(ctx){
       },[greetingReady,clockPlan,prefs.greetingsEnabled,prefs.greetingSeen]);
       React.useEffect(()=>{if(!greeting)return;const timer=setTimeout(()=>setGreeting(null),10000);return()=>clearTimeout(timer);},[greeting]);
       React.useEffect(()=>{
-        setBegging(false);if(!eligible)return;
-        let cancelled=false,timer;
-        const start=()=>{if(cancelled)return;if(!canBeg('idle',prefsRef.current,Date.now())){timer=setTimeout(start,12000);return;}
-          setBegging(true);timer=setTimeout(()=>{if(cancelled)return;setBegging(false);timer=setTimeout(start,25000);},6000);};
-        timer=setTimeout(start,Math.max(12000,lastFedAt(prefs.lastFed,Date.now())+FEED_QUIET_MS-Date.now()));
-        return()=>{cancelled=true;clearTimeout(timer);};
-      },[eligible,prefs.lastFed,prefs.beggingEnabled]);
+        if(!eligible||hidden)setBegging(false);
+        if(prefs.beggingEnabled===false)return;
+        const now=Date.now(),due=savedBegAt(prefs,now);
+        if(!due){const next={...prefsRef.current,nextBegAt:nextBegAt(now)};setPrefs(next);writePrefs(next);return;}
+        // Keep the deadline across tasks, sleep, and conversation remounts.
+        // An overdue request waits until she is awake, idle, and visible.
+        if(!eligible||hidden)return;
+        const timer=setTimeout(()=>{
+          if(document.hidden||!canBeg('idle',prefsRef.current,Date.now()))return;
+          setBegging(true);writePrefs({...prefsRef.current,nextBegAt:nextBegAt(Date.now())});
+        },Math.max(0,due-now));
+        return()=>clearTimeout(timer);
+      },[eligible,hidden,prefs.nextBegAt,prefs.lastFed,prefs.beggingEnabled]);
+      React.useEffect(()=>{if(!begging)return;const timer=setTimeout(()=>setBegging(false),6000);return()=>clearTimeout(timer);},[begging]);
       React.useEffect(()=>{
         let timer;const wake=()=>{setSleeping(false);clearTimeout(timer);if(!running)timer=setTimeout(()=>setSleeping(true),90000);};wake();
         window.addEventListener('pointerdown',wake);window.addEventListener('keydown',wake);
@@ -651,7 +669,7 @@ function createFinanceClient(ctx){
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
       function pet(){if(morph||feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false){setFinancePeek(Date.now());setGreeting(null);}const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
-      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);writePrefs({...prefsRef.current,lastFed:Date.now()});}
+      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);const now=Date.now();writePrefs({...prefsRef.current,lastFed:now,nextBegAt:nextBegAt(now)});}
       function down(e){if(e.button!==0||morph)return;setFinancePeek(0);setFinanceHeld(false);setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},render:{...renderBox},form,moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
       function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}const x=clamp(d.render.x+dx,0,Math.max(0,window.innerWidth-d.render.width)),y=clamp(d.render.y+dy,0,Math.max(0,window.innerHeight-d.render.height-32));d.position=viewport({...d.start,x:x+d.render.width/2-d.start.size/2,y:y+d.render.height-d.start.size});d.renderPosition=formGeometry(d.position,window.innerWidth,window.innerHeight,d.form);
         if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.renderPosition.x-d.render.x}px,${d.renderPosition.y-d.render.y}px,0)`;});}

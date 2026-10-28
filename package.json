@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-deepseek-girl",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "private": true,
   "type": "module",
   "description": "DeepSeek 娘：Flash / Pro 自动变身、双形态冬日衣柜、转轮、白饭与摸头账本。",
@@ -48,7 +48,7 @@
   },
   "scripts": {
     "build": "node scripts/build.cjs",
-    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/artwork.cjs && node tests/usage.mjs && node tests/finance-host.mjs && node tests/model-form.mjs && node tests/pro-artwork.cjs && node tests/pro-winter-artwork.cjs",
+    "test": "node tests/logic.mjs && node tests/client.cjs && node tests/greetings.cjs && node tests/begging.cjs && node tests/artwork.cjs && node tests/usage.mjs && node tests/finance-host.mjs && node tests/model-form.mjs && node tests/pro-artwork.cjs && node tests/pro-winter-artwork.cjs",
     "test:browser": "node scripts/build.cjs && node tests/browser.cjs && node tests/greeting-browser.cjs && node tests/petting-browser.cjs && node tests/wardrobe-browser.cjs && node tests/finance-browser.cjs && node tests/radial-browser.cjs && node tests/transformation-browser.cjs && node tests/pro-tail-browser.cjs && node tests/pro-meal-browser.cjs && node tests/pro-wardrobe-browser.cjs && node scripts/test-pro-winter.cjs",
     "test:pro-winter": "node tests/pro-winter-artwork.cjs && node tests/pro-wardrobe-browser.cjs && node scripts/test-pro-winter.cjs",
     "test:native": "node tests/finance-native.mjs"
