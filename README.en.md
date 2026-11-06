@@ -2,7 +2,9 @@
 
 **Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.11.1**
+English · [中文](README.md) · **v1.11.2**
+
+**v1.11.2 fixes a display issue on DSH 0.2.2-rc.1.** In conversations with messages, Little Whale could slide to the bottom of the window and appear partly cut off. She now stays within the window, including after resizing. Replace the plugin files and reopen Harness to apply the update.
 
 **v1.11.1: less frequent rice requests.** The first and each subsequent automatic request waits a random **10–15 minutes**. Feeding starts a fresh wait. Busy, sleeping, open-menu and hidden-window states defer the request; conversation changes preserve the deadline. She holds out the basin for about six seconds per request. Manual feeding remains available.
 

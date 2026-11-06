@@ -6,7 +6,7 @@ const storage=new Map(),events=new Map();const window={innerWidth:1280,innerHeig
 const localStorage={getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)};let timers=new Map(),next=1;
 const documentEvents=new Map(),document={hidden:false,createElement:()=>({remove(){active=false;}}),head:{appendChild(){}},addEventListener:(key,fn)=>documentEvents.set(key,fn),removeEventListener:(key,fn)=>{if(documentEvents.get(key)===fn)documentEvents.delete(key);}};
 vm.runInNewContext(fs.readFileSync('client.js','utf8'),{window,document,localStorage,console,Event:class{constructor(type){this.type=type;}},setTimeout:(fn,delay)=>{const id=next++;timers.set(id,{fn,delay});return id;},clearTimeout:id=>timers.delete(id)});
-const plugin=loadedModule.factory(name=>{assert.equal(name,'react');return React;});
+const plugin=loadedModule.factory(name=>name==='react-dom'?{createPortal:child=>child}:React);
 const source={getSnapshot:()=>({nodes:{source:()=>({getSnapshot:()=>undefined,subscribe:()=>()=>{}})}})};
 const ctx={modelDirectories:{directoryFor:()=>({store:{subscribe:()=>()=>{},getSnapshot:()=>null}})},effect:fn=>{const cleanup=fn();if(typeof cleanup==='function')cleanups.push(cleanup);},locale:{register:()=>()=>{}},sessions:{binding:()=>({})},uiConversation:{binding:()=>({target:()=>source})},slots:{inject:(_slot,fn)=>fn(),register:(opts,component)=>{regs.set(opts.name,{opts,component});return()=>{};}}};plugin.apply(ctx);
 assert.equal(regs.size,2);for(const reg of regs.values())assert.equal(reg.component(),null);

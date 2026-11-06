@@ -2,6 +2,7 @@ window.__ModuleLoader__.load({
   id: '@local/dsh-deepseek-girl',
   factory(require) {
     const React = require('react'), h = React.createElement;
+    const {createPortal} = require('react-dom');
     const ASSETS = __ASSETS__;
     const OUTFIT_ASSETS = __OUTFIT_ASSETS__;
     const PRO_ASSETS = __PRO_ASSETS__;
@@ -364,7 +365,7 @@ __SPRITE_CSS__
       const wheelWidth=Math.min(256,window.innerWidth-16),wheelHeight=wheelWidth+32;
       const wheelLeft=renderBox.x>=wheelWidth+20?renderBox.x-wheelWidth-12:renderBox.x+renderBox.width+wheelWidth+20<=window.innerWidth?renderBox.x+renderBox.width+12:renderBox.x+renderBox.width/2-wheelWidth/2;
       const wheelPosition={left:clamp(wheelLeft,8,Math.max(8,window.innerWidth-wheelWidth-8)),top:clamp(renderBox.y+(renderBox.height+30)/2-wheelHeight/2,8,Math.max(8,window.innerHeight-wheelHeight-8)),width:wheelWidth};
-      return h('div',{ref:root,className:'dsg-root',style:{left:renderBox.x,top:renderBox.y,width:renderBox.width},'data-form':form,'data-transforming':String(Boolean(morph)),'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':savedOutfit,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
+      return h('div',{ref:root,className:'dsg-root',onClick:e=>e.stopPropagation(),style:{left:renderBox.x,top:renderBox.y,width:renderBox.width},'data-form':form,'data-transforming':String(Boolean(morph)),'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':savedOutfit,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
         morph&&h(Transformation,{event:morph,prefs,animate,hidden,t}),
         greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
           h('span',{className:'dsg-greeting-text'},t('greet_'+greeting.period)),
@@ -419,7 +420,9 @@ __SPRITE_CSS__
         const key=props.useChat(latestAssistantKey);
         const phase=props.useGirlNode(key,assistantPhase);
         React.useEffect(()=>{docks++;notify();return()=>{docks--;notify();};},[]);
-        return h(Mascot,{key:props.sessionId,running,status,phase,modelTarget,sessionId:props.sessionId,finance,t:props.t});
+        // A transformed composer can contain and clip fixed elements. Keep the
+        // session hooks here while rendering the mascot in viewport coordinates.
+        return createPortal(h(Mascot,{key:props.sessionId,running,status,phase,modelTarget,sessionId:props.sessionId,finance,t:props.t}),document.body);
       }
       function FloatingGirl(props){const dock=React.useSyncExternalStore(presence.subscribe,presence.snapshot,presence.snapshot);
         return dock?null:h(Mascot,{finance,t:props.t});
