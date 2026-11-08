@@ -11,6 +11,7 @@ window.__ModuleLoader__.load({
     const OUTFITS = [{id:'maid',zh:'经典女仆装',en:'Classic maid'},{id:'hoodie',zh:'蓝白休闲卫衣',en:'Blue & white hoodie'},{id:'pajamas',zh:'星星睡衣',en:'Star pajamas'},{id:'winter-puffer',zh:'奶油蓝羽绒服',en:'Cream & blue puffer'},{id:'winter-cape',zh:'月牙绒绒斗篷',en:'Moonlit winter cape'}];
     const PROPS = __PROPS__;
     __LOGIC__
+    __COMPANION__
     __MODEL_FORM__
     __PRO_MOTION__
     __FINANCE__
@@ -24,6 +25,8 @@ window.__ModuleLoader__.load({
     Object.assign(DICTIONARIES.en,{wheelName:'Little Whale',wheelMore:'More',wheelSettings:'Settings',wheelExpressions:'Expressions',wheelClose:'Close wheel',wheelBack:'Back',wheelNext:'Next expressions',wheelPrevious:'Previous expressions',wheelHint:'Arrows to select · Esc to close',wheelFeed:'Feed rice',wheelPet:'Head pat',wheelWardrobe:'Dress up',wheelHatOn:'Hat on',wheelHatOff:'Hat off',wheelHello:'Say hello',wheelLedger:'Ledger',wheelFollow:'Follow task',wheelPause:'Pause',wheelResume:'Play',wheelReset:'Reset',wheelBeg:'Ask for rice',wheelGreetings:'Greetings',wheelFinance:'Pat to peek',wheelOn:'On',wheelOff:'Off',financePeekHint:'A head pat, a little peek at today',financeShow:'Enable ledger after head pats',financeHide:'Disable ledger after head pats'});
     Object.assign(DICTIONARIES.zh,{formPro:'Pro · 成熟形态',formFlash:'Flash · 小鲸鱼',formToPro:'这次，交给我吧。',formToFlash:'变回小鲸鱼啦～',formChanging:'正在变身',proWardrobeHint:'给 Pro 选一套暖暖的衣服。确认后会记住，Flash 的穿搭也会保留。',proWardrobe:'Pro 衣柜',outfit_pro:'鲸鱼女仆装','outfit_pro-winter-puffer':'奶油蓝羽绒服','outfit_pro-winter-cape':'月牙绒绒斗篷'});
     Object.assign(DICTIONARIES.en,{formPro:'Pro · Mature form',formFlash:'Flash · Little Whale',formToPro:'Leave this one to me.',formToFlash:'Little Whale is back!',formChanging:'Transforming',proWardrobeHint:'Choose a cozy Pro outfit. Each form remembers its own clothes.',proWardrobe:'Pro looks',outfit_pro:'Whale maid','outfit_pro-winter-puffer':'Cream & blue puffer','outfit_pro-winter-cape':'Moonlit winter cape'});
+    Object.assign(DICTIONARIES.zh,companionDictionaries().zh,{bond:'陪伴手账',bondTitle:'我们的小小默契',bondName:'希望她怎么称呼你？',bondNameHint:'最多 16 个字，留空使用普通问候。',bondSave:'记住这个称呼',bondClose:'收起手账',bondSaved:'称呼已记住啦。',bondToday:'今日亲密度',bondRules:'喂饭 +3（每天 3 次，间隔 2 分钟）· 摸头 +1（每天 5 次，间隔 1 分钟）· 一起完成任务 +2（每天 3 次）。每天最多 20 点。',bondLocal:'两个形态共用亲密度，进度保存在这台设备上。',bondNext:'下一阶段还需',bondMax:'已经是特别的陪伴啦',bondPoints:'点',bondLevel0:'初次见面',bondLevel1:'渐渐熟悉',bondLevel2:'默契搭档',nicknameJoin:'，'});
+    Object.assign(DICTIONARIES.en,companionDictionaries().en,{bond:'Companion journal',bondTitle:'Getting to know you',bondName:'What should she call you?',bondNameHint:'Up to 16 characters. Leave blank for a regular greeting.',bondSave:'Remember this name',bondClose:'Close journal',bondSaved:'Name remembered.',bondToday:'Today’s affection',bondRules:'Feed +3 (3/day, 2 minutes apart) · Head pat +1 (5/day, 1 minute apart) · Finish a task together +2 (3/day). Up to 20 points daily.',bondLocal:'Both forms share progress, saved on this device.',bondNext:'Points to the next stage',bondMax:'A familiar companion',bondPoints:'points',bondLevel0:'First meeting',bondLevel1:'Getting familiar',bondLevel2:'In sync',nicknameJoin:', '});
     // Small, local SVG drawings keep the wheel sharp without downloading icons.
     function WheelIcon({name}){
       const paths={rice:'M3 11h18c-1 6-4 9-9 9S4 17 3 11Zm2-2c0-3 3-5 7-5s7 2 7 5M8 7l1-1m3 1 1-1m3 1 1 1',pet:'M5 12V9a2 2 0 0 1 4 0v2-6a2 2 0 0 1 4 0v6-5a2 2 0 0 1 4 0v7-3a2 2 0 0 1 4 0v5c0 5-4 7-8 7-3 0-5-2-7-4l-3-3a2 2 0 0 1 2-3Z',wardrobe:'m8 4 4 3 4-3 6 5-4 4-2-2v10H8V11l-2 2-4-4 6-5Z',hat:'M3 16h18M5 14l2-8h10l2 8M9 9h6',hello:'M4 5h16v12h-7l-5 4v-4H4V5Zm4 5h1m5 0h1m-7 3q4 3 8 0',more:'M4 12h1m6 0h1m6 0h1',expressions:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM8 9h1m6 0h1m-8 5q4 5 8 0',settings:'M4 7h16M4 17h16M8 4v6m8 4v6',ledger:'M5 3h14v18H5V3Zm4 5h6m-6 4h6m-6 4h3',follow:'m5 6 14 6-7 2-2 7L5 6Z',pause:'M8 5v14m8-14v14',play:'m8 4 12 8-12 8V4Z',reset:'M5 8a8 8 0 1 1-1 8M5 3v5h5',back:'m14 5-7 7 7 7M7 12h14',close:'m6 6 12 12M18 6 6 18',star:'m12 3 3 6 7 1-5 5 1 6-6-3-6 3 1-6-5-5 7-1 3-6Z'};
@@ -39,6 +42,8 @@ window.__ModuleLoader__.load({
     const CSS = `
 @font-face{font-family:'DSG Greeting Hand';src:url('__GREETING_FONT__') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .dsg-root{position:fixed;z-index:60;display:flex;flex-direction:column;align-items:center;user-select:none;font-family:inherit}
+.dsg-bond-entry{display:block;box-sizing:border-box;max-width:100%;height:28px;margin:3px auto 0;padding:2px 10px;border:1px dashed #c7beca;border-radius:14px;background:#fff9ee;color:#6a6584;font:13px/20px 'DSG Greeting Hand','KaiTi',cursive;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.dsg-finance-panel.dsg-bond-panel{width:390px;font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:15px}.dsg-bond-panel label{display:block;margin:18px 0 7px}.dsg-bond-panel input{box-sizing:border-box;width:100%;min-width:0;padding:10px 12px;border:1.5px solid #b8c9dc;border-radius:12px;background:#fffefb;color:inherit;font:inherit}.dsg-bond-panel progress{width:100%;height:12px;accent-color:#829cbe}.dsg-bond-panel h3{font-size:20px;color:#6c719a}.dsg-companion-line{display:block;margin:0 0 8px;color:#6c719a;font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:14px;line-height:1.6}
 .dsg-character{position:relative;width:100%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:grab;touch-action:none;border-radius:18px}
 .dsg-character:active{cursor:grabbing}.dsg-character:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary));outline-offset:2px}
 .dsg-motion{width:100%;height:100%;display:block;position:relative;pointer-events:none;transform-origin:50% 85%;will-change:transform;filter:drop-shadow(0 3px 4px rgba(0,0,0,.14));animation:dsg-breathe 3.6s ease-in-out infinite}
@@ -172,6 +177,26 @@ __SPRITE_CSS__
         h('svg',{className:'dsg-morph-water',viewBox:'0 0 100 150',preserveAspectRatio:'none','aria-hidden':true},h('ellipse',{cx:50,cy:104,rx:44,ry:10,fill:'none',stroke:'#91cde8',strokeWidth:2}),h('path',{d:'M8 108C24 121 91 99 83 74C79 61 33 67 22 51C9 33 62 26 72 8',fill:'none',stroke:'#b8e5f4',strokeWidth:4,strokeLinecap:'round'}),h('path',{d:'M20 122Q50 139 81 116M28 20Q50 32 74 18',fill:'none',stroke:'#d8f3fb',strokeWidth:2,strokeLinecap:'round'}),[0,1,2,3].map(index=>h('circle',{key:index,cx:[18,78,29,85][index],cy:[83,53,29,103][index],r:[2.1,1.8,1.3,1.7][index],fill:'#b6e5f4'}))),
         h('span',{className:'dsg-morph-caption',style:{left:clamp(left+width/2-120,8,Math.max(8,window.innerWidth-248)),top:Math.max(8,top-39),width:240}},t(event.to==='pro'?'formToPro':'formToFlash')));
     }
+    function BondJournal({preferences,t,onSave,onClose}){
+      const panel=React.useRef(null),input=React.useRef(null);
+      const [name,setName]=React.useState(()=>normalizeNickname(preferences.nickname));
+      const [saved,setSaved]=React.useState(false);
+      const progress=companionProgress(preferences.companion,Date.now());
+      React.useEffect(()=>{const previous=document.activeElement;input.current?.focus?.({preventScroll:true});return()=>{if(previous?.isConnected)previous.focus?.({preventScroll:true});};},[]);
+      React.useEffect(()=>{
+        const keydown=e=>{if(e.key==='Escape'){e.preventDefault();onClose();}else if(e.key==='Tab'){const controls=[...panel.current.querySelectorAll('input,button')],first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};
+        window.addEventListener('keydown',keydown);return()=>window.removeEventListener('keydown',keydown);
+      },[onClose]);
+      return h('div',{className:'dsg-finance-backdrop',onPointerDown:e=>{if(e.target===e.currentTarget)onClose();}},h('form',{ref:panel,className:'dsg-finance-panel dsg-bond-panel',role:'dialog','aria-modal':true,'aria-labelledby':'dsg-bond-title',onSubmit:e=>{e.preventDefault();const nickname=normalizeNickname(name);onSave(nickname);setName(nickname);setSaved(true);}},
+        h('h2',{id:'dsg-bond-title'},t('bondTitle')),h('h3',null,t('bondLevel'+progress.level)+' · '+progress.points+' '+t('bondPoints')),
+        h('progress',{'aria-label':t('bond'),value:progress.points,max:progress.next||BOND_LEVELS[2]}),
+        h('p',null,progress.next?t('bondNext')+' '+(progress.next-progress.points):t('bondMax')),
+        h('p',null,t('bondToday')+' '+progress.earned+' / '+BOND_DAILY_LIMIT),
+        h('label',{htmlFor:'dsg-companion-name'},t('bondName')),h('input',{id:'dsg-companion-name',ref:input,value:name,maxLength:32,autoComplete:'off','aria-describedby':'dsg-companion-name-hint',onChange:e=>{setName(e.target.value);setSaved(false);}}),
+        h('p',{id:'dsg-companion-name-hint',className:'dsg-finance-note'},t('bondNameHint')),h('p',{role:'status','aria-live':'polite'},saved?t('bondSaved'):' '),
+        h('p',{className:'dsg-finance-note'},t('bondRules')),h('p',{className:'dsg-finance-note'},t('bondLocal')),
+        h('div',{className:'dsg-finance-actions'},h('button',{type:'submit'},t('bondSave')),h('button',{type:'button',onClick:onClose},t('bondClose')))));
+    }
     function Mascot({running=false,phase='thinking',status,sessionId='',modelTarget=null,finance=FINANCE_IDLE_STORE,t=key=>DICTIONARIES.zh[key]||key}){
       const [prefs,setPrefs]=React.useState(()=>({...readPrefs(),...viewport(readPrefs())}));
       const [form,setForm]=React.useState(()=>modelTarget||'flash'),[morph,setMorph]=React.useState(null);
@@ -180,6 +205,7 @@ __SPRITE_CSS__
       const [preview,setPreview]=React.useState(null),[menu,setMenu]=React.useState(false);
       const [wardrobe,setWardrobe]=React.useState(null),[outfitReadiness,setOutfitReadiness]=React.useState(null);
       const [financePanel,setFinancePanel]=React.useState(false);
+      const [bondPanel,setBondPanel]=React.useState(false);
       const [financePeek,setFinancePeek]=React.useState(0),[financeHeld,setFinanceHeld]=React.useState(false);
       const wheelRef=React.useRef(null);
       const [financeCardHeight,setFinanceCardHeight]=React.useState(104);
@@ -201,8 +227,8 @@ __SPRITE_CSS__
       const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
       const renderBox=formGeometry(prefs,window.innerWidth,window.innerHeight,form);
       const task=taskState(running,phase,status,sleeping,celebrating);
-      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!morph&&prefs.beggingEnabled!==false;
-      const greetingReady=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!financePeek&&!morph;
+      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!morph&&prefs.beggingEnabled!==false;
+      const greetingReady=(greeting?.event?!running:task==='idle'&&!eating&&!touch)&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!financePeek&&!morph;
       (React.useLayoutEffect||React.useEffect)(()=>{const element=financeCardRef.current;if(!element?.getBoundingClientRect)return;const measure=()=>{const height=Math.ceil(element.getBoundingClientRect().height);if(financeHeightRef.current!==height){financeHeightRef.current=height;setFinanceCardHeight(height);}};measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);return()=>observer?.disconnect();},[financePeek,financePanel,wardrobe,dragging,greeting?.period,greetingReady]);
       const financeActive=prefs.financeVisible!==false&&Boolean(financePeek||financePanel);
       React.useEffect(()=>finance.acquire(financeActive),[finance,financeActive]);
@@ -219,11 +245,11 @@ __SPRITE_CSS__
         let live=true;const measure=()=>{if(!live)return;const height=Math.ceil(element.getBoundingClientRect().height);setGreetingHeight(previous=>previous===height?previous:height);};
         measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);
         document.fonts?.ready.then(measure);return()=>{live=false;observer?.disconnect();};
-      },[greeting?.period,greetingReady]);
+      },[greeting?.period,greeting?.event,greetingReady]);
       const seen=React.useRef(status?.endSeq),lastSession=React.useRef(sessionId);
       React.useEffect(()=>{if(lastSession.current!==sessionId){lastSession.current=sessionId;seen.current=status?.endSeq;setCelebrating(false);return;}
         if(status?.endSeq===undefined)return;if(seen.current===undefined){seen.current=status.endSeq;return;}
-        if(status.endSeq!==seen.current){seen.current=status.endSeq;if(status.outcome==='completed')setCelebrating(true);}
+        if(status.endSeq!==seen.current){seen.current=status.endSeq;if(status.outcome==='completed'){setCelebrating(true);awardBond('task',{sessionId,seq:status.endSeq});if(!document.hidden)setGreeting({event:'success'});}}
       },[status?.endSeq,status?.outcome,sessionId]);
       React.useEffect(()=>{if(running){setCelebrating(false);setSleeping(false);}},[running]);
       React.useEffect(()=>{if(!celebrating)return;const timer=setTimeout(()=>setCelebrating(false),Math.max(3200,ASSETS.success.delays.reduce((a,b)=>a+b,0)));return()=>clearTimeout(timer);},[celebrating]);
@@ -235,7 +261,7 @@ __SPRITE_CSS__
         if(!modelObserved.current){modelObserved.current=true;setForm(modelTarget);return;}
         if(morph||modelTarget===form)return;
         if(hidden||reduced||prefs.animate===false){setForm(modelTarget);return;}
-        if(eating||dragging||dropping||touch||wardrobe||financePanel||preview)return;
+        if(eating||dragging||dropping||touch||wardrobe||financePanel||bondPanel||preview)return;
         let live=true;
         const timer=setTimeout(async()=>{
           const savedPro=normalizeProOutfit(prefsRef.current.proOutfit),targetArt=modelTarget==='pro'?savedPro:normalizeOutfit(prefsRef.current.outfit);
@@ -246,11 +272,11 @@ __SPRITE_CSS__
           setForm(modelTarget);
         },MODEL_SETTLE_MS);
         return()=>{live=false;clearTimeout(timer);};
-      },[modelTarget,form,morph,eating,dragging,dropping,touch,wardrobe,financePanel,preview,hidden,reduced,prefs.animate,task]);
+      },[modelTarget,form,morph,eating,dragging,dropping,touch,wardrobe,financePanel,bondPanel,preview,hidden,reduced,prefs.animate,task]);
       React.useEffect(()=>{if(!morph)return;const timer=setTimeout(()=>setMorph(null),MORPH_DURATION);return()=>clearTimeout(timer);},[morph]);
       React.useEffect(()=>{if(hidden||reduced||prefs.animate===false)setMorph(null);},[hidden,reduced,prefs.animate]);
       React.useEffect(()=>{if(!preview)return;const timer=setTimeout(()=>setPreview(null),Math.max(3500,ASSETS[preview].duration));return()=>clearTimeout(timer);},[preview]);
-      React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{feedingRef.current=false;setEating(false);},Math.max(0,ASSETS.eating.duration-(Date.now()-mealStarted.current)));return()=>clearTimeout(timer);},[eating]);
+      React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{feedingRef.current=false;setEating(false);if(!document.hidden)setGreeting({event:'meal'});},Math.max(0,ASSETS.eating.duration-(Date.now()-mealStarted.current)));return()=>clearTimeout(timer);},[eating]);
       React.useEffect(()=>{if(!touch)return;const timer=setTimeout(()=>{touchRef.current=null;touchTaps.current=[];setTouch(null);},ASSETS[touch.kind].duration);return()=>clearTimeout(timer);},[touch]);
       React.useEffect(()=>{
         const visibility=()=>setHidden(document.hidden===true);document.addEventListener('visibilitychange',visibility);
@@ -264,11 +290,11 @@ __SPRITE_CSS__
         return()=>{cancelled=true;clearTimeout(timer);window.removeEventListener('focus',sync);document.removeEventListener('visibilitychange',sync);};
       },[]);
       React.useEffect(()=>{
-        if(!greetingReady||document.hidden||!greetingDue(clockPlan,prefs,Date.now()))return;
+        if(greeting?.event||!greetingReady||document.hidden||!greetingDue(clockPlan,prefs,Date.now()))return;
         const timer=setTimeout(()=>{if(document.hidden)return;const plan=greetingFor(new Date()),current={...prefsRef.current,...readPrefs()};if(!greetingDue(plan,current,Date.now()))return;
           setGreeting({period:plan.period});writePrefs({...current,greetingSeen:rememberGreeting(current.greetingSeen,plan.key,Date.now())});
         },800);return()=>clearTimeout(timer);
-      },[greetingReady,clockPlan,prefs.greetingsEnabled,prefs.greetingSeen]);
+      },[greeting?.event,greetingReady,clockPlan,prefs.greetingsEnabled,prefs.greetingSeen]);
       React.useEffect(()=>{if(!greeting)return;const timer=setTimeout(()=>setGreeting(null),10000);return()=>clearTimeout(timer);},[greeting]);
       React.useEffect(()=>{
         if(!eligible||hidden)setBegging(false);
@@ -304,7 +330,7 @@ __SPRITE_CSS__
         if(!menu)return;
         const timer=setTimeout(()=>wheelRef.current?.querySelector?.('button:not(:disabled)')?.focus?.({preventScroll:true}),0);
         const close=e=>{if(e.type==='pointerdown'){if(!root.current?.contains(e.target))setMenu(false);return;}if(e.key==='Escape'){e.preventDefault();closeMenu();return;}
-          if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'].includes(e.key)){const controls=[...(wheelRef.current?.querySelectorAll('button:not(:disabled)')||[])];if(!controls.length)return;e.preventDefault();const current=controls.indexOf(document.activeElement),next=e.key==='Home'?0:e.key==='End'?controls.length-1:(current+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+controls.length)%controls.length;controls[next].focus();}};
+          if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'].includes(e.key)){const controls=[...(wheelRef.current?.querySelectorAll('.dsg-wheel button:not(:disabled)')||[])];if(!controls.length)return;e.preventDefault();const current=controls.indexOf(document.activeElement),next=e.key==='Home'?0:e.key==='End'?controls.length-1:(current+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+controls.length)%controls.length;controls[next].focus();}};
         const blur=e=>{if(!root.current?.contains(e.target))setMenu(false);};
         window.addEventListener('pointerdown',close);window.addEventListener('keydown',close);window.addEventListener('focusin',blur);
         return()=>{clearTimeout(timer);window.removeEventListener('pointerdown',close);window.removeEventListener('keydown',close);window.removeEventListener('focusin',blur);};
@@ -337,10 +363,13 @@ __SPRITE_CSS__
       const financeWidth=Math.max(1,Math.min(220,window.innerWidth-16)),financeBelow=renderBox.y+renderBox.height+39,financeAbove=financeBelow+financeCardHeight>window.innerHeight-8;
       const financePosition={left:clamp(renderBox.x+renderBox.width/2-financeWidth/2,8,Math.max(8,window.innerWidth-financeWidth-8))-renderBox.x,top:Math.max(8,financeAbove?renderBox.y-financeCardHeight-8:financeBelow)-renderBox.y,width:financeWidth};
       const financeUpdated=Math.max(accountFinance.updatedAt||0,summaryFinance.updatedAt||0);
+      const bondProgress=companionProgress(prefs.companion,Date.now());
+      function awardBond(action,completion){const current={...prefsRef.current,...readPrefs()};const companion=awardCompanion(current.companion,action,Date.now(),completion);writePrefs({...current,companion});}
+      function openBond(){setBondPanel(true);setMenu(false);setGreeting(null);setFinancePeek(0);setFinanceHeld(false);}
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
-      function pet(){if(morph||feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false){setFinancePeek(Date.now());setGreeting(null);}const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
-      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);const now=Date.now();writePrefs({...prefsRef.current,lastFed:now,nextBegAt:nextBegAt(now)});}
+      function pet(){if(morph||feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false)setFinancePeek(Date.now());const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setGreeting({event:reaction.state==='pouting'?'pout':'pet'});awardBond('pet');setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
+      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);setGreeting({event:'feed'});const now=Date.now(),current={...prefsRef.current,...readPrefs()};writePrefs({...current,lastFed:now,nextBegAt:nextBegAt(now),companion:awardCompanion(current.companion,'feed',now)});}
       function down(e){if(e.button!==0||morph)return;setFinancePeek(0);setFinanceHeld(false);setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},render:{...renderBox},form,moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
       function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}const x=clamp(d.render.x+dx,0,Math.max(0,window.innerWidth-d.render.width)),y=clamp(d.render.y+dy,0,Math.max(0,window.innerHeight-d.render.height-32));d.position=viewport({...d.start,x:x+d.render.width/2-d.start.size/2,y:y+d.render.height-d.start.size});d.renderPosition=formGeometry(d.position,window.innerWidth,window.innerHeight,d.form);
         if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.renderPosition.x-d.render.x}px,${d.renderPosition.y-d.render.y}px,0)`;});}
@@ -362,13 +391,13 @@ __SPRITE_CSS__
       const settingsWheel=[wheelEntry('rice',prefs.beggingEnabled===false?'begOn':'begOff',()=>writePrefs({...prefsRef.current,beggingEnabled:prefs.beggingEnabled===false}),{short:'wheelBeg',pressed:prefs.beggingEnabled!==false}),wheelEntry('hello',prefs.greetingsEnabled===false?'greetingsOn':'greetingsOff',()=>{setGreeting(null);writePrefs({...prefsRef.current,greetingsEnabled:prefs.greetingsEnabled===false});},{short:'wheelGreetings',pressed:prefs.greetingsEnabled!==false}),wheelEntry('ledger',prefs.financeVisible===false?'financeShow':'financeHide',()=>writePrefs({...prefsRef.current,financeVisible:prefs.financeVisible===false}),{short:'wheelFinance',pressed:prefs.financeVisible!==false})];
       const expressionPage=wheelPage==='expressions-1'?1:0,isExpressions=wheelPage.startsWith('expressions-');
       const wheelEntries=wheelPage==='main'?commonWheel:wheelPage==='more'?moreWheel:wheelPage==='settings'?settingsWheel:STATES.slice(expressionPage*6,expressionPage*6+6).map(key=>wheelEntry('expressions',key,chooseState(key)));
-      const wheelWidth=Math.min(256,window.innerWidth-16),wheelHeight=wheelWidth+32;
+      const wheelWidth=Math.min(256,window.innerWidth-16),wheelHeight=wheelWidth+37;
       const wheelLeft=renderBox.x>=wheelWidth+20?renderBox.x-wheelWidth-12:renderBox.x+renderBox.width+wheelWidth+20<=window.innerWidth?renderBox.x+renderBox.width+12:renderBox.x+renderBox.width/2-wheelWidth/2;
       const wheelPosition={left:clamp(wheelLeft,8,Math.max(8,window.innerWidth-wheelWidth-8)),top:clamp(renderBox.y+(renderBox.height+30)/2-wheelHeight/2,8,Math.max(8,window.innerHeight-wheelHeight-8)),width:wheelWidth};
       return h('div',{ref:root,className:'dsg-root',onClick:e=>e.stopPropagation(),style:{left:renderBox.x,top:renderBox.y,width:renderBox.width},'data-form':form,'data-transforming':String(Boolean(morph)),'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':savedOutfit,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
         morph&&h(Transformation,{event:morph,prefs,animate,hidden,t}),
         greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
-          h('span',{className:'dsg-greeting-text'},t('greet_'+greeting.period)),
+          h('span',{className:'dsg-greeting-text'},companionLine(prefs,form,greeting.event||greeting.period,t)),
           h('svg',{className:'dsg-greeting-paper',viewBox:'0 0 360 160',preserveAspectRatio:'none','aria-hidden':true},
             h('path',{d:'M30 5 C85 1 113 10 171 5 S274 7 328 4 Q354 5 353 28 C359 58 350 99 356 130 Q353 157 326 153 C272 159 234 148 179 153 S80 151 29 155 Q4 155 6 130 C1 96 10 65 4 29 Q5 6 30 5 Z',fill:'#fff9ee',stroke:'#83a6c7',strokeWidth:2.2,vectorEffect:'non-scaling-stroke',strokeLinecap:'round'}),
             h('path',{d:'M29 8 C95 6 227 10 328 8 Q351 8 351 31 L352 130 Q351 151 327 150 C236 153 115 147 31 151 Q9 152 9 130 L8 30 Q7 9 29 8',fill:'none',stroke:'#bad0df',strokeWidth:1.1,strokeDasharray:'17 4 9 3',vectorEffect:'non-scaling-stroke',strokeLinecap:'round'})),
@@ -383,14 +412,16 @@ __SPRITE_CSS__
           state==='petting'&&h('span',{className:'dsg-affection',key:touch?.sequence||'preview','aria-hidden':true},[0,1,2].map(index=>h('svg',{className:'dsg-heart',key:index,viewBox:'0 0 24 24'},h('path',{d:'M12 20 C4 14 1 10 3 6 C5 2 10 3 12 7 C14 3 19 2 21 6 C23 10 20 14 12 20Z',fill:'currentColor'}))))),
         h('div',{className:'dsg-footer'},h('span',{className:'dsg-label'},(preview?t('preview'):'')+t(state)),
           h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating||Boolean(morph),title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
-        financeActive&&Boolean(financePeek)&&!dragging&&!wardrobe&&!financePanel&&!menu&&!hidden&&h('button',{ref:financeCardRef,type:'button',className:'dsg-finance-card',style:financePosition,'aria-label':t('financeOpen'),'aria-busy':financeSnapshot.refreshing,onPointerEnter:()=>setFinanceHeld(true),onPointerLeave:()=>{if(!financeCardRef.current?.contains(document.activeElement))setFinanceHeld(false);},onFocus:()=>setFinanceHeld(true),onBlur:e=>{if(!e.currentTarget.contains(e.relatedTarget)){setFinanceHeld(false);}},onClick:()=>{setFinancePanel(true);setMenu(false);}},
+        financeActive&&Boolean(financePeek)&&!dragging&&!wardrobe&&!financePanel&&!bondPanel&&!menu&&!hidden&&h('button',{ref:financeCardRef,type:'button',className:'dsg-finance-card',style:financePosition,'aria-label':t('financeOpen'),'aria-busy':financeSnapshot.refreshing,onPointerEnter:()=>setFinanceHeld(true),onPointerLeave:()=>{if(!financeCardRef.current?.contains(document.activeElement))setFinanceHeld(false);},onFocus:()=>setFinanceHeld(true),onBlur:e=>{if(!e.currentTarget.contains(e.relatedTarget)){setFinanceHeld(false);}},onClick:()=>{setFinancePanel(true);setMenu(false);}},
+          (greeting?.event==='pet'||greeting?.event==='pout')&&h('span',{className:'dsg-companion-line'},companionLine(prefs,form,greeting.event,t)),
           h('span',{className:'dsg-finance-line'},h('span',null,t('financeBalance')),h('span',{className:'dsg-finance-value','data-finance-balance':accountFinance.status},balanceText)),
           h('span',{className:'dsg-finance-line'},h('span',null,t('financeToday')),h('span',{className:'dsg-finance-value','data-finance-estimate':summaryFinance.status},estimateText)),
           h('small',null,summaryFinance.status==='ready'?(financeIncomplete(summaryFinance)?t('financePartial')+' · ':'')+t('financeTokens')+' '+tokenCount(summaryFinance.tokens.total):t('financeSnapshot'))),
         menu&&h('div',{ref:wheelRef,className:'dsg-menu',role:'dialog','aria-label':t('menu'),'data-wheel-page':wheelPage,style:wheelPosition},
           h('div',{className:'dsg-wheel'},wheelEntries.map((item,index)=>{const angle=(-90+index*360/wheelEntries.length)*Math.PI/180;return h('button',{key:wheelPage+':'+item.label,type:'button','aria-label':t(item.label),title:t(item.label),disabled:item.disabled,'aria-pressed':item.pressed,onClick:item.action,style:{left:(50+33*Math.cos(angle))+'%',top:(50+33*Math.sin(angle))+'%'}},h(WheelIcon,{name:item.icon}),h('span',null,t(item.short||item.label)));}),
             h('button',{type:'button',className:'dsg-wheel-center','aria-label':t(wheelPage==='main'?'wheelClose':'wheelBack'),onClick:wheelPage==='main'?closeMenu:switchPage(wheelPage==='more'?'main':'more')},h(WheelIcon,{name:wheelPage==='main'?'close':'back'}),h('span',null,t(wheelPage==='main'?'wheelName':'wheelBack')))),
-          isExpressions?h('div',{className:'dsg-wheel-pager'},h('button',{type:'button','aria-label':t('wheelPrevious'),onClick:switchPage('expressions-'+(1-expressionPage))},'‹'),h('span',{'aria-live':'polite'},(expressionPage+1)+' / 2'),h('button',{type:'button','aria-label':t('wheelNext'),onClick:switchPage('expressions-'+(1-expressionPage))},'›')):h('p',{className:'dsg-wheel-note'},t('wheelHint'))),
+          isExpressions?h('div',{className:'dsg-wheel-pager'},h('button',{type:'button','aria-label':t('wheelPrevious'),onClick:switchPage('expressions-'+(1-expressionPage))},'‹'),h('span',{'aria-live':'polite'},(expressionPage+1)+' / 2'),h('button',{type:'button','aria-label':t('wheelNext'),onClick:switchPage('expressions-'+(1-expressionPage))},'›')):h('button',{className:'dsg-bond-entry',type:'button','aria-label':t('bond'),title:t('wheelHint'),onClick:openBond},'♡ '+t('bondLevel'+bondProgress.level)+' · '+bondProgress.points)),
+        bondPanel&&h(BondJournal,{preferences:prefs,t,onSave:nickname=>{writePrefs({...prefsRef.current,...readPrefs(),nickname});},onClose:()=>{setBondPanel(false);root.current?.querySelector('.dsg-character')?.focus?.({preventScroll:true});}}),
         wardrobe&&h('div',{className:'dsg-wardrobe-backdrop',style:{justifyContent:renderBox.x+renderBox.width/2>window.innerWidth/2?'flex-start':'flex-end'}},h('section',{ref:wardrobeRef,className:'dsg-wardrobe',role:'dialog','aria-modal':true,'aria-labelledby':'dsg-wardrobe-title','aria-describedby':'dsg-wardrobe-hint'},
           h('h2',{id:'dsg-wardrobe-title'},t('wardrobeTitle')),h('p',{id:'dsg-wardrobe-hint'},t(form==='pro'?'proWardrobeHint':'wardrobeHint')),
           h('div',{className:'dsg-outfits'},wardrobeItems.map(item=>h('button',{key:item.id,type:'button',className:'dsg-outfit','data-outfit-choice':item.id,'aria-pressed':outfit===item.id,onClick:()=>{if(outfit===item.id&&outfitReadiness?.key===outfitKey&&outfitReadiness.ok===false){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:(wardrobe.attempt||0)+1});}else if(outfit!==item.id){setOutfitReadiness(null);setWardrobe({outfit:item.id,attempt:0});}}},outfit===item.id?h('span',{className:'dsg-outfit-preview'},h(SpriteArt,{state,outfit,animate,hidden,startedAt,loadAttempt:wardrobe.attempt||0,label:t(state),artClass:'dsg-wardrobe-art',onReady:setOutfitReadiness}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false,style:hatStyle(outfit,state)})):h('img',{src:assetFor(item.id,'idle').still,alt:'',draggable:false}),h('span',null,t('outfit_'+item.id)),h('small',null,savedOutfit===item.id?t('outfitSaved'):outfit===item.id?t('outfitPreview'):' ')))),

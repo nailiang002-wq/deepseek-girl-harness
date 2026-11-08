@@ -2,7 +2,15 @@
 
 **Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.11.2**
+English · [中文](README.md) · **v1.12.0**
+
+**v1.12.0** adds affection, a custom name, and distinct responses for each form. Open the wheel and select the heart button beneath it to view the companion journal and set your name. Flash is playful and Pro is gentle and composed, with responses for greetings, head pats, feeding, finishing a meal, and completing a task.
+
+Both forms share affection. Reach 40 points for “Getting familiar” and 160 for “In sync” to unlock more familiar responses. Feeding awards 3 points (3/day, 2 minutes apart), head pats 1 point (5/day, 1 minute apart), and completing a task together 2 points (3/day), up to 20 points daily. Progress and the custom name are stored locally. Responses use built-in Chinese and English text.
+
+![Companion journal with affection progress and a custom name](docs/images/companion-journal.png)
+
+The journal screenshot uses the real plugin in a standalone test page with a sample name and simulated progress.
 
 **v1.11.2 fixes a display issue on DSH 0.2.2-rc.1.** In conversations with messages, Little Whale could slide to the bottom of the window and appear partly cut off. She now stays within the window, including after resizing. Replace the plugin files and reopen Harness to apply the update.
 
