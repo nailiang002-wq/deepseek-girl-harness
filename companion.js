@@ -1,6 +1,20 @@
 // Local companion progress is shared by both forms. Rewards are bounded per day.
 export const BOND_LEVELS = [0, 40, 160];
 export const BOND_DAILY_LIMIT = 20;
+export const AFTER_MEAL_DELAYS = [350,500,850,850,650,500];
+export const AFTER_MEAL_DURATION = AFTER_MEAL_DELAYS.reduce((total,delay)=>total+delay,0);
+export const REFEED_WINDOW_MS = 5 * 60 * 1000;
+
+export function feedingVisit(preferences,now) {
+  const recent = Number.isFinite(preferences?.lastFed) && preferences.lastFed > 0 && preferences.lastFed <= now && now-preferences.lastFed <= REFEED_WINDOW_MS;
+  const previous = Number.isSafeInteger(preferences?.mealStreak) ? Math.max(1,Math.min(3,preferences.mealStreak)) : 1;
+  const streak = recent ? Math.min(3,previous+1) : 1;
+  return {streak,event:streak===1?'feed':streak===2?'feedAgain':'feedThird'};
+}
+export function pendingMilestone(value,now) {
+  const event=value?.milestone;
+  return event && [1,2].includes(event.level) && Number.isFinite(event.time) && event.time>0 && event.time<=now ? event : null;
+}
 const BOND_REWARDS = {feed: {points: 3, limit: 3, cooldown: 120000}, pet: {points: 1, limit: 5, cooldown: 60000}, task: {points: 2, limit: 3, cooldown: 0}};
 
 export function companionDay(now) {
@@ -34,7 +48,10 @@ export function awardCompanion(value, action, now, completion) {
     Object.defineProperty(completed,completion.sessionId,{value:completion.seq,enumerable:true,configurable:true,writable:true});
   }
   const points = count < reward.limit && now-lastAt >= reward.cooldown ? Math.min(reward.points,BOND_DAILY_LIMIT-progress.earned) : 0;
-  return {points:Math.min(10000,progress.points+points),day,earned:progress.earned+points,
+  const total=Math.min(10000,progress.points+points);
+  const level=companionProgress({points:total},now).level;
+  const milestone=level>progress.level?{level,time:now}:pendingMilestone(value,now);
+  return {points:total,day,earned:progress.earned+points,milestone,
     actions:points ? {...actions,[action]:{count:count+1,lastAt:now}} : actions,
     completed:Object.fromEntries(Object.entries(completed).slice(-32))};
 }
@@ -55,6 +72,9 @@ const dialogue = {
       pet:['嘿嘿，头顶暖乎乎的～','你的手我记住啦，再摸一下嘛。','最喜欢这样陪着你啦～'],
       pout:['哎呀，头发要揉乱啦！','揉成小毛球了！白饭可以哄好我哦。','又逗我～等一下还要摸摸头的。'],
       feed:['白饭！我要认真开吃啦！','你记得给我带饭啦，嘿嘿！','是你喂的白饭，今天也超香！'],
+      feedAgain:['又一盆！还能再吃一点点～','嘿嘿，给我加餐啦！抱紧我的铁盆。','你都端过来啦，那就陪我再吃一点嘛。'],
+      feedThird:['盆都给我摆好啦～这次慢慢吃！','哎呀，被你喂得圆乎乎了，慢慢吃～','还想陪我坐一会儿呀？白饭分你一口！'],
+      levelup:['我们开始熟悉啦～','越来越熟悉啦！新的小回应，想慢慢说给你听。','我们已经是默契搭档啦！以后也一起吃饭、一起加油～'],
       meal:['吃饱啦～谢谢你的白饭！','这一盆好满足，陪你继续忙啦！','吃饱饱，接下来换我陪着你～'],
       success:['完成啦～我们好厉害！','又一起做好一件事，击个掌！','咱们越来越有默契啦！']
     },
@@ -67,6 +87,9 @@ const dialogue = {
       pet:['嗯，谢谢。这样的鼓励很温暖。','是你呀。这份温柔，我收到了。','在你身边，我也可以放松一点了。'],
       pout:['头发都要被你揉乱了。','你呀，偶尔也让我整理一下头发吧。','又在逗我了。好吧，再陪你一会儿。'],
       feed:['谢谢，我会好好享用这盆白饭。','你还记得我的白饭。一起休息片刻吧。','你递来的这一盆，总让我觉得格外温暖。'],
+      feedAgain:['还准备了一盆呀。那就一起多坐一会儿吧。','又是你递来的白饭。好，我慢慢享用。','你呀，总是这样照顾我。这一盆也收下了。'],
+      feedThird:['让我缓一缓，我们慢慢吃吧。','看来，你还想多陪我一会儿呢。','已经很满足了。留一点时间，我们慢慢享用。'],
+      levelup:['很高兴能陪着你。','我们渐渐熟悉了。还有些话，想慢慢说给你听。','不知不觉，我们已经这样默契了。今后也请多关照。'],
       meal:['吃好了，谢谢你的照顾。','很满足。接下来，也让我照顾你的进度吧。','谢谢。这样的日常，我很珍惜。'],
       success:['完成了。辛苦你了。','配合得很顺利，接下来也一起吧。','又完成一件事。我们的默契，越来越好了。']
     }
@@ -81,6 +104,9 @@ const dialogue = {
       pet:['Hehe, that feels warm!','I know that gentle touch. One more pat?','Being here with you is my favorite.'],
       pout:['Hey, you’re ruffling my hair!','I’m a fluffball now! Rice might cheer me up.','Teasing me again? More pats later, okay?'],
       feed:['Rice! Time to dig in!','You remembered my rice! Hehe!','Rice from you always tastes extra nice!'],
+      feedAgain:['Another basin! I have room for a little more!','An extra helping! Hugging my basin tight.','Since you brought it, keep me company for another bite?'],
+      feedThird:['My basin is ready again! Slowly this time.','You’re making me round and cozy. Let’s take our time!','Want to sit with me a little longer? I’ll share a bite!'],
+      levelup:['We’re getting to know each other!','We’re getting familiar! I have new little things to say.','We’re in sync! More meals and good days together!'],
       meal:['All full! Thank you for the rice!','That hit the spot. Back to keeping you company!','Full tummy. My turn to keep you company!'],
       success:['Done! We did it!','Another thing finished together. High five!','We make such a good team!']
     },
@@ -93,6 +119,9 @@ const dialogue = {
       pet:['Thank you. That’s a warm little encouragement.','Ah, it’s you. I appreciate your gentleness.','I can relax a little when I’m here with you.'],
       pout:['You’re ruffling my hair.','Let me straighten my hair for a moment, please.','Teasing me again? All right, a little longer.'],
       feed:['Thank you. I’ll enjoy this rice.','You remembered my rice. Let’s rest a moment.','A bowl from you always feels especially comforting.'],
+      feedAgain:['Another helping? Let’s sit together a little longer.','Rice from you again. I’ll take my time with it.','You always look after me. Thank you for another helping.'],
+      feedThird:['A moment to settle, then we can eat slowly.','It seems you’d like a little more time together.','I’m quite content. Let’s take our time with this one.'],
+      levelup:['I’m glad to be here with you.','We’re getting familiar. There’s more I’d like to share.','We’ve become quite a team. Here’s to more days together.'],
       meal:['That was lovely. Thank you for looking after me.','All satisfied. Let me help keep you company now.','Thank you. I treasure these small moments.'],
       success:['Finished. Well done.','That went smoothly. On to the next, together.','Another task done. We’re getting to know each other well.']
     }

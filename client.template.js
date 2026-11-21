@@ -7,6 +7,7 @@ window.__ModuleLoader__.load({
     const OUTFIT_ASSETS = __OUTFIT_ASSETS__;
     const PRO_ASSETS = __PRO_ASSETS__;
     const PRO_OUTFIT_ASSETS = __PRO_OUTFIT_ASSETS__;
+    const AFTER_MEAL_ASSETS = __AFTER_MEAL_ASSETS__;
     const PRO_OUTFITS = [{id:'pro',zh:'鲸鱼女仆装',en:'Whale maid'},{id:'pro-winter-puffer',zh:'奶油蓝羽绒服',en:'Cream & blue puffer'},{id:'pro-winter-cape',zh:'月牙绒绒斗篷',en:'Moonlit winter cape'}];
     const OUTFITS = [{id:'maid',zh:'经典女仆装',en:'Classic maid'},{id:'hoodie',zh:'蓝白休闲卫衣',en:'Blue & white hoodie'},{id:'pajamas',zh:'星星睡衣',en:'Star pajamas'},{id:'winter-puffer',zh:'奶油蓝羽绒服',en:'Cream & blue puffer'},{id:'winter-cape',zh:'月牙绒绒斗篷',en:'Moonlit winter cape'}];
     const PROPS = __PROPS__;
@@ -27,6 +28,8 @@ window.__ModuleLoader__.load({
     Object.assign(DICTIONARIES.en,{formPro:'Pro · Mature form',formFlash:'Flash · Little Whale',formToPro:'Leave this one to me.',formToFlash:'Little Whale is back!',formChanging:'Transforming',proWardrobeHint:'Choose a cozy Pro outfit. Each form remembers its own clothes.',proWardrobe:'Pro looks',outfit_pro:'Whale maid','outfit_pro-winter-puffer':'Cream & blue puffer','outfit_pro-winter-cape':'Moonlit winter cape'});
     Object.assign(DICTIONARIES.zh,companionDictionaries().zh,{bond:'陪伴手账',bondTitle:'我们的小小默契',bondName:'希望她怎么称呼你？',bondNameHint:'最多 16 个字，留空使用普通问候。',bondSave:'记住这个称呼',bondClose:'收起手账',bondSaved:'称呼已记住啦。',bondToday:'今日亲密度',bondRules:'喂饭 +3（每天 3 次，间隔 2 分钟）· 摸头 +1（每天 5 次，间隔 1 分钟）· 一起完成任务 +2（每天 3 次）。每天最多 20 点。',bondLocal:'两个形态共用亲密度，进度保存在这台设备上。',bondNext:'下一阶段还需',bondMax:'已经是特别的陪伴啦',bondPoints:'点',bondLevel0:'初次见面',bondLevel1:'渐渐熟悉',bondLevel2:'默契搭档',nicknameJoin:'，'});
     Object.assign(DICTIONARIES.en,companionDictionaries().en,{bond:'Companion journal',bondTitle:'Getting to know you',bondName:'What should she call you?',bondNameHint:'Up to 16 characters. Leave blank for a regular greeting.',bondSave:'Remember this name',bondClose:'Close journal',bondSaved:'Name remembered.',bondToday:'Today’s affection',bondRules:'Feed +3 (3/day, 2 minutes apart) · Head pat +1 (5/day, 1 minute apart) · Finish a task together +2 (3/day). Up to 20 points daily.',bondLocal:'Both forms share progress, saved on this device.',bondNext:'Points to the next stage',bondMax:'A familiar companion',bondPoints:'points',bondLevel0:'First meeting',bondLevel1:'Getting familiar',bondLevel2:'In sync',nicknameJoin:', '});
+    Object.assign(DICTIONARIES.zh,{aftermeal:'吃饱满足啦',bondUnlocked:'新的回应已解锁'});
+    Object.assign(DICTIONARIES.en,{aftermeal:'Happily full',bondUnlocked:'New responses unlocked'});
     // Small, local SVG drawings keep the wheel sharp without downloading icons.
     function WheelIcon({name}){
       const paths={rice:'M3 11h18c-1 6-4 9-9 9S4 17 3 11Zm2-2c0-3 3-5 7-5s7 2 7 5M8 7l1-1m3 1 1-1m3 1 1 1',pet:'M5 12V9a2 2 0 0 1 4 0v2-6a2 2 0 0 1 4 0v6-5a2 2 0 0 1 4 0v7-3a2 2 0 0 1 4 0v5c0 5-4 7-8 7-3 0-5-2-7-4l-3-3a2 2 0 0 1 2-3Z',wardrobe:'m8 4 4 3 4-3 6 5-4 4-2-2v10H8V11l-2 2-4-4 6-5Z',hat:'M3 16h18M5 14l2-8h10l2 8M9 9h6',hello:'M4 5h16v12h-7l-5 4v-4H4V5Zm4 5h1m5 0h1m-7 3q4 3 8 0',more:'M4 12h1m6 0h1m6 0h1',expressions:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM8 9h1m6 0h1m-8 5q4 5 8 0',settings:'M4 7h16M4 17h16M8 4v6m8 4v6',ledger:'M5 3h14v18H5V3Zm4 5h6m-6 4h6m-6 4h3',follow:'m5 6 14 6-7 2-2 7L5 6Z',pause:'M8 5v14m8-14v14',play:'m8 4 12 8-12 8V4Z',reset:'M5 8a8 8 0 1 1-1 8M5 3v5h5',back:'m14 5-7 7 7 7M7 12h14',close:'m6 6 12 12M18 6 6 18',star:'m12 3 3 6 7 1-5 5 1 6-6-3-6 3 1-6-5-5 7-1 3-6Z'};
@@ -42,6 +45,10 @@ window.__ModuleLoader__.load({
     const CSS = `
 @font-face{font-family:'DSG Greeting Hand';src:url('__GREETING_FONT__') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .dsg-root{position:fixed;z-index:60;display:flex;flex-direction:column;align-items:center;user-select:none;font-family:inherit}
+.dsg-motion[data-motion='aftermeal']{animation:none;transform:none;will-change:auto}
+.dsg-bond-celebration{position:absolute;inset:0;z-index:2;pointer-events:none;color:#c57d9f;font-family:'DSG Greeting Hand','KaiTi',cursive;text-align:center}.dsg-level-note{position:absolute;left:0;top:0;right:0;padding:5px 6px;border:1px solid #c7d7ea;border-radius:13px;background:#fff9eeed;color:#687e9f;font-size:12px;line-height:1.5}.dsg-level-note small{display:block;font-size:10px}.dsg-level-heart{position:absolute;top:52%;font-size:20px;animation:dsg-level-hearts 2.2s ease-out 3 both}
+@keyframes dsg-level-hearts{0%{opacity:0;translate:0 0;scale:.6}20%{opacity:1;scale:1}100%{opacity:0;translate:0 -48px;scale:.8}}
+.dsg-root[data-motion-enabled='false'] .dsg-level-heart{animation:none;opacity:.7}.dsg-root[data-hidden='true'] .dsg-level-heart{animation-play-state:paused}
 .dsg-bond-entry{display:block;box-sizing:border-box;max-width:100%;height:28px;margin:3px auto 0;padding:2px 10px;border:1px dashed #c7beca;border-radius:14px;background:#fff9ee;color:#6a6584;font:13px/20px 'DSG Greeting Hand','KaiTi',cursive;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .dsg-finance-panel.dsg-bond-panel{width:390px;font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:15px}.dsg-bond-panel label{display:block;margin:18px 0 7px}.dsg-bond-panel input{box-sizing:border-box;width:100%;min-width:0;padding:10px 12px;border:1.5px solid #b8c9dc;border-radius:12px;background:#fffefb;color:inherit;font:inherit}.dsg-bond-panel progress{width:100%;height:12px;accent-color:#829cbe}.dsg-bond-panel h3{font-size:20px;color:#6c719a}.dsg-companion-line{display:block;margin:0 0 8px;color:#6c719a;font-family:'DSG Greeting Hand','KaiTi',cursive;font-size:14px;line-height:1.6}
 .dsg-character{position:relative;width:100%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:grab;touch-action:none;border-radius:18px}
@@ -133,8 +140,8 @@ __SPRITE_CSS__
     const CACHE_LIMIT=8;
     const EMPTY_MODEL_SOURCE={subscribe:()=>()=>{},getSnapshot:()=>null};
     const artOutfit=value=>isProOutfit(value)?normalizeProOutfit(value):normalizeOutfit(value);
-    function assetFor(outfit,state){if(isProOutfit(outfit))return (outfit==='pro'?PRO_ASSETS:PRO_OUTFIT_ASSETS[outfit])[state];return (normalizeOutfit(outfit)==='maid'?ASSETS:OUTFIT_ASSETS[normalizeOutfit(outfit)])[state];}
-    const hatStyle=(outfit,state)=>isProOutfit(outfit)?assetFor(outfit,state).hat||{left:'39%',top:'7.3%',width:'31%'}:undefined;
+    function assetFor(outfit,state){if(state==='aftermeal')return AFTER_MEAL_ASSETS[artOutfit(outfit)];if(isProOutfit(outfit))return (outfit==='pro'?PRO_ASSETS:PRO_OUTFIT_ASSETS[outfit])[state];return (normalizeOutfit(outfit)==='maid'?ASSETS:OUTFIT_ASSETS[normalizeOutfit(outfit)])[state];}
+    const hatStyle=(outfit,state)=>state==='aftermeal'?assetFor(outfit,state).hat:isProOutfit(outfit)?assetFor(outfit,state).hat||{left:'39%',top:'7.3%',width:'31%'}:undefined;
     function warmAsset(state,outfit='maid'){
       const key=artOutfit(outfit)+':'+state;
       if(decoded.has(key)){const entry=decoded.get(key);decoded.delete(key);decoded.set(key,entry);return entry.promise;}
@@ -147,7 +154,7 @@ __SPRITE_CSS__
     function SpriteArt(props){return h(isProOutfit(props.outfit)&&props.artClass!=='dsg-transform-art'?ProSpriteArt:AtlasArt,props);}
     function ProSpriteArt(props){
       const {state,animate,artClass='dsg-art'}=props,asset=assetFor(props.outfit,state),rig=asset.tailRig||proTailRig(state);
-      if(state==='eating')return h('span',{className:'dsg-pro-rig','data-state':state,'data-animate':String(animate),'data-playback':'whole-frame'},
+      if(state==='eating'||state==='aftermeal')return h('span',{className:'dsg-pro-rig','data-state':state,'data-animate':String(animate),'data-playback':'whole-frame'},
         h('span',{className:'dsg-pro-body'},h(AtlasArt,{...props,artClass:artClass+' dsg-pro-meal-art'})));
       return h('span',{className:'dsg-pro-rig','data-state':state,'data-animate':String(animate)},
         h('span',{className:'dsg-pro-tail',style:{transformOrigin:rig.origin},'aria-hidden':true},h('img',{src:asset.still,alt:'',draggable:false,style:{clipPath:rig.tailClip}})),
@@ -212,6 +219,8 @@ __SPRITE_CSS__
       const financeSnapshot=React.useSyncExternalStore(finance.subscribe,finance.getSnapshot,finance.getSnapshot);
       const [sleeping,setSleeping]=React.useState(false),[celebrating,setCelebrating]=React.useState(false);
       const [eating,setEating]=React.useState(false),[begging,setBegging]=React.useState(false);
+      const [afterMeal,setAfterMeal]=React.useState(0),[bondCelebration,setBondCelebration]=React.useState(null);
+      const mealBusy=eating||Boolean(afterMeal);
       const [touch,setTouch]=React.useState(null);
       const [greeting,setGreeting]=React.useState(null),[clockPlan,setClockPlan]=React.useState(()=>greetingFor(new Date()));
       const [greetingHeight,setGreetingHeight]=React.useState(128);
@@ -227,8 +236,22 @@ __SPRITE_CSS__
       const touchRef=React.useRef(null),touchTaps=React.useRef([]),touchSequence=React.useRef(0);
       const renderBox=formGeometry(prefs,window.innerWidth,window.innerHeight,form);
       const task=taskState(running,phase,status,sleeping,celebrating);
-      const eligible=task==='idle'&&!eating&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!morph&&prefs.beggingEnabled!==false;
-      const greetingReady=(greeting?.event?!running:task==='idle'&&!eating&&!touch)&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!financePeek&&!morph;
+      const eligible=task==='idle'&&!mealBusy&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!morph&&prefs.beggingEnabled!==false;
+      const greetingReady=(greeting?.event?!running:task==='idle'&&!mealBusy&&!touch)&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!financePeek&&!morph;
+      const milestone=pendingMilestone(prefs.companion,Date.now());
+      const milestoneReady=!running&&!mealBusy&&!touch&&!dragging&&!dropping&&!preview&&!menu&&!wardrobe&&!financePanel&&!bondPanel&&!financePeek&&!morph&&!hidden;
+      React.useEffect(()=>{
+        if(!milestone||!milestoneReady||bondCelebration)return;
+        const timer=setTimeout(()=>{
+          if(document.hidden)return;
+          const current={...prefsRef.current,...readPrefs()},pending=pendingMilestone(current.companion,Date.now());
+          if(!pending||pending.time!==milestone.time||pending.level!==milestone.level)return;
+          writePrefs({...current,companion:{...current.companion,milestone:null}});
+          setBondCelebration({level:pending.level,startedAt:Date.now()});setGreeting({event:'levelup'});
+        },2500);
+        return()=>clearTimeout(timer);
+      },[milestone?.level,milestone?.time,milestoneReady,bondCelebration]);
+      React.useEffect(()=>{if(!bondCelebration)return;const timer=setTimeout(()=>setBondCelebration(null),7000);return()=>clearTimeout(timer);},[bondCelebration]);
       (React.useLayoutEffect||React.useEffect)(()=>{const element=financeCardRef.current;if(!element?.getBoundingClientRect)return;const measure=()=>{const height=Math.ceil(element.getBoundingClientRect().height);if(financeHeightRef.current!==height){financeHeightRef.current=height;setFinanceCardHeight(height);}};measure();const observer=typeof ResizeObserver==='function'?new ResizeObserver(measure):null;observer?.observe(element);return()=>observer?.disconnect();},[financePeek,financePanel,wardrobe,dragging,greeting?.period,greetingReady]);
       const financeActive=prefs.financeVisible!==false&&Boolean(financePeek||financePanel);
       React.useEffect(()=>finance.acquire(financeActive),[finance,financeActive]);
@@ -261,7 +284,7 @@ __SPRITE_CSS__
         if(!modelObserved.current){modelObserved.current=true;setForm(modelTarget);return;}
         if(morph||modelTarget===form)return;
         if(hidden||reduced||prefs.animate===false){setForm(modelTarget);return;}
-        if(eating||dragging||dropping||touch||wardrobe||financePanel||bondPanel||preview)return;
+        if(mealBusy||dragging||dropping||touch||wardrobe||financePanel||bondPanel||preview)return;
         let live=true;
         const timer=setTimeout(async()=>{
           const savedPro=normalizeProOutfit(prefsRef.current.proOutfit),targetArt=modelTarget==='pro'?savedPro:normalizeOutfit(prefsRef.current.outfit);
@@ -272,11 +295,12 @@ __SPRITE_CSS__
           setForm(modelTarget);
         },MODEL_SETTLE_MS);
         return()=>{live=false;clearTimeout(timer);};
-      },[modelTarget,form,morph,eating,dragging,dropping,touch,wardrobe,financePanel,bondPanel,preview,hidden,reduced,prefs.animate,task]);
+      },[modelTarget,form,morph,mealBusy,dragging,dropping,touch,wardrobe,financePanel,bondPanel,preview,hidden,reduced,prefs.animate,task]);
       React.useEffect(()=>{if(!morph)return;const timer=setTimeout(()=>setMorph(null),MORPH_DURATION);return()=>clearTimeout(timer);},[morph]);
       React.useEffect(()=>{if(hidden||reduced||prefs.animate===false)setMorph(null);},[hidden,reduced,prefs.animate]);
       React.useEffect(()=>{if(!preview)return;const timer=setTimeout(()=>setPreview(null),Math.max(3500,ASSETS[preview].duration));return()=>clearTimeout(timer);},[preview]);
-      React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{feedingRef.current=false;setEating(false);if(!document.hidden)setGreeting({event:'meal'});},Math.max(0,ASSETS.eating.duration-(Date.now()-mealStarted.current)));return()=>clearTimeout(timer);},[eating]);
+      React.useEffect(()=>{if(!eating)return;const timer=setTimeout(()=>{setEating(false);const began=mealStarted.current+ASSETS.eating.duration;if(Date.now()<began+AFTER_MEAL_DURATION){setAfterMeal(began);if(!document.hidden)setGreeting({event:'meal'});}else feedingRef.current=false;},Math.max(0,ASSETS.eating.duration-(Date.now()-mealStarted.current)));return()=>clearTimeout(timer);},[eating]);
+      React.useEffect(()=>{if(!afterMeal)return;const timer=setTimeout(()=>{feedingRef.current=false;setAfterMeal(0);},Math.max(0,afterMeal+AFTER_MEAL_DURATION-Date.now()));return()=>clearTimeout(timer);},[afterMeal]);
       React.useEffect(()=>{if(!touch)return;const timer=setTimeout(()=>{touchRef.current=null;touchTaps.current=[];setTouch(null);},ASSETS[touch.kind].duration);return()=>clearTimeout(timer);},[touch]);
       React.useEffect(()=>{
         const visibility=()=>setHidden(document.hidden===true);document.addEventListener('visibilitychange',visibility);
@@ -346,13 +370,13 @@ __SPRITE_CSS__
         window.addEventListener('pointerdown',close);window.addEventListener('keydown',close);return()=>{clearTimeout(focusTimer);window.removeEventListener('pointerdown',close);window.removeEventListener('keydown',close);};
       },[Boolean(wardrobe)]);
       React.useEffect(()=>{warmAsset('idle',prefs.outfit);},[prefs.outfit]);
-      const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible,touch?.kind);
+      const state=visualState(task,dragging,dropping,preview,eating,begging&&eligible,afterMeal?'aftermeal':touch?.kind);
       const flashOutfit=form==='flash'&&wardrobe?wardrobe.outfit:normalizeOutfit(prefs.outfit),proOutfit=form==='pro'&&wardrobe?wardrobe.outfit:normalizeProOutfit(prefs.proOutfit),outfit=form==='pro'?proOutfit:flashOutfit,outfitKey=outfit+':'+state;
       const wardrobeItems=form==='pro'?PRO_OUTFITS:OUTFITS,savedOutfit=form==='pro'?normalizeProOutfit(prefs.proOutfit):normalizeOutfit(prefs.outfit);
       const outfitReady=decoded.get(outfitKey)?.ready===true||outfitReadiness?.key===outfitKey&&outfitReadiness.ok;
-      const timelineKey=state+':'+(preview?'preview-'+previewStarted.current:eating?'meal-'+mealStarted.current:touch?'touch-'+touch.sequence:'task');
+      const timelineKey=state+':'+(preview?'preview-'+previewStarted.current:eating?'meal-'+mealStarted.current:afterMeal?'aftermeal-'+afterMeal:touch?'touch-'+touch.sequence:'task');
       if(visualTimeline.current.key!==timelineKey)visualTimeline.current={key:timelineKey,startedAt:Date.now()};
-      const startedAt=preview&&state===preview?previewStarted.current:eating&&state==='eating'?mealStarted.current:touch&&state===touch.kind?touch.startedAt:state==='drop'?dropStarted.current:visualTimeline.current.startedAt;
+      const startedAt=preview&&state===preview?previewStarted.current:eating&&state==='eating'?mealStarted.current:afterMeal&&state==='aftermeal'?afterMeal:touch&&state===touch.kind?touch.startedAt:state==='drop'?dropStarted.current:visualTimeline.current.startedAt;
       const animate=prefs.animate!==false&&!reduced;
       const greetingPosition=greetingGeometry(prefs,window.innerWidth,window.innerHeight,greetingHeight,renderBox);
       const accountFinance=financeSnapshot.account,summaryFinance=financeSnapshot.summary;
@@ -369,7 +393,7 @@ __SPRITE_CSS__
       function greet(){const plan=greetingFor(new Date());setGreeting({period:plan.period});setMenu(false);setPreview(null);setSleeping(false);writePrefs({...prefsRef.current,greetingSeen:rememberGreeting(prefsRef.current.greetingSeen,plan.key,Date.now())});}
       function stopTouch(){touchRef.current=null;touchTaps.current=[];setTouch(null);}
       function pet(){if(morph||feedingRef.current||touchRef.current?.kind==='pouting')return;if(prefsRef.current.financeVisible!==false)setFinancePeek(Date.now());const reaction=patReaction(touchTaps.current,Date.now());touchTaps.current=reaction.taps;const next={kind:reaction.state,sequence:++touchSequence.current,startedAt:Date.now()};touchRef.current=next;setTouch(next);setGreeting({event:reaction.state==='pouting'?'pout':'pet'});awardBond('pet');setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);}
-      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);setGreeting({event:'feed'});const now=Date.now(),current={...prefsRef.current,...readPrefs()};writePrefs({...current,lastFed:now,nextBegAt:nextBegAt(now),companion:awardCompanion(current.companion,'feed',now)});}
+      function feed(){if(morph||feedingRef.current)return;feedingRef.current=true;setFinancePeek(0);setFinanceHeld(false);mealStarted.current=Date.now();stopTouch();setMenu(false);setPreview(null);setSleeping(false);setBegging(false);setDropping(false);setEating(true);const now=Date.now(),current={...prefsRef.current,...readPrefs()},visit=feedingVisit(current,now);setGreeting({event:visit.event});writePrefs({...current,lastFed:now,mealStreak:visit.streak,nextBegAt:nextBegAt(now),companion:awardCompanion(current.companion,'feed',now)});}
       function down(e){if(e.button!==0||morph)return;setFinancePeek(0);setFinanceHeld(false);setMenu(false);setPreview(null);setDropping(false);drag.current={id:e.pointerId,x:e.clientX,y:e.clientY,start:{...prefsRef.current},render:{...renderBox},form,moved:false};e.currentTarget.setPointerCapture(e.pointerId);}
       function move(e){const d=drag.current;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<4)return;if(!d.moved){d.moved=true;stopTouch();setDragging(true);}const x=clamp(d.render.x+dx,0,Math.max(0,window.innerWidth-d.render.width)),y=clamp(d.render.y+dy,0,Math.max(0,window.innerHeight-d.render.height-32));d.position=viewport({...d.start,x:x+d.render.width/2-d.start.size/2,y:y+d.render.height-d.start.size});d.renderPosition=formGeometry(d.position,window.innerWidth,window.innerHeight,d.form);
         if(!d.raf)d.raf=requestAnimationFrame(()=>{d.raf=0;if(drag.current!==d||!root.current)return;root.current.style.transform=`translate3d(${d.renderPosition.x-d.render.x}px,${d.renderPosition.y-d.render.y}px,0)`;});}
@@ -382,8 +406,8 @@ __SPRITE_CSS__
       const switchPage=page=>()=>setMenu(page);
       const chooseState=key=>()=>{previewStarted.current=Date.now();setPreview(key);closeMenu();};
       const commonWheel=[
-        wheelEntry('rice','feed',feed,{short:'wheelFeed',disabled:eating}),
-        wheelEntry('pet','pet',pet,{short:'wheelPet',disabled:eating||touch?.kind==='pouting'}),
+        wheelEntry('rice','feed',feed,{short:'wheelFeed',disabled:mealBusy}),
+        wheelEntry('pet','pet',pet,{short:'wheelPet',disabled:mealBusy||touch?.kind==='pouting'}),
         wheelEntry('wardrobe','wardrobe',()=>{setWardrobe({outfit:form==='pro'?normalizeProOutfit(prefsRef.current.proOutfit):normalizeOutfit(prefsRef.current.outfit),attempt:0});setMenu(false);},{short:form==='pro'?'proWardrobe':'wheelWardrobe'}),
         wheelEntry('hat',prefs.hat?'hatOff':'hatOn',()=>writePrefs({...prefsRef.current,hat:!prefs.hat}),{short:prefs.hat?'wheelHatOff':'wheelHatOn',pressed:prefs.hat===true}),
         wheelEntry('hello','greetNow',greet,{short:'wheelHello'}),wheelEntry('more','wheelMore',switchPage('more'))];
@@ -396,6 +420,7 @@ __SPRITE_CSS__
       const wheelPosition={left:clamp(wheelLeft,8,Math.max(8,window.innerWidth-wheelWidth-8)),top:clamp(renderBox.y+(renderBox.height+30)/2-wheelHeight/2,8,Math.max(8,window.innerHeight-wheelHeight-8)),width:wheelWidth};
       return h('div',{ref:root,className:'dsg-root',onClick:e=>e.stopPropagation(),style:{left:renderBox.x,top:renderBox.y,width:renderBox.width},'data-form':form,'data-transforming':String(Boolean(morph)),'data-deepseek-girl-state':state,'data-outfit':outfit,'data-saved-outfit':savedOutfit,'data-hidden':String(hidden),'data-motion-enabled':String(animate)},
         morph&&h(Transformation,{event:morph,prefs,animate,hidden,t}),
+        bondCelebration&&milestoneReady&&h('div',{className:'dsg-bond-celebration',role:'status','aria-live':'polite','data-level':bondCelebration.level},h('span',{className:'dsg-level-note'},'♡ '+t('bondLevel'+bondCelebration.level),h('small',null,t('bondUnlocked'))),[0,1,2,3,4].map(index=>h('span',{className:'dsg-level-heart',key:index,'aria-hidden':true,style:{left:(8+index*18)+'%',animationDelay:(index*.12)+'s'}},'♡'))),
         greeting&&greetingReady&&h('div',{ref:greetingRef,className:'dsg-greeting',role:'status','aria-live':'polite','data-side':greetingPosition.side,style:{left:greetingPosition.left,top:greetingPosition.top,width:greetingPosition.width,'--dsg-tail-x':greetingPosition.tailX+'px','--dsg-text-max-height':Math.max(1,greetingPosition.maxHeight-46)+'px'}},
           h('span',{className:'dsg-greeting-text'},companionLine(prefs,form,greeting.event||greeting.period,t)),
           h('svg',{className:'dsg-greeting-paper',viewBox:'0 0 360 160',preserveAspectRatio:'none','aria-hidden':true},
@@ -411,7 +436,7 @@ __SPRITE_CSS__
           h('span',{className:'dsg-motion','data-motion':state,'data-animate':String(animate)},h(SpriteArt,{key:state+':'+(preview?'preview':eating?'meal':touch?'touch-'+touch.sequence:'task'),state,outfit,animate,hidden,startedAt,loadAttempt:wardrobe?.attempt||0,label:t(state),loadingLabel:t('outfitLoading'),onReady:setOutfitReadiness}),prefs.hat&&h('img',{className:'dsg-hat',src:PROPS.hat,alt:t('hat'),draggable:false,style:hatStyle(outfit,state)})),
           state==='petting'&&h('span',{className:'dsg-affection',key:touch?.sequence||'preview','aria-hidden':true},[0,1,2].map(index=>h('svg',{className:'dsg-heart',key:index,viewBox:'0 0 24 24'},h('path',{d:'M12 20 C4 14 1 10 3 6 C5 2 10 3 12 7 C14 3 19 2 21 6 C23 10 20 14 12 20Z',fill:'currentColor'}))))),
         h('div',{className:'dsg-footer'},h('span',{className:'dsg-label'},(preview?t('preview'):'')+t(state)),
-          h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:eating||Boolean(morph),title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
+          h('button',{className:'dsg-food',type:'button',onClick:feed,disabled:mealBusy||Boolean(morph),title:t('feed'),'aria-label':t('feed')},h('img',{src:PROPS.rice,alt:'',draggable:false}))),
         financeActive&&Boolean(financePeek)&&!dragging&&!wardrobe&&!financePanel&&!bondPanel&&!menu&&!hidden&&h('button',{ref:financeCardRef,type:'button',className:'dsg-finance-card',style:financePosition,'aria-label':t('financeOpen'),'aria-busy':financeSnapshot.refreshing,onPointerEnter:()=>setFinanceHeld(true),onPointerLeave:()=>{if(!financeCardRef.current?.contains(document.activeElement))setFinanceHeld(false);},onFocus:()=>setFinanceHeld(true),onBlur:e=>{if(!e.currentTarget.contains(e.relatedTarget)){setFinanceHeld(false);}},onClick:()=>{setFinancePanel(true);setMenu(false);}},
           (greeting?.event==='pet'||greeting?.event==='pout')&&h('span',{className:'dsg-companion-line'},companionLine(prefs,form,greeting.event,t)),
           h('span',{className:'dsg-finance-line'},h('span',null,t('financeBalance')),h('span',{className:'dsg-finance-value','data-finance-balance':accountFinance.status},balanceText)),

@@ -1,0 +1,131 @@
+{
+  "outfit": "hoodie",
+  "portrait": false,
+  "frames": 6,
+  "width": 512,
+  "height": 512,
+  "stages": [
+    "empty-basin",
+    "raise-napkin",
+    "wipe-mouth",
+    "pat-tummy",
+    "lower-basin",
+    "rest"
+  ],
+  "hat": {
+    "left": "21.439%",
+    "top": "11%",
+    "width": "57.122%"
+  },
+  "alignment": {
+    "method": "complete-frame hair span and top",
+    "fit": 0.9520378072245811,
+    "target": {
+      "head": [
+        262.5,
+        25
+      ],
+      "span": 364.6304801670146
+    },
+    "transforms": [
+      [
+        0.9749478079331941,
+        0,
+        0,
+        0.9749478079331941,
+        16.363256784968712,
+        11.350730688935283
+      ],
+      [
+        0.9749478079331941,
+        0,
+        0,
+        0.9749478079331941,
+        16.863256784968712,
+        11.350730688935283
+      ],
+      [
+        0.9749478079331941,
+        0,
+        0,
+        0.9749478079331941,
+        16.863256784968712,
+        11.350730688935283
+      ],
+      [
+        0.9723479471120389,
+        0,
+        0,
+        0.9723479471120389,
+        17.509795407098142,
+        10.414780793319416
+      ],
+      [
+        0.9723479471120389,
+        0,
+        0,
+        0.9723479471120389,
+        17.509795407098142,
+        10.414780793319416
+      ],
+      [
+        0.9749478079331941,
+        0,
+        0,
+        0.9749478079331941,
+        16.363256784968712,
+        11.350730688935283
+      ]
+    ],
+    "measured": [
+      {
+        "head": [
+          262,
+          25
+        ],
+        "span": 368
+      },
+      {
+        "head": [
+          262.5,
+          25
+        ],
+        "span": 369
+      },
+      {
+        "head": [
+          262.5,
+          25
+        ],
+        "span": 369
+      },
+      {
+        "head": [
+          262,
+          25
+        ],
+        "span": 368
+      },
+      {
+        "head": [
+          262,
+          25
+        ],
+        "span": 368
+      },
+      {
+        "head": [
+          262,
+          25
+        ],
+        "span": 368
+      }
+    ]
+  },
+  "generation": {
+    "mode": "built-in image_gen",
+    "reference": "assets/outfits/hoodie/frames/eating/00.png",
+    "transparentBackground": true,
+    "prompt": "Create a production animation sprite sheet from this exact reference character. Use-case identity-preserve. Reference role: the attached image is the exact approved character identity, costume, body proportions, linework, colors and camera framing to preserve. Deliver one transparent PNG sprite sheet, three columns by two rows, SIX separate complete drawings in reading order. Each cell is square, canvas landscape 3:2. Preserve the EXACT cute big-head chibi HALF-BODY crop, blue hair and costume from the reference. Do not add legs or make her an adult. Maintain identical scale, face center, headband or hair top and bottom body baseline in all six cells. Fixed camera, frontal stance, identical still head and torso position. Only expression, arms, napkin and basin change. Keep ample transparent gutters between complete drawings. No panel borders, captions, numbers, text, ground, shadows, background or decorative hearts. Do not add a hat.\nAnimation is a subtle AFTER EATING sequence, distinct from eating: the round plain silver steel basin is EMPTY, no rice remains and no spoon goes to the mouth. Frame 1: satisfied small smile, holding empty steel basin low with left hand, spoon resting inside basin. Frame 2: right hand raises a small white napkin halfway toward mouth, left hand supports basin. Frame 3: napkin gently touches mouth in a polite wiping gesture, happy closed eyes and rosy cheeks, basin stays low. Frame 4: napkin lowered, right palm gently rests on tummy, content expression, left hand still holds empty basin. Frame 5: hands start lowering empty basin toward the bottom of the half-body crop, relaxed smile. Frame 6: basin has been set down below the half-body crop, out of view, hands relaxed near waist, eyes open and warm bright cheerful smile. This is ONE same person in one costume in all six drawings, not six different characters. Render all costume details, hands, hair and body as a coherent complete character each time, no detached body part patches. Keep her body planted, no lateral sway or zoom. All art has genuinely transparent alpha background."
+  }
+}

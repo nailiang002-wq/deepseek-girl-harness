@@ -2,7 +2,15 @@
 
 **Switch to Pro and watch Little Whale transform. Switch back to Flash to welcome her back in her saved outfit.**
 
-English · [中文](README.md) · **v1.12.0**
+English · [中文](README.md) · **v1.13.0**
+
+**v1.13.0** adds after-meal gestures. After three bites, she wipes her mouth, pats her tummy, and lowers the empty basin. All five Flash outfits and three Pro outfits have complete character frames. The gestures last about 3.7 seconds before returning to the current task.
+
+Feeding again within five minutes produces different responses for the second and third servings. Newly reaching 40 or 160 affection points unlocks a one-time heart effect and response, deferred during meals, dragging, transformations, open panels, and hidden windows. Reduced-motion settings use a static notice. [After-meal sources](assets/after-meal) include the generated sheets, complete character frames, and prompts.
+
+<p align="center"><img src="docs/images/after-meal-flash.png" width="410" alt="Flash wiping her mouth while wearing the basin hat"><img src="docs/images/after-meal-pro.png" width="410" alt="Pro in a winter outfit wiping her mouth with the basin hat on"></p>
+
+The after-meal demos use the real plugin in a standalone test page with simulated progress and model selection.
 
 **v1.12.0** adds affection, a custom name, and distinct responses for each form. Open the wheel and select the heart button beneath it to view the companion journal and set your name. Flash is playful and Pro is gentle and composed, with responses for greetings, head pats, feeding, finishing a meal, and completing a task.
 
@@ -136,7 +144,7 @@ These previews use the plugin's artwork without personal conversations. Flash ha
 | Sleep | Rests after 90 seconds without input and wakes on mouse or keyboard activity |
 | Animation controls | Preview expressions, pause motion, respect reduced-motion settings, and pause visual playback while the window is hidden |
 
-There are **12 states**: idle, thinking, answering, success, error, dragging, landing, sleeping, asking for rice, eating rice, enjoying head pats, and pouting. Stopping a task or waiting for approval is not treated as successful completion.
+There are **12 base states**: idle, thinking, answering, success, error, dragging, landing, sleeping, asking for rice, eating rice, enjoying head pats, and pouting. v1.13 adds an automatic after-meal sequence. Stopping a task or waiting for approval is not treated as successful completion.
 
 ## Other installation options and compatibility
 

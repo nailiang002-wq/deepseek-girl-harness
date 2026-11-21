@@ -25,7 +25,7 @@ fs.mkdirSync(proof,{recursive:true});
   await page.keyboard.press('Escape');assert.equal(await page.locator('.dsg-bond-panel').count(),0);
   await page.locator('.dsg-food').click();assert.equal((await prefs()).companion.points,3);
   await page.locator('.dsg-greeting').waitFor();assert.match(await page.locator('.dsg-greeting-text').innerText(),/小船长，白饭/);
-  await page.clock.runFor(13200);assert.match(await page.locator('.dsg-greeting-text').innerText(),/吃饱/);
+  await page.clock.runFor(13200);assert.match(await page.locator('.dsg-greeting-text').innerText(),/吃饱/);assert.equal(await page.locator('.dsg-root').getAttribute('data-deepseek-girl-state'),'aftermeal');await page.clock.runFor(3700);
   await page.locator('.dsg-character').click({position:{x:70,y:40}});assert.equal((await prefs()).companion.points,4);
   await page.locator('.dsg-finance-card .dsg-companion-line').waitFor();const flash=await page.locator('.dsg-companion-line').innerText();assert.match(flash,/小船长/);
   await page.locator('.dsg-character').click({position:{x:70,y:40}});assert.equal((await prefs()).companion.points,4);
